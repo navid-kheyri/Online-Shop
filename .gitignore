@@ -1,0 +1,6 @@
+__pycache__/
+.venv
+.idea
+online shop/venv
+*.pyc
+venv
