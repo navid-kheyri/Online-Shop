@@ -21,4 +21,9 @@ class Product(models.Model):
     category=models.ForeignKey(Category,on_delete=models.CASCADE,related_name="products")
     vendor=models.ForeignKey('Vendor',on_delete=models.CASCADE,related_name='products')
     
-    
+class ProductImage(models.Model):
+    title=models.CharField(max_length=100)
+    description = models.TextField()
+    image=models.ImageField(upload_to='product/%Y/%m/%d/')
+    created_at=jmodels.jDateTimeField(auto_now_add=True)
+    Product=models.ForeignKey(Product,on_delete=models.DO_NOTHING,related_name="images")
