@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import (MaxLengthValidator, MinLengthValidator,
-                                    MaxValueValidator,MinValueValidator)
+                                    MaxValueValidator, MinValueValidator)
 from django_jalali.db import models as jmodels
 
 # Create your models here.
@@ -55,3 +55,14 @@ class VendorImage(models.Model):
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     vendor = models.ForeignKey(
         Vendor, on_delete=models.DO_NOTHING, related_name="images")
+
+
+class Rating(models.Model):
+    rating = models.IntegerField(default=1, validators=[
+                                 MinValueValidator(1), MaxValueValidator(5)])
+    created_at = jmodels.jDateTimeField(auto_now_add=True)
+    updated_at = jmodels.jDateTimeField(auto_now=True)
+    # user = models.ForeignKey(
+        # 'accounts.User', on_delete=models.CASCADE, related_name='ratings')
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name='ratings')
