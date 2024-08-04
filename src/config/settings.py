@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'customers',
     'vendors',
     'website',
-    'order'
+    'order',
+    'django_jalali'
 ]
 
 MIDDLEWARE = [
