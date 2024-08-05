@@ -17,3 +17,7 @@ class ProductModelAdmin(admin.ModelAdmin):
 class ProductImageModelAdmin(admin.ModelAdmin):
     list_display=['title','image','created_at','product']
 
+@admin.register(Rating)
+class RatingModelAdmin(admin.ModelAdmin):
+    list_display=['rating','product','user']
+    ordering=['rating']
