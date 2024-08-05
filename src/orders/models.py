@@ -20,17 +20,23 @@ class OrderItem(models.Model):
 
     # TODO discount here or in cart?
 
+
 class Cart(models.Model):
     class Status(models.TextChoices):
         ACTIVE = 'AC', 'Active'
         PAID = 'PD', 'Paid'
-        
+
     created_at = jmodels.jDateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=2,choices=Status.choices,default=Status.ACTIVE)
-     # user = models.ForeignKey(
+    status = models.CharField(
+        max_length=2, choices=Status.choices, default=Status.ACTIVE)
+    # user = models.ForeignKey(
     # 'accounts.User', on_delete=models.CASCADE, related_name='ratings')
 
+    def __str__(self):
+        return self.pk
+
     def get_total_amount(self):
-        total = sum(item.product.price * item.quantity for item in self.order.all())
-    
+        total = sum(item.product.price *
+                    item.quantity for item in self.order.all())
+
         return total

@@ -14,6 +14,9 @@ class Vendor(models.Model):
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     address = models.OneToOneField('Address', on_delete=models.PROTECT)
 
+    def __str__(self):
+        return self.name
+
 
 class VendorImage(models.Model):
     title = models.CharField(max_length=100)
@@ -22,3 +25,6 @@ class VendorImage(models.Model):
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     vendor = models.ForeignKey(
         Vendor, on_delete=models.DO_NOTHING, related_name="images")
+
+    def __str__(self):
+        return self.title

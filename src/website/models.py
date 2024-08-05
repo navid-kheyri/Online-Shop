@@ -13,6 +13,9 @@ class Category(models.Model):
     parent = models.ForeignKey('self', null=True, blank=True,
                                on_delete=models.DO_NOTHING, related_name='sub_categories')
 
+    def __str__(self):
+        return self.name
+
 
 class Product(models.Model):
     name = models.CharField(max_length=100)
@@ -27,6 +30,9 @@ class Product(models.Model):
     vendor = models.ForeignKey(
         'Vendor', on_delete=models.CASCADE, related_name='products')
 
+    def __str__(self):
+        return self.name
+
 
 class ProductImage(models.Model):
     title = models.CharField(max_length=100)
@@ -35,6 +41,9 @@ class ProductImage(models.Model):
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     product = models.ForeignKey(
         Product, on_delete=models.DO_NOTHING, related_name="images")
+
+    def __str__(self):
+        return self.title
 
 
 class Rating(models.Model):
@@ -47,6 +56,9 @@ class Rating(models.Model):
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name='ratings')
 
+    def __str__(self):
+        return self.rating
+
 
 class Comment(models.Model):
     title = models.CharField(max_length=100)
@@ -56,3 +68,6 @@ class Comment(models.Model):
     # 'accounts.User', on_delete=models.CASCADE, related_name='ratings')
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name='ratings')
+
+    def __str__(self):
+        return self.title
