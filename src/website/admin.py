@@ -11,3 +11,9 @@ class CategoryModelAdmin(admin.ModelAdmin):
 class ProductModelAdmin(admin.ModelAdmin):
     exclude=['description']
     ordering=['created_at','discount','vendor']
+
+
+@admin.register(ProductImage)
+class ProductImageModelAdmin(admin.ModelAdmin):
+    list_display=['title','image','created_at','product']
+
