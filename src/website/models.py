@@ -1,13 +1,12 @@
 from django.db import models
-from django.core.validators import (MaxLengthValidator, MinLengthValidator,
-                                    MaxValueValidator, MinValueValidator)
+from django.core.validators import (MaxValueValidator, MinValueValidator)
 from django_jalali.db import models as jmodels
 
 # Create your models here.
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
     description = models.TextField()
     image = models.ImageField(
         upload_to='category/%Y/%m/%d/', blank=True, null=True, default='default.jpg')
@@ -38,31 +37,22 @@ class ProductImage(models.Model):
         Product, on_delete=models.DO_NOTHING, related_name="images")
 
 
-class Vendor(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    phone = models.CharField(
-        validators=[MinLengthValidator(11), MaxLengthValidator(11)])
-    email = models.EmailField()
-    status = models.BooleanField()
-    created_at = jmodels.jDateTimeField(auto_now_add=True)
-    address = models.OneToOneField('Address', on_delete=models.PROTECT)
-
-
-class VendorImage(models.Model):
-    title = models.CharField(max_length=100)
-    description = models.TextField()
-    image = models.ImageField(upload_to='product/%Y/%m/%d/')
-    created_at = jmodels.jDateTimeField(auto_now_add=True)
-    vendor = models.ForeignKey(
-        Vendor, on_delete=models.DO_NOTHING, related_name="images")
-
-
 class Rating(models.Model):
     rating = models.IntegerField(default=1, validators=[
                                  MinValueValidator(1), MaxValueValidator(5)])
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     updated_at = jmodels.jDateTimeField(auto_now=True)
     # user = models.ForeignKey(
-        # 'accounts.User', on_delete=models.CASCADE, related_name='ratings')
+    # 'accounts.User', on_delete=models.CASCADE, related_name='ratings')
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name='ratings')
+
+
+class Comment(models.Model):
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    created_at = jmodels.jDateTimeField(auto_now_add=True)
+    # user = models.ForeignKey(
+    # 'accounts.User', on_delete=models.CASCADE, related_name='ratings')
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name='ratings')
