@@ -11,7 +11,7 @@ class CategoryModelAdmin(admin.ModelAdmin):
 @admin.register(Product)
 class ProductModelAdmin(admin.ModelAdmin):
     exclude = ['description']
-    ordering = ['created_at', 'discount', 'vendor']
+    ordering = ['created_at', 'discount']
 
 
 @admin.register(ProductImage)
