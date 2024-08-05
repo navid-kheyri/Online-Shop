@@ -5,3 +5,9 @@ from .models import (Category,Product,ProductImage,Rating,Comment)
 @admin.register(Category)
 class CategoryModelAdmin(admin.ModelAdmin):
     list_display=['name','image','parent']
+
+
+@admin.register(Product)
+class ProductModelAdmin(admin.ModelAdmin):
+    exclude=['description']
+    ordering=['created_at','discount','vendor']
