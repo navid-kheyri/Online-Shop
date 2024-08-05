@@ -3,6 +3,8 @@ from django.core.validators import (MaxLengthValidator, MinLengthValidator)
 from django_jalali.db import models as jmodels
 
 # Create your models here.
+
+
 class Vendor(models.Model):
     name = models.CharField(max_length=100, unique=True)
     phone = models.CharField(

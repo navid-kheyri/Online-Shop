@@ -33,7 +33,7 @@ class ProductImage(models.Model):
     description = models.TextField()
     image = models.ImageField(upload_to='product/%Y/%m/%d/')
     created_at = jmodels.jDateTimeField(auto_now_add=True)
-    Product = models.ForeignKey(
+    product = models.ForeignKey(
         Product, on_delete=models.DO_NOTHING, related_name="images")
 
 
