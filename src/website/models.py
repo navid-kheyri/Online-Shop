@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import (MaxValueValidator, MinValueValidator)
 from django_jalali.db import models as jmodels
+from vendors.models import Vendor
 
 # Create your models here.
 
@@ -28,7 +29,7 @@ class Product(models.Model):
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, related_name="products")
     vendor = models.ForeignKey(
-        'Vendor', on_delete=models.CASCADE, related_name='products')
+        Vendor, on_delete=models.CASCADE, related_name='products')
 
     def __str__(self):
         return self.name
