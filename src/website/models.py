@@ -14,6 +14,8 @@ class Category(models.Model):
         upload_to='category/%Y/%m/%d/', blank=True, null=True, default='default.jpg')
     parent = models.ForeignKey('self', null=True, blank=True,
                                on_delete=models.DO_NOTHING, related_name='sub_categories')
+    vendor = models.ForeignKey(
+        Vendor, on_delete=models.CASCADE, related_name='category')
 
     def __str__(self):
         return self.name
@@ -29,8 +31,6 @@ class Product(models.Model):
     updated_at = jmodels.jDateTimeField(auto_now=True)
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, related_name="products")
-    vendor = models.ForeignKey(
-        Vendor, on_delete=models.CASCADE, related_name='products')
 
     def __str__(self):
         return self.name
