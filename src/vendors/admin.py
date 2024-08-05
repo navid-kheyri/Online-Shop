@@ -8,3 +8,8 @@ class VendorModelAdmin(admin.ModelAdmin):
     list_display = ['name', 'phone', 'email',
                     'status', 'created_at', 'address']
     ordering = ['status']
+
+
+@admin.register(VendorImage)
+class VendorImageModelAdmin(admin.ModelAdmin):
+    exclude = ['description']
