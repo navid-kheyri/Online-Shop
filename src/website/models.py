@@ -23,8 +23,8 @@ class Product(models.Model):
     name = models.CharField(max_length=100)
     quantity_in_stock = models.IntegerField()
     description = models.TextField()
-    price = models.DecimalField(decimal_places=2)
-    discount = models.DecimalField(decimal_places=0)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    discount = models.DecimalField(max_digits=10, decimal_places=0)
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     updated_at = jmodels.jDateTimeField(auto_now=True)
     category = models.ForeignKey(
@@ -54,7 +54,7 @@ class Rating(models.Model):
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     updated_at = jmodels.jDateTimeField(auto_now=True)
     user = models.ForeignKey(
-    User, on_delete=models.CASCADE, related_name='ratings')
+        User, on_delete=models.CASCADE, related_name='ratings')
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name='ratings')
 
@@ -67,9 +67,9 @@ class Comment(models.Model):
     description = models.TextField()
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     user = models.ForeignKey(
-    User, on_delete=models.CASCADE, related_name='comment')
+        User, on_delete=models.CASCADE, related_name='comment')
     product = models.ForeignKey(
-        Product, on_delete=models.CASCADE, related_name='ratings')
+        Product, on_delete=models.CASCADE, related_name='comment')
 
     def __str__(self):
         return self.title

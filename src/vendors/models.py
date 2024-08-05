@@ -1,18 +1,19 @@
 from django.db import models
 from django.core.validators import (MaxLengthValidator, MinLengthValidator)
 from django_jalali.db import models as jmodels
+from customers.models import Address
 
 # Create your models here.
 
 
 class Vendor(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    phone = models.CharField(
-        validators=[MinLengthValidator(11), MaxLengthValidator(11)])
+    phone = models.CharField(max_length=11,
+                             validators=[MinLengthValidator(11), MaxLengthValidator(11)])
     email = models.EmailField()
     status = models.BooleanField()
     created_at = jmodels.jDateTimeField(auto_now_add=True)
-    address = models.OneToOneField('Address', on_delete=models.PROTECT)
+    address = models.OneToOneField(Address, on_delete=models.PROTECT)
 
     def __str__(self):
         return self.name

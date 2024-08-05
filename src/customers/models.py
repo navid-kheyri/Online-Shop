@@ -15,7 +15,7 @@ class Address(models.Model):
                                    MaxLengthValidator(10)
                                ])
     user = models.ForeignKey(
-    User, on_delete=models.CASCADE, related_name='address')
+        User, on_delete=models.CASCADE, related_name='address')
 
     def __str__(self):
         return f"{self.id} {self.state}, {self.city}, {self.street}"
