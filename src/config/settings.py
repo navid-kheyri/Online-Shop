@@ -38,11 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'accounts',
-    'admin_panel',
+    'dashboard'
     'customers',
     'vendors',
     'website',
-    'order',
+    'orders',
     'django_jalali'
 ]
 
