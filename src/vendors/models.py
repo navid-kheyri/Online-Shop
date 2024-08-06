@@ -1,7 +1,9 @@
 from django.db import models
 from django.core.validators import (MaxLengthValidator, MinLengthValidator)
 from django_jalali.db import models as jmodels
-from customers.models import Address
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 # Create your models here.
 
@@ -13,7 +15,9 @@ class Vendor(models.Model):
     email = models.EmailField()
     status = models.BooleanField()
     created_at = jmodels.jDateTimeField(auto_now_add=True)
-    address = models.OneToOneField(Address, on_delete=models.PROTECT)
+    user = models.ManyToManyField(
+        User, related_name='vendors')
+    address = models.TextField()
 
     def __str__(self):
         return self.name

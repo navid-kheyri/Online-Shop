@@ -16,7 +16,6 @@ class Category(models.Model):
         upload_to='category/%Y/%m/%d/', blank=True, null=True, default='default.jpg')
     parent = models.ForeignKey('self', null=True, blank=True,
                                on_delete=models.DO_NOTHING, related_name='sub_categories')
-    
 
     def __str__(self):
         return self.name
@@ -24,10 +23,11 @@ class Category(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=100)
-    quantity_in_stock = models.IntegerField()
+    quantity_in_stock = models.PositiveIntegerField()
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    discount = models.DecimalField(max_digits=10, decimal_places=0)
+    discount = models.DecimalField(
+        max_digits=10, decimal_places=0, blank=True, null=True)
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     updated_at = jmodels.jDateTimeField(auto_now=True)
     category = models.ForeignKey(
