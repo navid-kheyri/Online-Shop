@@ -1,7 +1,9 @@
 from django.db import models
 from django_jalali.db import models as jmodels
 from website.models import Product
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 # Create your models here.
 
