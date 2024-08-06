@@ -31,6 +31,18 @@ class CustomUser(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['age', 'city', 'phone_number']
 
+    def is_customer(self):
+        return self.user_type == 'customer'
+
+    def is_owner(self):
+        return self.user_type == 'owner'
+
+    def is_manager(self):
+        return self.user_type == 'manager'
+
+    def is_operator(self):
+        return self.user_type == 'operator'
+
     objects = CustomUserManager()
 
     def __str__(self):
