@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, AbstractBaseUser, PermissionsMixin
 from django.core.validators import RegexValidator
 from accounts.managers import CustomUserManager
+from vendors.models import Vendor
 
 # Create your models here.
 
@@ -10,12 +11,22 @@ phone_number_regex = RegexValidator(r'^(09\d{9})$')
 
 
 class CustomUser(AbstractUser):
+    USER_TYPES = (
+        ('customer', 'Customer'),
+        ('owner', 'Owner'),
+        ('manager', 'Manager'),
+        ('operator', 'Operator'),
+    )
     username = None
     email = models.EmailField(unique=True)
     phone_number = models.CharField(
         max_length=11, unique=True, validators=[phone_number_regex])
     age = models.PositiveIntegerField()
     city = models.CharField(max_length=100)
+    vendor = models.ForeignKey(
+        Vendor, on_delete=models.DO_NOTHING, related_name='vendors')
+    user_type = models.CharField(
+        max_length=10, choices=USER_TYPES, default='customer')
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['age', 'city', 'phone_number']
