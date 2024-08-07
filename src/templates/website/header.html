@@ -15,7 +15,7 @@
                         <ul>
                             <li>
                                 <div class="header-dropdown">
-                                    <a href="#">English</a>
+                                    <a href="#" style='margin-right:20px'>English</a>
                                     <div class="header-menu">
                                         <ul>
                                             <li><a href="#">English</a></li>
@@ -25,7 +25,11 @@
                                     </div><!-- End .header-menu -->
                                 </div>
                             </li>
-                            <li><a href="#signin-modal" data-toggle="modal">Sign in / Sign up</a></li>
+                            {% if request.user.is_authenticated %}
+                            {{request.user.email}} <a href="{% url "accounts:logout" %}" style='margin-left:20px'>Sign Out</a>
+                            {% else %}
+                            <li><a href={% url 'accounts:login' %} >Sign in / Sign up</a></li>
+                            {% endif %}
                         </ul>
                     </li>
                 </ul><!-- End .top-menu -->
