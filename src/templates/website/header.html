@@ -26,7 +26,7 @@
                                 </div>
                             </li>
                             {% if request.user.is_authenticated %}
-                            {{request.user.email}} <a href="{% url "accounts:logout" %}" style='margin-left:20px'>Sign Out</a>
+                            <a href="{% url 'dashboard:user' request.user.pk  %}" >{{request.user.email}}</a> <a href="{% url "accounts:logout" %}" style='margin-left:20px'>Sign Out</a>
                             {% else %}
                             <li><a href={% url 'accounts:login' %} >Sign in / Sign up</a></li>
                             {% endif %}

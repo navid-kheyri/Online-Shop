@@ -115,25 +115,37 @@
 								    </div><!-- .End .tab-pane -->
 
 								    <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
-								    	<form action="#">
+								    	<form method='post'>
 			                				<div class="row">
 			                					<div class="col-sm-6">
 			                						<label>First Name *</label>
-			                						<input type="text" class="form-control" required>
+			                						<input type="text" class="form-control" required value={{request.user.first_name}}>
 			                					</div><!-- End .col-sm-6 -->
 
 			                					<div class="col-sm-6">
 			                						<label>Last Name *</label>
-			                						<input type="text" class="form-control" required>
+			                						<input type="text" class="form-control" required value={{request.user.last_name}}>
 			                					</div><!-- End .col-sm-6 -->
 			                				</div><!-- End .row -->
-
-		            						<label>Display Name *</label>
-		            						<input type="text" class="form-control" required>
-		            						<small class="form-text">This will be how your name will be displayed in the account section and in reviews</small>
+                                            
 
 		                					<label>Email address *</label>
-		        							<input type="email" class="form-control" required>
+		        							<input type="email" class="form-control" required value={{request.user.email}} readonly>
+
+                                            <label>Phone Number *</label>
+		        							<input type="text" class="form-control" required value={{request.user.phone_number}} readonly>
+
+                                            <div class="row">
+			                					<div class="col-sm-6">
+			                						<label>Age *</label>
+			                						<input type="text" class="form-control" required min="0" max="120" value={{request.user.age}} readonly>
+			                					</div><!-- End .col-sm-6 -->
+
+			                					<div class="col-sm-6">
+			                						<label>City *</label>
+			                						<input type="text" class="form-control" required value={{request.user.city}}>
+			                					</div><!-- End .col-sm-6 -->
+			                				</div><!-- End .row -->
 
 		            						<label>Current password (leave blank to leave unchanged)</label>
 		            						<input type="password" class="form-control">
