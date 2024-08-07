@@ -1,179 +1,50 @@
 {% load static %}
 <!DOCTYPE html>
-<html class="no-js" lang="zxx">
+<html lang="en">
 
+
+<!-- molla/index-4.html  22 Nov 2019 09:53:08 GMT -->
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="apple-mobile-web-app-title" content="Molla">
+    <meta name="application-name" content="Molla">
+    <meta name="msapplication-TileColor" content="#cc9966">
+    <meta name="msapplication-config" content={% static "assets/images/icons/browserconfig.xml" %}>
+    <meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" href={% static "assets/vendor/line-awesome/line-awesome/line-awesome/css/line-awesome.min.css" %}>
+    <!-- Plugins CSS File -->
+    <link rel="stylesheet" href={% static "assets/css/bootstrap.min.css" %}>
+    <link rel="stylesheet" href={% static "assets/css/plugins/owl-carousel/owl.carousel.css" %}>
+    <link rel="stylesheet" href={% static "assets/css/plugins/magnific-popup/magnific-popup.css" %}>
+    <link rel="stylesheet" href={% static "assets/css/plugins/jquery.countdown.css" %}>
+    <!-- Main CSS File -->
+    <link rel="stylesheet" href={% static "assets/css/style.css" %}>
+    <link rel="stylesheet" href={% static "assets/css/skins/skin-demo-4.css" %}>
+    <link rel="stylesheet" href={% static "assets/css/demos/demo-4.css" %}>
     {% block title %}{% endblock title %}
-    <meta name="description" content="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="shortcut icon" type="image/x-icon" href={% static "assets1/images/favicon.svg" %} />
-
-    <!-- ========================= CSS here ========================= -->
-    <link rel="stylesheet" href={% static "assets1/css/bootstrap.min.css" %} />
-    <link rel="stylesheet" href={% static "assets1/css/LineIcons.3.0.css" %} />
-    <link rel="stylesheet" href={% static "assets1/css/tiny-slider.css" %} />
-    <link rel="stylesheet" href={% static "assets1/css/glightbox.min.css" %} />
-    <link rel="stylesheet" href={% static "assets1/css/main.css" %} />
     {% block head %}{% endblock head %}
 </head>
 
 <body>
-    <!--[if lte IE 9]>
-      <p class="browserupgrade">
-        You are using an <strong>outdated</strong> browser. Please
-        <a href="https://browsehappy.com/">upgrade your browser</a> to improve
-        your experience and security.
-      </p>
-    <![endif]-->
-
-    <!-- Preloader -->
-    <div class="preloader">
-        <div class="preloader-inner">
-            <div class="preloader-icon">
-                <span></span>
-                <span></span>
-            </div>
-        </div>
-    </div>
-    <!-- /End Preloader -->
-
-{% block header %}
-{% endblock header %}
-
-{% block content %}
-{% endblock content %}
-
-    {% comment %} <!-- Start Hero Area -->
-    <section class="hero-area">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-12 custom-padding-right">
-                    <div class="slider-head">
-                        <!-- Start Hero Slider -->
-                        <div class="hero-slider">
-                            <!-- Start Single Slider -->
-                            <div class="single-slider"
-                                style="background-image: url(assets1/images/hero/slider-bg1.jpg);">
-                                <div class="content">
-                                    <h2><span>No restocking fee ($35 savings)</span>
-                                        M75 Sport Watch
-                                    </h2>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                                        incididunt ut labore et dolore magna aliqua.</p>
-                                    <h3><span>Now Only</span> $320.99</h3>
-                                    <div class="button">
-                                        <a href="product-grids.html" class="btn">Shop Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End Single Slider -->
-                            <!-- Start Single Slider -->
-                            <div class="single-slider"
-                                style="background-image: url(assets1/images/hero/slider-bg2.jpg);">
-                                <div class="content">
-                                    <h2><span>Big Sale Offer</span>
-                                        Get the Best Deal on CCTV Camera
-                                    </h2>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                                        incididunt ut labore et dolore magna aliqua.</p>
-                                    <h3><span>Combo Only:</span> $590.00</h3>
-                                    <div class="button">
-                                        <a href="product-grids.html" class="btn">Shop Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End Single Slider -->
-                        </div>
-                        <!-- End Hero Slider -->
-                    </div>
-                </div>
-                <div class="col-lg-4 col-12">
-                    <div class="row">
-                        <div class="col-lg-12 col-md-6 col-12 md-custom-padding">
-                            <!-- Start Small Banner -->
-                            <div class="hero-small-banner"
-                                style="background-image: url('assets1/images/hero/slider-bnr.jpg');">
-                                <div class="content">
-                                    <h2>
-                                        <span>New line required</span>
-                                        iPhone 12 Pro Max
-                                    </h2>
-                                    <h3>$259.99</h3>
-                                </div>
-                            </div>
-                            <!-- End Small Banner -->
-                        </div>
-                        <div class="col-lg-12 col-md-6 col-12">
-                            <!-- Start Small Banner -->
-                            <div class="hero-small-banner style2">
-                                <div class="content">
-                                    <h2>Weekly Sale!</h2>
-                                    <p>Saving up to 50% off all online store items this week.</p>
-                                    <div class="button">
-                                        <a class="btn" href="product-grids.html">Shop Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Start Small Banner -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- End Hero Area --> {% endcomment %}
-
-
-
-    {% block footer %}
-    {% endblock footer %}
-    <!-- ========================= JS here ========================= -->
-    <script src={% static "assets1/js/bootstrap.min.js" %}></script>
-    <script src={% static "assets1/js/tiny-slider.js " %}></script>
-    <script src={% static "assets1/js/glightbox.min.js" %}></script>
-    <script src={% static "assets1/js/main.js" %}></script>
-    <script type="text/javascript">
-        //========= Hero Slider 
-        tns({
-            container: '.hero-slider',
-            slideBy: 'page',
-            autoplay: true,
-            autoplayButtonOutput: false,
-            mouseDrag: true,
-            gutter: 0,
-            items: 1,
-            nav: false,
-            controls: true,
-            controlsText: ['<i class="lni lni-chevron-left"></i>', '<i class="lni lni-chevron-right"></i>'],
-        });
-
-        //======== Brand Slider
-        tns({
-            container: '.brands-logo-carousel',
-            autoplay: true,
-            autoplayButtonOutput: false,
-            mouseDrag: true,
-            gutter: 15,
-            nav: false,
-            controls: false,
-            responsive: {
-                0: {
-                    items: 1,
-                },
-                540: {
-                    items: 3,
-                },
-                768: {
-                    items: 5,
-                },
-                992: {
-                    items: 6,
-                }
-            }
-        });
-    </script>
+    {% block header %}{% endblock header %}
+    {% block content %}{% endblock content %}
+    
+    <!-- Plugins JS File -->
+    <script src={% static "assets/js/jquery.min.js" %}></script>
+    <script src={% static "assets/js/bootstrap.bundle.min.js" %}></script>
+    <script src={% static "assets/js/jquery.hoverIntent.min.js" %}></script>
+    <script src={% static "assets/js/jquery.waypoints.min.js" %}></script>
+    <script src={% static "assets/js/superfish.min.js" %}></script>
+    <script src={% static "assets/js/owl.carousel.min.js" %}></script>
+    <script src={% static "assets/js/bootstrap-input-spinner.js" %}></script>
+    <script src={% static "assets/js/jquery.plugin.min.js" %}></script>
+    <script src={% static "assets/js/jquery.magnific-popup.min.js" %}></script>
+    <script src={% static "assets/js/jquery.countdown.min.js" %}></script>
+    <!-- Main JS File -->
+    <script src={% static "assets/js/main.js" %}></script>
+    <script src={% static "assets/js/demos/demo-4.js" %}></script>
+    {% block footer %}{% endblock footer %}
 </body>
 
+
+<!-- molla/index-4.html  22 Nov 2019 09:54:18 GMT -->
 </html>
