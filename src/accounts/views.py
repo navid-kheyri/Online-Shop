@@ -11,6 +11,9 @@ User = get_user_model()
 
 
 class CustomLoginView(View):
+    """
+    لاگین کاستومر و مدیر در اینجا انجام میشود و هر کدام به صفحه خود هدایت میشوند.
+    """
     template_name = 'accounts/login.html'
 
     def get(self, request):
@@ -26,11 +29,11 @@ class CustomLoginView(View):
             if request.user.user_type == 'customer':
                 return redirect("website:index")
             elif request.user.user_type == 'owner' or request.user.user_type == 'manager' or request.user.user_type == 'operator':
-                return redirect("dashboard:admin-dashboard")
+                return redirect("dashboard:owner-dashboard")
 
         return render(request, self.template_name)
 
-
+#TODO CBV later
 @login_required
 def my_logout(request):
     logout(request)
@@ -38,6 +41,10 @@ def my_logout(request):
 
 
 class CustomRegisterView(View):
+
+    """
+    صفحه مربوط به رجیستر کاستومر
+    """
     template_name = 'accounts/login.html'
 
     def get(self, request):
@@ -70,6 +77,9 @@ class CustomRegisterView(View):
 
 
 class RegisterOwner(View):
+    """
+    صفحه مربوط به رجیستر مدیر
+    """
     template_name = 'accounts/owners-register.html'
 
     def get(self, request):
