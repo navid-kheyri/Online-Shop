@@ -6,8 +6,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Modernize Free</title>
-  <link rel="shortcut icon" type="image/png" href={% static "assest3/images/logos/favicon.png" %} />
-  <link rel="stylesheet" href={% static "assest3/css/styles.min.css" %} />
+  <link rel="shortcut icon" type="image/png" href={% static ".assets3/images/logos/favicon.png" %} />
+  <link rel="stylesheet" href={% static "assets3/css/styles.min.css" %} />
 </head>
 
 <body>
@@ -19,8 +19,8 @@
       <!-- Sidebar scroll-->
       <div>
         <div class="brand-logo d-flex align-items-center justify-content-between">
-          <a href="dashboard/admin-dashboard.html"  class="text-nowrap logo-img">
-            <img src={% static "assest3/images/logos/dark-logo.svg" %} width="180" alt="" />
+          <a href="./index.html" class="text-nowrap logo-img">
+            <img src={% static "assets3/images/logos/dark-logo.svg" %} width="180" alt="" />
           </a>
           <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
             <i class="ti ti-x fs-8"></i>
@@ -34,7 +34,7 @@
               <span class="hide-menu">Home</span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="dashboard/admin-dashboard.html"  aria-expanded="false">
+              <a class="sidebar-link" href="./index.html" aria-expanded="false">
                 <span>
                   <i class="ti ti-layout-dashboard"></i>
                 </span>
@@ -46,7 +46,7 @@
               <span class="hide-menu">UI COMPONENTS</span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="dashboard/ui-buttons.html" aria-expanded="false">
+              <a class="sidebar-link" href="./ui-buttons.html" aria-expanded="false">
                 <span>
                   <i class="ti ti-article"></i>
                 </span>
@@ -54,7 +54,7 @@
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="dashboard/ui-alerts.html" aria-expanded="false">
+              <a class="sidebar-link" href="./ui-alerts.html" aria-expanded="false">
                 <span>
                   <i class="ti ti-alert-circle"></i>
                 </span>
@@ -62,7 +62,7 @@
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="dashboard/ui-card.html" aria-expanded="false">
+              <a class="sidebar-link" href="./ui-card.html" aria-expanded="false">
                 <span>
                   <i class="ti ti-cards"></i>
                 </span>
@@ -70,7 +70,7 @@
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="dashbaord/ui-forms.html" aria-expanded="false">
+              <a class="sidebar-link" href="./ui-forms.html" aria-expanded="false">
                 <span>
                   <i class="ti ti-file-description"></i>
                 </span>
@@ -78,19 +78,27 @@
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="dashboard/ui-typography.html" aria-expanded="false">
+              <a class="sidebar-link" href="./ui-forms.html" aria-expanded="false">
+                <span>
+                  <i class="ti ti-file-description"></i>
+                </span>
+                <span class="hide-menu">Add Employee</span>
+              </a>
+            </li>
+            {% comment %} <li class="sidebar-item">
+              <a class="sidebar-link" href="./ui-typography.html" aria-expanded="false">
                 <span>
                   <i class="ti ti-typography"></i>
                 </span>
                 <span class="hide-menu">Typography</span>
               </a>
-            </li>
+            </li> {% endcomment %}
             <li class="nav-small-cap">
               <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
               <span class="hide-menu">AUTH</span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="dashboard/authentication-login.html" aria-expanded="false">
+              <a class="sidebar-link" href="./authentication-login.html" aria-expanded="false">
                 <span>
                   <i class="ti ti-login"></i>
                 </span>
@@ -98,7 +106,7 @@
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="dashboard/authentication-register.html" aria-expanded="false">
+              <a class="sidebar-link" href="./authentication-register.html" aria-expanded="false">
                 <span>
                   <i class="ti ti-user-plus"></i>
                 </span>
@@ -110,7 +118,7 @@
               <span class="hide-menu">EXTRA</span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="dashboard/icon-tabler.html" aria-expanded="false">
+              <a class="sidebar-link" href="./icon-tabler.html" aria-expanded="false">
                 <span>
                   <i class="ti ti-mood-happy"></i>
                 </span>
@@ -118,7 +126,7 @@
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="dashboard/sample-page.html" aria-expanded="false">
+              <a class="sidebar-link" href="./sample-page.html" aria-expanded="false">
                 <span>
                   <i class="ti ti-aperture"></i>
                 </span>
@@ -133,7 +141,7 @@
                 <a href="https://adminmart.com/product/modernize-bootstrap-5-admin-template/" target="_blank" class="btn btn-primary fs-2 fw-semibold lh-sm">Buy Pro</a>
               </div>
               <div class="unlimited-access-img">
-                <img src={% static "assest3/images/backgrounds/rocket.png" %} alt="" class="img-fluid">
+                <img src={% static "assets3/images/backgrounds/rocket.png" %} alt="" class="img-fluid">
               </div>
             </div>
           </div>
@@ -163,11 +171,11 @@
           </ul>
           <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
             <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-              <a href="https://adminmart.com/product/modernize-free-bootstrap-admin-" target="_blank" class="btn btn-primary">Download Free</a>
+              <a href="https://adminmart.com/product/modernize-free-bootstrap-admin-dashboard/" target="_blank" class="btn btn-primary">Download Free</a>
               <li class="nav-item dropdown">
                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                   aria-expanded="false">
-                  <img src={% static "assest3/images/profile/user-1.jpg" %} alt="" width="35" height="35" class="rounded-circle">
+                  <img src={% static "assets3/images/profile/user-1.jpg" %} alt="" width="35" height="35" class="rounded-circle">
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                   <div class="message-body">
@@ -183,7 +191,7 @@
                       <i class="ti ti-list-check fs-6"></i>
                       <p class="mb-0 fs-3">My Task</p>
                     </a>
-                    <a href={% static "authentication-login.html" %} class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                    <a href="./authentication-login.html" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
                   </div>
                 </div>
               </li>
@@ -459,7 +467,7 @@
           <div class="col-sm-6 col-xl-3">
             <div class="card overflow-hidden rounded-2">
               <div class="position-relative">
-                <a href="javascript:void(0)"><img src={% static "assest3/images/products/s4.jpg" %} class="card-img-top rounded-0" alt="..."></a>
+                <a href="javascript:void(0)"><img src={% static "assets3/images/products/s4.jpg" %} class="card-img-top rounded-0" alt="..."></a>
                 <a href="javascript:void(0)" class="bg-primary rounded-circle p-2 text-white d-inline-flex position-absolute bottom-0 end-0 mb-n3 me-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add To Cart"><i class="ti ti-basket fs-4"></i></a>                      </div>
               <div class="card-body pt-3 p-4">
                 <h6 class="fw-semibold fs-4">Boat Headphone</h6>
@@ -479,7 +487,7 @@
           <div class="col-sm-6 col-xl-3">
             <div class="card overflow-hidden rounded-2">
               <div class="position-relative">
-                <a href="javascript:void(0)"><img src={% static "assest3/images/products/s5.jpg" %} class="card-img-top rounded-0" alt="..."></a>
+                <a href="javascript:void(0)"><img src={% static "assets3/images/products/s5.jpg" %} class="card-img-top rounded-0" alt="..."></a>
                 <a href="javascript:void(0)" class="bg-primary rounded-circle p-2 text-white d-inline-flex position-absolute bottom-0 end-0 mb-n3 me-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add To Cart"><i class="ti ti-basket fs-4"></i></a>                      </div>
               <div class="card-body pt-3 p-4">
                 <h6 class="fw-semibold fs-4">MacBook Air Pro</h6>
@@ -499,7 +507,7 @@
           <div class="col-sm-6 col-xl-3">
             <div class="card overflow-hidden rounded-2">
               <div class="position-relative">
-                <a href="javascript:void(0)"><img src={% static "assest3/images/products/s7.jpg" %} class="card-img-top rounded-0" alt="..."></a>
+                <a href="javascript:void(0)"><img src={% static "assets3/images/products/s7.jpg" %} class="card-img-top rounded-0" alt="..."></a>
                 <a href="javascript:void(0)" class="bg-primary rounded-circle p-2 text-white d-inline-flex position-absolute bottom-0 end-0 mb-n3 me-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add To Cart"><i class="ti ti-basket fs-4"></i></a>                      </div>
               <div class="card-body pt-3 p-4">
                 <h6 class="fw-semibold fs-4">Red Valvet Dress</h6>
@@ -519,7 +527,7 @@
           <div class="col-sm-6 col-xl-3">
             <div class="card overflow-hidden rounded-2">
               <div class="position-relative">
-                <a href="javascript:void(0)"><img src={% static "assest3/images/products/s11.jpg" %} class="card-img-top rounded-0" alt="..."></a>
+                <a href="javascript:void(0)"><img src={% static "assets3/images/products/s11.jpg" %} class="card-img-top rounded-0" alt="..."></a>
                 <a href="javascript:void(0)" class="bg-primary rounded-circle p-2 text-white d-inline-flex position-absolute bottom-0 end-0 mb-n3 me-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add To Cart"><i class="ti ti-basket fs-4"></i></a>                      </div>
               <div class="card-body pt-3 p-4">
                 <h6 class="fw-semibold fs-4">Cute Soft Teddybear</h6>
@@ -543,13 +551,13 @@
       </div>
     </div>
   </div>
-  <script src={% static "assest3/libs/jquery/dist/jquery.min.js" %}></script>
-  <script src={% static "assest3/libs/bootstrap/dist/js/bootstrap.bundle.min.js" %}></script>
-  <script src={% static "assest3/js/sidebarmenu.js" %}></script>
-  <script src={% static "assest3/js/app.min.js" %}></script>
-  <script src={% static "assest3/libs/apexcharts/dist/apexcharts.min.js" %}></script>
-  <script src={% static "assest3/libs/simplebar/dist/simplebar.js" %}></script>
-  <script src={% static "assest3/js/dashboard.js" %}></script>
+  <script src={% static "assets3/libs/jquery/dist/jquery.min.js" %}></script>
+  <script src={% static "assets3/libs/bootstrap/dist/js/bootstrap.bundle.min.js" %}></script>
+  <script src={% static "assets3/js/sidebarmenu.js" %}></script>
+  <script src={% static "assets3/js/app.min.js" %}></script>
+  <script src={% static "assets3/libs/apexcharts/dist/apexcharts.min.js" %}></script>
+  <script src={% static "assets3/libs/simplebar/dist/simplebar.js" %}></script>
+  <script src={% static "assets3/js/dashboard.js" %}></script>
 </body>
 
 </html>

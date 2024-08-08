@@ -21,6 +21,11 @@ class Vendor(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def save(self, *args, **kwargs):
+        if not self.status:
+            self.status = True
+        super().save(*args, **kwargs)
 
 
 class VendorImage(models.Model):
