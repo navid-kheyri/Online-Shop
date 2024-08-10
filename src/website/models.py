@@ -30,10 +30,12 @@ class Product(models.Model):
         max_digits=10, decimal_places=0, blank=True, null=True)
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     updated_at = jmodels.jDateTimeField(auto_now=True)
+    average_rating = models.DecimalField(
+        max_digits=3, decimal_places=2, default=0.00)
     category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, related_name="products")
-    vendor = models.ForeignKey(
-        Vendor, on_delete=models.CASCADE, related_name='products')
+        Category, on_delete=models.CASCADE, related_name="category_products")
+    vendor = models.ManyToManyField(
+        Vendor, on_delete=models.CASCADE, related_name='vendor_products')
 
     def __str__(self):
         return self.name
@@ -57,12 +59,16 @@ class Rating(models.Model):
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     updated_at = jmodels.jDateTimeField(auto_now=True)
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='ratings')
+        User, on_delete=models.CASCADE, related_name='user_ratings')
     product = models.ForeignKey(
-        Product, on_delete=models.CASCADE, related_name='ratings')
+        Product, on_delete=models.CASCADE, related_name='product_ratings')
 
     def __str__(self):
         return self.rating
+    
+    #TODO later
+    def add_avg_rate_to_prod(self):
+        pass
 
 
 class Comment(models.Model):
@@ -70,9 +76,9 @@ class Comment(models.Model):
     description = models.TextField()
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='comments')
+        User, on_delete=models.CASCADE, related_name='user_comments')
     product = models.ForeignKey(
-        Product, on_delete=models.CASCADE, related_name='comments')
+        Product, on_delete=models.CASCADE, related_name='Product_comments')
 
     def __str__(self):
         return self.title
