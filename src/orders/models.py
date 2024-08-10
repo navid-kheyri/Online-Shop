@@ -12,9 +12,11 @@ class OrderItem(models.Model):
     quantity = models.PositiveIntegerField()
     item_total_price = models.DecimalField(max_digits=10, decimal_places=2)
     product = models.ForeignKey(
-        Product, on_delete=models.DO_NOTHING, related_name="order")
+        Product, on_delete=models.DO_NOTHING, related_name="product_item")
     cart = models.ForeignKey(
-        'Cart', on_delete=models.DO_NOTHING, related_name='order')
+        'Cart', on_delete=models.DO_NOTHING, related_name='cart_item')
+    order = models.ForeignKey(
+        'Order', on_delete=models.DO_NOTHING, related_name='order_item')
 
     def total_price(self):
         total = self.product.price * self.quantity
@@ -25,13 +27,8 @@ class OrderItem(models.Model):
 
 
 class Cart(models.Model):
-    class Status(models.TextChoices):
-        ACTIVE = 'AC', 'Active'
-        PAID = 'PD', 'Paid'
 
     created_at = jmodels.jDateTimeField(auto_now_add=True)
-    status = models.CharField(
-        max_length=2, choices=Status.choices, default=Status.ACTIVE)
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='cart')
 
@@ -40,6 +37,27 @@ class Cart(models.Model):
 
     def get_total_amount(self):
         total = sum(item.product.price *
-                    item.quantity for item in self.order.all())
+                    item.quantity for item in self.product_item.all())
 
         return total
+
+
+class Order(models.Model):
+    created_at = jmodels.jDateTimeField(auto_now_add=True)
+    updated_at = models.jDateTimeField(auto_now=True)
+    is_paid = models.BooleanField(default=False)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='order')
+    
+    def __str__(self):
+        return self.pk
+    
+    def get_total_amount(self):
+        total = sum(item.product.price *
+                    item.quantity for item in self.product_item.all())
+        return total
+    
+
+    #TODO
+    def get_address(self):
+        pass
