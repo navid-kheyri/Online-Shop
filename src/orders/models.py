@@ -44,7 +44,7 @@ class Cart(models.Model):
 
 class Order(models.Model):
     created_at = jmodels.jDateTimeField(auto_now_add=True)
-    updated_at = models.jDateTimeField(auto_now=True)
+    updated_at = jmodels.jDateTimeField(auto_now=True)
     is_paid = models.BooleanField(default=False)
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='order')

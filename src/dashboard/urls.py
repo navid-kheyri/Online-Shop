@@ -5,5 +5,6 @@ app_name='dashboard'
 
 urlpatterns = [
     path('customer/<pk>/detailes/',CustomerDetailView.as_view(),name='user'),
-    path('create_vendor/',OwnerDashboardView.as_view(),name='owner-dashboard')
+    path('owner_dashboard/',OwnerDashboardView.as_view(),name='owner-dashboard'),
+    
 ]

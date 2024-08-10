@@ -32,14 +32,14 @@ class VendorCreateView(CreateView):
         form.save()
         return response
 
-class EmplpyeeCreateView(CreateView):
+class AddEmployeeCreateView(CreateView):
     """
     این کلاس برای ایجاد منیجر و اوپراتور توسط مدیر نوشته شده است.
     """
     model=User
-    template_name='test.html'
+    template_name='shop/add-employee.html'
     form_class=UserModelForm
-    success_url=reverse_lazy("website:index")
+    success_url=reverse_lazy("dashboard:owner-dashboard")
 
     def get_form_kwargs(self):
         """

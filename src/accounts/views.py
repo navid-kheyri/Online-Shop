@@ -109,6 +109,7 @@ class RegisterOwner(View):
             user.is_staff = True
 
             user.save()
-            return redirect('vendor:create_vendor')
+            return redirect('dashboard:owner-dashboard')
+            # return redirect('vendors:create_vendor')
 
         return render(request, self.template_name, context={'message': message})

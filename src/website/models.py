@@ -35,7 +35,7 @@ class Product(models.Model):
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, related_name="category_products")
     vendor = models.ManyToManyField(
-        Vendor, on_delete=models.CASCADE, related_name='vendor_products')
+        Vendor, related_name='vendor_products')
 
     def __str__(self):
         return self.name
@@ -65,8 +65,8 @@ class Rating(models.Model):
 
     def __str__(self):
         return self.rating
-    
-    #TODO later
+
+    # TODO later
     def add_avg_rate_to_prod(self):
         pass
 
