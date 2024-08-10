@@ -64,11 +64,11 @@
         <div class="container-fluid">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title fw-semibold mb-4">Forms</h5>
+              <h5 class="card-title fw-semibold mb-4">Add New Empolyee</h5>
               <div class="card">
                 <div class="card-body">
-                  <form>
-                    <div class="mb-3">
+                  <form method="post" action="{% url 'vendors:add-employee' %}">
+                    {% comment %} <div class="mb-3">
                       <label for="exampleInputEmail1" class="form-label">Email address</label>
                       <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
                       <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
@@ -80,12 +80,18 @@
                     <div class="mb-3 form-check">
                       <input type="checkbox" class="form-check-input" id="exampleCheck1">
                       <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                    </div>
+                    </div> {% endcomment %}
+                    {% csrf_token %}
+                    {% for field in form %}
+                        {{ field.label_tag }}
+                        {{ field }}<br><br>
+                    {% endfor %}
+                
                     <button type="submit" class="btn btn-primary">Submit</button>
                   </form>
                 </div>
               </div>
-              <h5 class="card-title fw-semibold mb-4">Disabled forms</h5>
+              {% comment %} <h5 class="card-title fw-semibold mb-4">Disabled forms</h5>
               <div class="card mb-0">
                 <div class="card-body">
                   <form>
@@ -111,7 +117,7 @@
                       </div>
                       <button type="submit" class="btn btn-primary">Submit</button>
                     </fieldset>
-                  </form>
+                  </form> {% endcomment %}
                 </div>
               </div>
             </div>

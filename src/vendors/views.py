@@ -10,17 +10,16 @@ User = get_user_model()
 
 # Create your views here.
 
-class CreateVendor (View):
-    def get(self,request):
-        pass
-        # return render(request,'dashboard/owner-dashboard.html')
-        # return render(request,'test.html')
+
     
-class VendorCreateView(CreateView):
+class AddVendorCreateView(CreateView):
+    """
+    این کلاس برای ایجاد فروشگاه جدید نوشته شده است.
+    """
     model=Vendor
-    template_name='test.html'
+    template_name='shop/add-vendor.html'
     form_class=VendorModelForms
-    success_url=reverse_lazy("website:index")
+    success_url=reverse_lazy("dashboard:owner-dashboard")
 
     def form_valid(self,form):
         """

@@ -30,14 +30,14 @@
                 <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                 <span class="hide-menu">UI COMPONENTS</span>
               </li>
-              <li class="sidebar-item">
+              {% comment %} <li class="sidebar-item">
                 <a class="sidebar-link" href="./ui-buttons.html" aria-expanded="false">
                   <span>
                     <i class="ti ti-article"></i>
                   </span>
                   <span class="hide-menu">Buttons</span>
                 </a>
-              </li>
+              </li> {% endcomment %}
               <li class="sidebar-item">
                 <a class="sidebar-link" href="./ui-alerts.html" aria-expanded="false">
                   <span>
@@ -55,11 +55,11 @@
                 </a>
               </li>
               <li class="sidebar-item">
-                <a class="sidebar-link" href="./ui-forms.html" aria-expanded="false">
+                <a class="sidebar-link" href="{% url 'vendors:create-vendor' %}" aria-expanded="false">
                   <span>
                     <i class="ti ti-file-description"></i>
                   </span>
-                  <span class="hide-menu">Forms</span>
+                  <span class="hide-menu">Add Vendor</span>
                 </a>
               </li>
               <li class="sidebar-item">
@@ -67,7 +67,15 @@
                   <span>
                     <i class="ti ti-file-description"></i>
                   </span>
-                  <span class="hide-menu">Add Employee</span>
+                  <span class="hide-menu">Add New Employee</span>
+                </a>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="{% url 'vendors:add-employee' %}" aria-expanded="false">
+                  <span>
+                    <i class="ti ti-file-description"></i>
+                  </span>
+                  <span class="hide-menu">My Employees</span>
                 </a>
               </li>
               {% comment %} <li class="sidebar-item">
