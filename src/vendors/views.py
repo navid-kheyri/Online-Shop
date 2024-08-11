@@ -58,3 +58,6 @@ class AddEmployeeCreateView(CreateView):
         self.object.is_staff=True
         form.save()
         return response
+    
+def test(request):
+    return render(request,'shop/category.html')
