@@ -42,15 +42,15 @@ class Product(models.Model):
 
 
 class ProductImage(models.Model):
-    title = models.CharField(max_length=100)
-    description = models.TextField()
+    title = models.CharField(max_length=100, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to='product/%Y/%m/%d/')
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     product = models.ForeignKey(
         Product, on_delete=models.DO_NOTHING, related_name="images")
 
     def __str__(self):
-        return self.title
+        return self.image
 
 
 class Rating(models.Model):

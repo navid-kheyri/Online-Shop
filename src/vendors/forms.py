@@ -1,5 +1,6 @@
 from django import forms
-from .models import Vendor
+from .models import Vendor, VendorImage
+from accounts.models import UserImage
 from django.contrib.auth import get_user_model
 
 
@@ -7,20 +8,35 @@ User = get_user_model()
 
 
 class VendorModelForms(forms.ModelForm):
+    input_image = forms.ImageField(label='Image')
+
     class Meta:
-        model=Vendor
-        exclude=['user','status']
+        model = Vendor
+        exclude = ['user', 'status']
+
+    def save(self, commit=True):
+        vendor = super().save(commit=False)
+        if commit:
+            vendor.save()
+            VendorImage.objects.create(
+                vendor=vendor, image=self.cleaned_data['input_image'])
+        return vendor
+
 
 class UserModelForm(forms.ModelForm):
     """
     اینجا نمیدونم چرا فیلد پسورد داخل فیلد، عدد نشون میداد که مجبور شدم بصوزت دستی ایجاد و اورراید کنم؟؟؟؟
     """
     password = forms.CharField(widget=forms.PasswordInput(), label="Password")
-    confirm_password = forms.CharField(widget=forms.PasswordInput(), label="Confirm Password")
+    confirm_password = forms.CharField(
+        widget=forms.PasswordInput(), label="Confirm Password")
+    input_image = forms.ImageField(label='Image')
+
     class Meta:
-        model=User
-        fields=['email','phone_number','password','confirm_password','first_name','last_name','age','city','user_type']
-        
+        model = User
+        fields = ['email', 'phone_number', 'password', 'confirm_password',
+                  'first_name', 'last_name', 'age', 'city', 'user_type', 'input_image']
+
     def __init__(self, *args, **kwargs):
         """
         init در اینجا چویس های ما را که 5 تا بود
@@ -33,6 +49,14 @@ class UserModelForm(forms.ModelForm):
                 ('manager', 'Manager'),
                 ('operator', 'Operator')
             ]
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        if commit:
+            user.save()
+            UserImage.objects.create(
+                user=user, image=self.cleaned_data['input_image'])
+        return user
 
     def clean(self):
         cleaned_data = super().clean()

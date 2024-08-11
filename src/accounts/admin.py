@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .forms import CustomUserCreationForm, CustomUserChangeForm
+from .models import UserImage
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -41,3 +42,7 @@ class CustomUserAdmin(BaseUserAdmin):
 
 
 admin.site.register(User, CustomUserAdmin)
+
+@admin.register(UserImage)
+class UserImageModelAdmin(admin.ModelAdmin):
+    list_display=['title','image','created_at','user']

@@ -3,6 +3,7 @@ from django.urls import reverse_lazy
 from django.views.generic import View
 from django.views.generic import CreateView
 from .models import Vendor
+from accounts.models import UserImage
 from .forms import VendorModelForms,UserModelForm
 from django.contrib.auth import get_user_model
 
@@ -54,6 +55,9 @@ class AddEmployeeCreateView(CreateView):
         """
         در اینجا هنگام ایجاد کارمند استف را ترو میکنیم
         """
+        # form_data = form.cleaned_data
+        # category = Categories.objects.create(name=form_data['name'], description=form_data['description'])
+        # UserImage.objects.create(category=category, image=form_data['input_image'])
         response = super().form_valid(form)
         self.object.is_staff=True
         form.save()

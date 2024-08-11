@@ -67,7 +67,7 @@
               <h5 class="card-title fw-semibold mb-4">Forms</h5>
               <div class="card">
                 <div class="card-body">
-                  <form method="post" action="{% url 'vendors:create-vendor' %}">
+                  <form method="post" action="{% url 'vendors:create-vendor' %}" enctype="multipart/form-data">
                     {% comment %} <div class="mb-3">
                       <label for="exampleInputEmail1" class="form-label">Email address</label>
                       <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
