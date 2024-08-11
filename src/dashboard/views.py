@@ -1,8 +1,9 @@
 from django.shortcuts import render
-from django.views.generic import DetailView,CreateView
+from django.views.generic import DetailView,CreateView,ListView
 from django.contrib.auth import get_user_model
 from django.urls import reverse_lazy
 from django.views.generic import View
+from vendors.models import Vendor
 
 User = get_user_model()
 
@@ -25,11 +26,26 @@ class CustomerDetailView (DetailView):
         context['user']=user
         return context
 
-class OwnerDashboardView (View):
+# class OwnerDashboardView (View):
+#     """
+#     برای نشان دادن داشبورد مدیز
+#     """
+#     #TODO complet this
+#     def get(self,request):
+#         return render(request,'dashboard/owner-dashboard.html')
+#         # return render(request,'test.html')
+
+
+class MyVendorListView(ListView):
     """
-    برای نشان دادن داشبورد مدیز
+    برای دیدن فروشگاه های خود
     """
-    #TODO complet this
-    def get(self,request):
-        return render(request,'dashboard/owner-dashboard.html')
-        # return render(request,'test.html')
+    model=Vendor
+    template_name='dashboard/owner-dashboard.html'
+
+    def get_context_data(self, **kwargs):
+        context=super().get_context_data(**kwargs)
+        user=self.request.user
+        vendor=Vendor.objects.prefetch_related('user').filter(user=user.id)
+        context['vendor']=vendor
+        return context

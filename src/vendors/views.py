@@ -1,9 +1,7 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import View
-from django.views.generic import CreateView
+from django.views.generic import CreateView,DetailView,ListView
 from .models import Vendor
-from accounts.models import UserImage
 from .forms import VendorModelForms,UserModelForm
 from django.contrib.auth import get_user_model
 
@@ -62,9 +60,4 @@ class AddEmployeeCreateView(CreateView):
         self.object.is_staff=True
         form.save()
         return response
-
-
-
-
-def test(request):
-    return render(request,'shop/category.html')
+    

@@ -9,8 +9,8 @@ class AddProductModelForm(forms.ModelForm):
     input_image = forms.ImageField(label='Image')
 
     class Meta:
-        mode = Product
-        fields = '__all__'
+        model = Product
+        exclude=['average_rating']
 
     def save(self, commit=True):
         product = super().save(commit=False)

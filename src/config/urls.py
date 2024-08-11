@@ -25,7 +25,6 @@ urlpatterns = [
     path('accounts/',include('accounts.urls')),
     path('dashboard/',include('dashboard.urls')),
     path('vendor/',include('vendors.urls')),
-    path('website/',include('website.urls')),
 ]
 
 

@@ -6,10 +6,9 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="{% url 'vendors:create_vendor' %}" method="post">
-        {% csrf_token %}
-        {{form.as_p}}
-        <input type="submit" value="add vendor">
+    {% for shop in vendor  %}
+    {{shop}}
+    {% endfor %}
     </form>
 </body>
 </html>
