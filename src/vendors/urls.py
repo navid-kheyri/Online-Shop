@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import AddVendorCreateView,AddEmployeeCreateView,test
+from .views import AddVendorCreateView,AddEmployeeCreateView,AddProductCreateView,test
 
 app_name='vendors'
 
