@@ -50,16 +50,20 @@
           <li class="nav-small-cap">
             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
             <span class="hide-menu">My Vendors</span>
+            <h6>{% if not vendor %}No vendor yet :({% endif %}</h6>
           </li>
           {% for shop in vendor  %}
+          
           <li class="sidebar-item">
-            <a class="sidebar-link" href="{% url 'dashboard:owner-dashboard'  %}" aria-expanded="false">
+            <a class="sidebar-link" href="{% url 'vendors:my-vendor' shop.pk %}" aria-expanded="false">
               <span>
                 <i class="ti ti-file-description"></i>  
               </span>
               <span class="hide-menu">{{shop.name}}</span>
             </a>
-          </li>{% endfor %}
+          </li>
+          {% endfor %}
+          
          
           
           {% comment %} <li class="nav-small-cap">

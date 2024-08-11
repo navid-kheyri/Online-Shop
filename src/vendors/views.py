@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView,DetailView,ListView
+from django.views.generic import CreateView,DetailView
 from .models import Vendor
 from .forms import VendorModelForms,UserModelForm
 from django.contrib.auth import get_user_model
@@ -61,3 +61,13 @@ class AddEmployeeCreateView(CreateView):
         form.save()
         return response
     
+
+class MyVendorDetatilView(DetailView):
+    model = Vendor
+    template_name='shop/my-vendors.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        vendor=self.object
+        context['vendor']=vendor
+        return context
