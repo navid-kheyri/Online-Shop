@@ -4,9 +4,10 @@ from django.views.generic import View
 from django.views.generic import UpdateView
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth import get_user_model
 from .forms import *
-from vendors.forms import UserModelForm
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.views import PasswordChangeView
+from django.contrib.auth import get_user_model
 User = get_user_model()
 
 # Create your views here.
@@ -120,6 +121,9 @@ class RegisterOwner(View):
 
 
 class EmployeeUpdateView(UpdateView):
+    """
+    برای آپدیت کردن اطلاعات کارمندان
+    """
     model = User
     template_name = 'accounts/edit-employee.html'
     success_url = reverse_lazy('dashboard:owner-dashboard')
@@ -132,3 +136,9 @@ class EmployeeUpdateView(UpdateView):
         kwargs = super().get_form_kwargs()
         kwargs['request'] = self.request
         return kwargs
+
+
+class ChangePasswordView(PasswordChangeView):
+    form_class=PasswordChangeForm
+    success_url = reverse_lazy('dashboard:owner-dashboard')
+    template_name='accounts/change-password.html'
