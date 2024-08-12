@@ -35,7 +35,9 @@ class CustomLoginView(View):
 
         return render(request, self.template_name)
 
-#TODO CBV later
+# TODO CBV later
+
+
 @login_required
 def my_logout(request):
     logout(request)
@@ -115,3 +117,18 @@ class RegisterOwner(View):
             # return redirect('vendors:create_vendor')
 
         return render(request, self.template_name, context={'message': message})
+
+
+class EmployeeUpdateView(UpdateView):
+    model = User
+    template_name = 'accounts/edit-employee.html'
+    success_url = reverse_lazy('dashboard:owner-dashboard')
+    form_class = CustomUserChangeForm
+
+    def get_form_kwargs(self):
+        """
+        در اینجا ما در واقع  ریکوئست را به فرم پاس میدهیم  
+        """
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
