@@ -47,10 +47,18 @@
               <span class="hide-menu">Add Vendor</span>
             </a>
           </li>
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'accounts:edit-employee' request.user.pk %}" aria-expanded="false">
+              <span>
+                <i class="ti ti-file-description"></i>
+              </span>
+              <span class="hide-menu">edit profile</span>
+            </a>
+          </li>
           <li class="nav-small-cap">
             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
             <span class="hide-menu">My Vendors</span>
-            <h6>{% if not vendor %}No vendor yet :({% endif %}</h6>
+            {% comment %} <h6>{% if not vendor %}No vendor yet :({% endif %}</h6> {% endcomment %}
           </li>
           {% for shop in vendor  %}
           

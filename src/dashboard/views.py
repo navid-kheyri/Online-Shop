@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import DetailView,CreateView,ListView
+from django.views.generic import DetailView,CreateView,ListView,UpdateView
 from django.contrib.auth import get_user_model
 from django.urls import reverse_lazy
 from django.views.generic import View
