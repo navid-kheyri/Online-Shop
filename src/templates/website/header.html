@@ -150,12 +150,14 @@
                     <div class="dropdown-menu">
                         <nav class="side-nav">
                             <ul class="menu-vertical sf-arrows">
-                                <li class="item-lead"><a href="#">Daily offers</a></li>
-                                <li class="item-lead"><a href="#">Gift Ideas</a></li>
-                                <li><a href="#">Beds</a></li>
-                                <li><a href="#">Lighting</a></li>
+                                {% comment %} <li class="item-lead"><a href="#">Daily offers</a></li>
+                                <li class="item-lead"><a href="#">Gift Ideas</a></li> {% endcomment %}
+                                {% for cat in category  %}
+                                <li><a href="{% url '' cat.pk %}">{{cat.name}}</a></li>
+                                {% endfor %}
+                                {% comment %} <li><a href="#">Lighting</a></li>
                                 <li><a href="#">Sofas & Sleeper sofas</a></li>
-                                <li><a href="#">Outdoor Furniture </a></li>
+                                <li><a href="#">Outdoor Furniture </a></li> {% endcomment %}
                             </ul><!-- End .menu-vertical -->
                         </nav><!-- End .side-nav -->
                     </div><!-- End .dropdown-menu -->
