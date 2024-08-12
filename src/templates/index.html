@@ -5,33 +5,43 @@
 {% endblock title %}
 
 {% block header %}
-{% include "website/header.html" %}
+{% include "website/header.html" with category=category %}
 {% endblock header %}
 
 {% block content %}
 <div class="page-wrapper">
 
-
     <main class="main">
         <div class="mb-4"></div><!-- End .mb-4 -->
         <div class="container">
-            <h2 class="title text-center mb-4">Explore Popular Categories</h2><!-- End .title text-center -->
+            <div class="heading heading-flex mb-3">
+                <div class="heading-left">
+                    <h2 class="title">Explore Categories </h2><!-- End .title -->
+                </div><!-- End .heading-left -->
+
+               <div class="heading-right">
+                    <a href="{% url 'website:all-categories' %}" class="title-link">View All Categories <i class="icon-long-arrow-right"></i></a>
+               </div><!-- End .heading-right -->
+            </div><!-- End .heading -->
+            
+            {% comment %} <h2 class="title text-center mb-4">Explore Popular Categories</h2><!-- End .title text-center --> {% endcomment %}
             
             <div class="cat-blocks-container">
                 <div class="row">
+                    {% for cat in categories|slice:'0:6' %}
                     <div class="col-6 col-sm-4 col-lg-2">
                         <a href="category.html" class="cat-block">
                             <figure>
                                 <span>
-                                    <img src={% static "assets/images/demos/demo-4/cats/1.png" %} alt="Category image">
+                                    <img src={{cat.image.url}} alt="Category image">
                                 </span>
                             </figure>
 
-                            <h3 class="cat-block-title">Computer & Laptop</h3><!-- End .cat-block-title -->
+                            <h3 class="cat-block-title">{{cat.name}}</h3><!-- End .cat-block-title -->
                         </a>
                     </div><!-- End .col-sm-4 col-lg-2 -->
-
-                    <div class="col-6 col-sm-4 col-lg-2">
+                    {% endfor %}
+                    {% comment %} <div class="col-6 col-sm-4 col-lg-2">
                         <a href="category.html" class="cat-block">
                             <figure>
                                 <span>
@@ -89,7 +99,7 @@
 
                             <h3 class="cat-block-title">Smart Watches</h3><!-- End .cat-block-title -->
                         </a>
-                    </div><!-- End .col-sm-4 col-lg-2 -->
+                    </div><!-- End .col-sm-4 col-lg-2 --> {% endcomment %}
                 </div><!-- End .row -->
             </div><!-- End .cat-blocks-container -->
         </div><!-- End .container -->

@@ -1,7 +1,7 @@
 from django.db.models.query import QuerySet
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView,ListView
+from django.views.generic import CreateView,ListView,DetailView
 from .models import Product,Category
 from vendors.models import Vendor
 from .forms import AddProductModelForm
@@ -27,14 +27,36 @@ def index(request):
 class IndexListView(ListView):
     template_name='index.html'
     model=Product
-    context_object_name='product'
 
-    def get_queryset(self):
-        category=Category.objects.all()
-        return category
+    # def get_queryset(self):
+    #     category=Category.objects.all()
+    #     return category
 
     
+    # def get_context_data(self, **kwargs):
+    #     context=super().get_context_data(**kwargs)
+    #     context['category']=self.get_queryset()
+    #     return context
+
+class CategoryDetailView(DetailView):
+    model=Category
+    template_name='shop/category.html'
+
     def get_context_data(self, **kwargs):
         context=super().get_context_data(**kwargs)
-        context['category']=self.get_queryset()
+        category=self.object
+        category_product=category.category_products.all()
+        for prod in category_product:
+            image=prod.images.all()
+        
+        context['category_product']=category_product
+        context['image']=image
+        
         return context
+    
+class AllCategoriesListView(ListView):
+    """
+    برای دیدن دسته بندی ها در صفحه all categories
+    """
+    model=Category
+    template_name='website/all-categories.html'

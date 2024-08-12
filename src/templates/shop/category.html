@@ -56,12 +56,14 @@ Categories
 
                             <div class="products mb-3">
                                 <div class="row justify-content-center">
+									{% for product  in category_product %}
                                     <div class="col-6 col-md-4 col-lg-4">
                                         <div class="product product-7 text-center">
                                             <figure class="product-media">
                                                 <span class="product-label label-new">New</span>
                                                 <a href="product.html">
-                                                    <img src={% static "assets/images/products/product-4.jpg" %} alt="Product image" class="product-image">
+													
+                                                    <img src={{image.first.image.url}} alt="Product image" class="product-image">
                                                 </a>
 
                                                 <div class="product-action-vertical">
@@ -74,14 +76,14 @@ Categories
                                                     <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
                                                 </div><!-- End .product-action -->
                                             </figure><!-- End .product-media -->
-
+											
                                             <div class="product-body">
                                                 <div class="product-cat">
                                                     <a href="#">Women</a>
                                                 </div><!-- End .product-cat -->
-                                                <h3 class="product-title"><a href="product.html">Brown paperbag waist pencil skirt</a></h3><!-- End .product-title -->
+                                                <h3 class="product-title"><a href="product.html">{{product.name}}</a></h3><!-- End .product-title -->
                                                 <div class="product-price">
-                                                    $60.00
+                                                    {{product.price}}
                                                 </div><!-- End .product-price -->
                                                 <div class="ratings-container">
                                                     <div class="ratings">
@@ -89,22 +91,16 @@ Categories
                                                     </div><!-- End .ratings -->
                                                     <span class="ratings-text">( 2 Reviews )</span>
                                                 </div><!-- End .rating-container -->
-
+												{% for img in image|slice:'1:'  %}
                                                 <div class="product-nav product-nav-thumbs">
                                                     <a href="#" class="active">
-                                                        <img src={% static "assets/images/products/product-4-thumb.jpg" %} alt="product desc">
+                                                        <img src={{img.image.url}} alt="product desc">
                                                     </a>
-                                                    <a href="#">
-                                                        <img src={% static "assets/images/products/product-4-2-thumb.jpg" %} alt="product desc">
-                                                    </a>
-
-                                                    <a href="#">
-                                                        <img src={% static "assets/images/products/product-4-3-thumb.jpg" %} alt="product desc">
-                                                    </a>
+                                            {% endfor %}
                                                 </div><!-- End .product-nav -->
                                             </div><!-- End .product-body -->
                                         </div><!-- End .product -->
-                                    </div><!-- End .col-sm-6 col-lg-4 -->
+                                    </div><!-- End .col-sm-6 col-lg-4 -->{% endfor %}
                                 </div>
 
 

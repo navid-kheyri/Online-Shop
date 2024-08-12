@@ -6,8 +6,8 @@
     <title>Document</title>
 </head>
 <body>
-    {{category}}
-    {{product}}
+    {% for product  in category_product %}
+    {{product}}{% endfor %}
     </form>
 </body>
 </html>

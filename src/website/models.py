@@ -50,7 +50,7 @@ class ProductImage(models.Model):
         Product, on_delete=models.DO_NOTHING, related_name="images")
 
     def __str__(self):
-        return self.image
+        return self.image.url
 
 
 class Rating(models.Model):
