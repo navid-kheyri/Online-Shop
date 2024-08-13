@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView,DetailView,ListView,UpdateView
 from .models import Vendor
 from website.models import Product
-from .forms import VendorModelForms,UserModelForm
+from .forms import ProductDetailModelForm, VendorModelForms,UserModelForm
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -57,10 +57,11 @@ class AddEmployeeCreateView(CreateView):
         # form_data = form.cleaned_data
         # category = Categories.objects.create(name=form_data['name'], description=form_data['description'])
         # UserImage.objects.create(category=category, image=form_data['input_image'])
-        response = super().form_valid(form)
+        self.object=form.save(commit=False)
         self.object.is_staff=True
-        form.save()
-        return response
+        self.object.save()
+        form.save_m2m()
+        return super().form_valid(form)
     
 
 class MyVendorDetatilView(DetailView):
@@ -103,5 +104,15 @@ class MyProductsListView(ListView):
 class ProductUpdateView(UpdateView):
     model=Product
     template_name='shop/dashboard-product-detail.html'
-    fields=['name','quantity_in_stock','description','price','discount','average_rating','category']
+    # fields=['name','quantity_in_stock','description','price','discount','average_rating','category']
+    form_class=ProductDetailModelForm
     success_url=reverse_lazy("dashboard:owner-dashboard")
+
+    def get_form_kwargs(self):
+        """
+        در اینجا ما در واقع  ریکوئست را به فرم پاس میدهیم تا 
+        با استفاه از آن فرم به ریکویست دست پیدا کنیم 
+        """
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs

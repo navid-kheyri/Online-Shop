@@ -39,6 +39,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
               <span class="hide-menu">Buttons</span>
             </a>
           </li> {% endcomment %}
+          {% if  request.user.user_type != 'operator' %}
           <li class="sidebar-item">
             <a class="sidebar-link" href="{% url 'vendors:add-employee' %}" aria-expanded="false">
               <span>
@@ -61,6 +62,8 @@ data-sidebar-position="fixed" data-header-position="fixed">
                 <i class="ti ti-file-description"></i>
               </span>
               <span class="hide-menu">My Employees</span>
+              {% else %}
+              {% endif %}
             </a>
           </li>
           

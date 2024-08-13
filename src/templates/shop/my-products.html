@@ -44,6 +44,7 @@
                 <span class="hide-menu">Buttons</span>
               </a>
             </li> {% endcomment %}
+            {% if  request.user.user_type != 'operator' %}
             <li class="sidebar-item">
               <a class="sidebar-link" href="{% url 'vendors:add-employee' %}" aria-expanded="false">
                 <span>
@@ -68,6 +69,7 @@
                 <span class="hide-menu">My Employees</span>
               </a>
             </li>
+            {%endif%}
             <li class="sidebar-item">
               {% for vend in vendor  %}
               <a class="sidebar-link" href="{% url 'vendors:my-products' vend.pk %}" aria-expanded="false">

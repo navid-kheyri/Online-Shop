@@ -85,13 +85,16 @@ class ProductDetailModelForm(forms.ModelForm):
     class Meta:
         model=Product
         exclude=['vendor']
+        # fields=['name']
     
     def __init__(self, *args, **kwargs):
         """
         دسترسی رول های زیر را برای تغیر فیلد های داده شده میبندیم
+        self.fields یک دیکشنری از فیلد های فرم است
         """
         self.request = kwargs.pop('request', None)
         super(ProductDetailModelForm, self).__init__(*args, **kwargs)
         if self.request and (self.request.user.user_type == 'operator' or  self.request.user.user_type == 'customer'):
-            self.fields.disabled = True
+            for field in self.fields.values():
+                field.disabled = True
             

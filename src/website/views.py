@@ -55,7 +55,7 @@ class IndexListView(ListView):
     #     context['category']=self.get_queryset()
     #     return context
 
-class CategoryDetailView(DetailView):
+class CategoryProductDetailView(DetailView):
     model=Category
     template_name='shop/category.html'
 
@@ -77,3 +77,13 @@ class AllCategoriesListView(ListView):
     """
     model=Category
     template_name='website/all-categories.html'
+
+class ProductDetailView(DetailView):
+    model=Product
+    template_name='shop/product.html'
+
+    def get_context_data(self, **kwargs):
+        context= super().get_context_data(**kwargs)
+        product=self.object
+        context['product']=product
+        return context

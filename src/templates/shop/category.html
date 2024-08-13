@@ -32,6 +32,7 @@ Categories
             <div class="page-content">
                 <div class="container">
                 	<div class="row">
+						
                 		<div class="col-lg-9">
                 			<div class="toolbox">
                 				<div class="toolbox-left">
@@ -61,9 +62,9 @@ Categories
                                         <div class="product product-7 text-center">
                                             <figure class="product-media">
                                                 <span class="product-label label-new">New</span>
-                                                <a href="product.html">
+                                                <a href="{% url 'website:product-detail' product.pk %}">
 													
-                                                    <img src={{image.first.image.url}} alt="Product image" class="product-image">
+                                                    <img style='width:277px;height:277px' src={{image.first.image.url}} alt="Product image" >
                                                 </a>
 
                                                 <div class="product-action-vertical">
@@ -78,12 +79,12 @@ Categories
                                             </figure><!-- End .product-media -->
 											
                                             <div class="product-body">
-                                                <div class="product-cat">
+                                                {% comment %} <div class="product-cat">
                                                     <a href="#">Women</a>
-                                                </div><!-- End .product-cat -->
+                                                </div><!-- End .product-cat --> {% endcomment %}
                                                 <h3 class="product-title"><a href="product.html">{{product.name}}</a></h3><!-- End .product-title -->
                                                 <div class="product-price">
-                                                    {{product.price}}
+                                                    ${{product.price}}
                                                 </div><!-- End .product-price -->
                                                 <div class="ratings-container">
                                                     <div class="ratings">
@@ -99,8 +100,8 @@ Categories
                                             {% endfor %}
                                                 </div><!-- End .product-nav -->
                                             </div><!-- End .product-body -->
-                                        </div><!-- End .product -->
-                                    </div><!-- End .col-sm-6 col-lg-4 -->{% endfor %}
+                                        </div><!-- End .product -->{% endfor %}
+                                    </div><!-- End .col-sm-6 col-lg-4 -->
                                 </div>
 
 
