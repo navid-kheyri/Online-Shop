@@ -28,16 +28,23 @@ class VendorModelForms(forms.ModelForm):
 class UserModelForm(forms.ModelForm):
     """
     اینجا نمیدونم چرا فیلد پسورد داخل فیلد، عدد نشون میداد که مجبور شدم بصوزت دستی ایجاد و اورراید کنم؟؟؟؟
+    فیلد وندور فروشگاهای کارنت یوزر رو میده
     """
     password = forms.CharField(widget=forms.PasswordInput, label="Password")
     confirm_password = forms.CharField(
         widget=forms.PasswordInput, label="Confirm Password")
     input_image = forms.ImageField(label='Image')
 
+    vendors = forms.ModelMultipleChoiceField(
+        queryset=Vendor.objects.all(),
+        required=True,
+        label="Vendors"
+    )
+
     class Meta:
         model = User
         fields = ['email', 'phone_number', 'password', 'confirm_password',
-                  'first_name', 'last_name', 'age', 'city', 'user_type', 'input_image']
+                  'first_name', 'last_name', 'age', 'city', 'user_type', 'input_image','vendors']
 
     def __init__(self, *args, **kwargs):
         """
@@ -46,11 +53,12 @@ class UserModelForm(forms.ModelForm):
         """
         self.request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)
-        if self.request and self.request.user.user_type == 'owner':
+        if self.request and (self.request.user.user_type == 'owner' or self.request.user.user_type == 'manager'):
             self.fields['user_type'].choices = [
                 ('manager', 'Manager'),
                 ('operator', 'Operator')
             ]
+            self.fields['vendors'].queryset = Vendor.objects.filter(user=self.request.user.id)
 
     def save(self, commit=True):
         user = super().save(commit=False)

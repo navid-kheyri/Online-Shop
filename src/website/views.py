@@ -24,6 +24,16 @@ class AddProductCreateView(CreateView):
         self.object.save()
         form.save_m2m()
         return super().form_valid(form)
+    
+    def get_form_kwargs(self):
+        """
+        در اینجا ما در واقع  ریکوئست را به فرم پاس میدهیم تا 
+        با استفاه از آن فرم به ریکویست دست پیدا کنیم 
+        """
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+    
 
    
 
