@@ -1,6 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from accounts.models import CustomUser, UserImage
 from django import forms
+from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -11,7 +12,7 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 class CustomUserChangeForm(forms.ModelForm):
-
+    password = ReadOnlyPasswordHashField()
     input_image = forms.ImageField(label='Image')
 
     class Meta:

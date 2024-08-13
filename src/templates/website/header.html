@@ -4,7 +4,7 @@
     <div class="header-top">
         <div class="container">
             <div class="header-left">
-                {% if request.user.is_authenticated and request.user.user_type == 'owner' or request.user.user_type == "manager" or request.user.user_type == 'operator' %}
+                {% if request.user.is_authenticated and request.user.user_type == 'manager' or request.user.user_type == "owner" or request.user.user_type == 'operator' %}
                 <a href="{% url 'dashboard:owner-dashboard' %}">My Vendor</a>
                 {% comment %} {% elif request.user.is_authenticated and request.user.user_type == 'Customer' %} {% endcomment %}
                 {% else %}

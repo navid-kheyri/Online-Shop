@@ -18,6 +18,13 @@ class AddProductCreateView(CreateView):
     form_class=AddProductModelForm
     success_url=reverse_lazy('dashboard:owner-dashboard')
 
+    def form_valid(self,form):
+
+        self.object=form.save(commit=False)
+        self.object.save()
+        form.save_m2m()
+        return super().form_valid(form)
+
    
 
 

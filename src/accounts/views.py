@@ -31,7 +31,9 @@ class CustomLoginView(View):
             login(request, user)
             if request.user.user_type == 'customer':
                 return redirect("website:index")
-            elif request.user.user_type == 'owner' or request.user.user_type == 'manager' or request.user.user_type == 'operator':
+            elif (user.user_type == 'owner' or user.user_type == 'manager' or user.user_type == 'operator'):
+                print(user.user_type)
+                print('***================================')
                 return redirect("dashboard:owner-dashboard")
 
         return render(request, self.template_name)

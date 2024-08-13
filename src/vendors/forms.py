@@ -1,7 +1,9 @@
 from django import forms
 from .models import Vendor, VendorImage
 from accounts.models import UserImage
+from website.models import Product
 from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import make_password
 
 
 User = get_user_model()
@@ -27,9 +29,9 @@ class UserModelForm(forms.ModelForm):
     """
     اینجا نمیدونم چرا فیلد پسورد داخل فیلد، عدد نشون میداد که مجبور شدم بصوزت دستی ایجاد و اورراید کنم؟؟؟؟
     """
-    password = forms.CharField(widget=forms.PasswordInput(), label="Password")
+    password = forms.CharField(widget=forms.PasswordInput, label="Password")
     confirm_password = forms.CharField(
-        widget=forms.PasswordInput(), label="Confirm Password")
+        widget=forms.PasswordInput, label="Confirm Password")
     input_image = forms.ImageField(label='Image')
 
     class Meta:
@@ -52,6 +54,7 @@ class UserModelForm(forms.ModelForm):
 
     def save(self, commit=True):
         user = super().save(commit=False)
+        user.password=make_password(self.cleaned_data['password'])
         if commit:
             user.save()
             UserImage.objects.create(
@@ -67,3 +70,20 @@ class UserModelForm(forms.ModelForm):
             raise forms.ValidationError("Passwords do not match")
 
         return cleaned_data
+
+
+class ProductDetailModelForm(forms.ModelForm):
+    input_image = forms.ImageField(label='Image')
+    class Meta:
+        model=Product
+        exclude=['vendor']
+    
+    def __init__(self, *args, **kwargs):
+        """
+        دسترسی رول های زیر را برای تغیر فیلد های داده شده میبندیم
+        """
+        self.request = kwargs.pop('request', None)
+        super(ProductDetailModelForm, self).__init__(*args, **kwargs)
+        if self.request and (self.request.user.user_type == 'operator' or  self.request.user.user_type == 'customer'):
+            self.fields.disabled = True
+            

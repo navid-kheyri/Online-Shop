@@ -2,15 +2,15 @@
 {% load static %}
 
 {% block content %}
-<body>
+
   <!--  Body Wrapper -->
   <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
     data-sidebar-position="fixed" data-header-position="fixed">
-
+    <!-- Sidebar Start -->
     {% block aside %}
     {% include "dashboard/options-aside.html" %}
     {% endblock aside %}
-
+    <!--  Sidebar End -->
     <!--  Main wrapper -->
     <div class="body-wrapper">
       <!--  Header Start -->
@@ -64,10 +64,10 @@
         <div class="container-fluid">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title fw-semibold mb-4">Add New Product</h5>
+              <h5 class="card-title fw-semibold mb-4">Add New Empolyee</h5>
               <div class="card">
                 <div class="card-body">
-                  <form method="post" action="{% url 'website:add-product' %}" enctype="multipart/form-data">
+                  <form method="post" action="{% url 'vendors:add-employee' %}" enctype="multipart/form-data">
                     {% comment %} <div class="mb-3">
                       <label for="exampleInputEmail1" class="form-label">Email address</label>
                       <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
@@ -86,6 +86,7 @@
                         {{ field.label_tag }}
                         {{ field }}<br><br>
                     {% endfor %}
+                
                     <button type="submit" class="btn btn-primary">Submit</button>
                   </form>
                 </div>

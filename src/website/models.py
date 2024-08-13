@@ -33,7 +33,7 @@ class Product(models.Model):
     average_rating = models.DecimalField(
         max_digits=3, decimal_places=2, default=0.00)
     category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, related_name="category_products")
+        Category, on_delete=models.DO_NOTHING, related_name="category_products")
     vendor = models.ManyToManyField(
         Vendor, related_name='vendor_products')
 
@@ -59,7 +59,7 @@ class Rating(models.Model):
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     updated_at = jmodels.jDateTimeField(auto_now=True)
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='user_ratings')
+        User, on_delete=models.DO_NOTHING, related_name='user_ratings')
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name='product_ratings')
 
@@ -76,7 +76,7 @@ class Comment(models.Model):
     description = models.TextField()
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='user_comments')
+        User, on_delete=models.DO_NOTHING, related_name='user_comments')
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name='Product_comments')
 
