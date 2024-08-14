@@ -21,15 +21,20 @@ class Vendor(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def save(self, *args, **kwargs):
+        if not self.status:
+            self.status = True
+        super().save(*args, **kwargs)
 
 
 class VendorImage(models.Model):
-    title = models.CharField(max_length=100)
-    description = models.TextField()
-    image = models.ImageField(upload_to='product/%Y/%m/%d/')
+    title = models.CharField(max_length=100,blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    image = models.ImageField(upload_to='product/%Y/%m/%d/',default='default.jpg')
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     vendor = models.ForeignKey(
         Vendor, on_delete=models.DO_NOTHING, related_name="images")
 
     def __str__(self):
-        return self.title
+        return self.image

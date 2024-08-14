@@ -12,4 +12,4 @@ class VendorModelAdmin(admin.ModelAdmin):
 
 @admin.register(VendorImage)
 class VendorImageModelAdmin(admin.ModelAdmin):
-    exclude = ['description']
+    list_display=['title','image','created_at','vendor']

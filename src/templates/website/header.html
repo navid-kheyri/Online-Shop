@@ -4,7 +4,12 @@
     <div class="header-top">
         <div class="container">
             <div class="header-left">
-                <a href="tel:#"><i class="icon-phone"></i>Call: +0123 456 789</a>
+                {% if request.user.is_authenticated and request.user.user_type == 'manager' or request.user.user_type == "owner" or request.user.user_type == 'operator' %}
+                <a href="{% url 'dashboard:owner-dashboard' %}">My Vendor</a>
+                {% comment %} {% elif request.user.is_authenticated and request.user.user_type == 'Customer' %} {% endcomment %}
+                {% else %}
+                <a href="{% url 'accounts:register-owner' %}">Want to Be a Seller? </a>
+                {% endif %}
             </div><!-- End .header-left -->
 
             <div class="header-right">
@@ -25,9 +30,12 @@
                                     </div><!-- End .header-menu -->
                                 </div>
                             </li>
+
                             {% if request.user.is_authenticated %}
                             <a href="{% url 'dashboard:user' request.user.pk  %}" >{{request.user.email}}</a> <a href="{% url "accounts:logout" %}" style='margin-left:20px'>Sign Out</a>
                             {% else %}
+                            <li><a href="{% url 'accounts:otp-login' %}"> opt login</a></li>
+                            <li><a href="{% url 'accounts:otp-register' %}"> opt register</a></li>
                             <li><a href={% url 'accounts:login' %} >Sign in / Sign up</a></li>
                             {% endif %}
                         </ul>
@@ -46,8 +54,8 @@
                     <i class="icon-bars"></i>
                 </button>
                 
-                <a href="index.html" class="logo">
-                    <img src="assets/images/demos/demo-4/logo.png" alt="Molla Logo" width="105" height="25">
+                <a href="http://127.0.0.1:8000/" >
+                    <img src={% static "logo.png" %} alt="Molla Logo" width="105" height="25">
                 </a>
             </div><!-- End .header-left -->
 
@@ -145,12 +153,11 @@
                     <div class="dropdown-menu">
                         <nav class="side-nav">
                             <ul class="menu-vertical sf-arrows">
-                                <li class="item-lead"><a href="#">Daily offers</a></li>
-                                <li class="item-lead"><a href="#">Gift Ideas</a></li>
-                                <li><a href="#">Beds</a></li>
-                                <li><a href="#">Lighting</a></li>
-                                <li><a href="#">Sofas & Sleeper sofas</a></li>
-                                <li><a href="#">Outdoor Furniture </a></li>
+                                
+                                {% for cat in categories  %}
+                                <li><a href="{% url 'website:category-product' cat.pk %}">{{cat.name}}</a></li>
+                                {% endfor %}
+                                
                             </ul><!-- End .menu-vertical -->
                         </nav><!-- End .side-nav -->
                     </div><!-- End .dropdown-menu -->

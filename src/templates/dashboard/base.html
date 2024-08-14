@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% block title %}<title>Modernize Free</title>{% endblock title %}
+    <link rel="shortcut icon" type="image/png" href={% static "assets3/images/logos/favicon.png" %} />
+    <link rel="stylesheet" href={% static "assets3/css/styles.min.css" %} />
+</head>
+
+<body>
+
+    {% block content %}
+    {% block aside %}{% endblock aside %}
+    {% endblock content %}
+    <script src={% static "assets3/libs/jquery/dist/jquery.min.js" %}></script>
+    <script src={% static "assets3/libs/bootstrap/dist/js/bootstrap.bundle.min.js" %}></script>
+    <script src={% static "assets3/js/sidebarmenu.js" %}></script>
+    <script src={% static "assets3/js/app.min.js" %}></script>
+    <script src={% static "assets3/libs/apexcharts/dist/apexcharts.min.js" %}></script>
+    <script src={% static "assets3/libs/simplebar/dist/simplebar.js" %}></script>
+    <script src={% static "assets3/js/dashboard.js" %}></script>
+</body>
+</html>

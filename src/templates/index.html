@@ -5,107 +5,175 @@
 {% endblock title %}
 
 {% block header %}
-{% include "website/header.html" %}
+{% include "website/header.html" with category=category %}
 {% endblock header %}
 
 {% block content %}
 <div class="page-wrapper">
 
-
     <main class="main">
-        <div class="intro-slider-container mb-5">
-            <div class="intro-slider owl-carousel owl-theme owl-nav-inside owl-light" data-toggle="owl" 
-                data-owl-options='{
-                    "dots": true,
-                    "nav": false, 
-                    "responsive": {
-                        "1200": {
-                            "nav": true,
-                            "dots": false
-                        }
-                    }
-                }'>
-                <div class="intro-slide" style="background-image: url(assets/images/demos/demo-4/slider/slide-1.png);">
-                    <div class="container intro-content">
-                        <div class="row justify-content-end">
-                            <div class="col-auto col-sm-7 col-md-6 col-lg-5">
-                                <h3 class="intro-subtitle text-third">Deals and Promotions</h3><!-- End .h3 intro-subtitle -->
-                                <h1 class="intro-title">Beats by</h1>
-                                <h1 class="intro-title">Dre Studio 3</h1><!-- End .intro-title -->
+        <div class="mb-4"></div><!-- End .mb-4 -->
+        <div class="container">
+            <div class="heading heading-flex mb-3">
+                <div class="heading-left">
+                    <h2 class="title">Explore Categories </h2><!-- End .title -->
+                </div><!-- End .heading-left -->
 
-                                <div class="intro-price">
-                                    <sup class="intro-old-price">$349,95</sup>
-                                    <span class="text-third">
-                                        $279<sup>.99</sup>
-                                    </span>
-                                </div><!-- End .intro-price -->
+               <div class="heading-right">
+                    <a href="{% url 'website:all-categories' %}" class="title-link">View All Categories <i class="icon-long-arrow-right"></i></a>
+               </div><!-- End .heading-right -->
+            </div><!-- End .heading -->
+            
+            {% comment %} <h2 class="title text-center mb-4">Explore Popular Categories</h2><!-- End .title text-center --> {% endcomment %}
+            
+            <div class="cat-blocks-container">
+                <div class="row">
+                    {% for cat in categories|slice:'0:6' %}
+                    <div class="col-6 col-sm-4 col-lg-2">
+                        <a href="{% url 'website:category-product' cat.pk %}" class="cat-block">
+                            <figure>
+                                <span>
+                                    <img src={{cat.image.url}} alt="Category image">
+                                </span>
+                            </figure>
 
-                                <a href="category.html" class="btn btn-primary btn-round">
-                                    <span>Shop More</span>
-                                    <i class="icon-long-arrow-right"></i>
-                                </a>
-                            </div><!-- End .col-lg-11 offset-lg-1 -->
-                        </div><!-- End .row -->
-                    </div><!-- End .intro-content -->
-                </div><!-- End .intro-slide -->
-
-                <div class="intro-slide" style="background-image: url(assets/images/demos/demo-4/slider/slide-2.png);">
-                    <div class="container intro-content">
-                        <div class="row justify-content-end">
-                            <div class="col-auto col-sm-7 col-md-6 col-lg-5">
-                                <h3 class="intro-subtitle text-primary">New Arrival</h3><!-- End .h3 intro-subtitle -->
-                                <h1 class="intro-title">Apple iPad Pro <br>12.9 Inch, 64GB </h1><!-- End .intro-title -->
-
-                                <div class="intro-price">
-                                    <sup>Today:</sup>
-                                    <span class="text-primary">
-                                        $999<sup>.99</sup>
-                                    </span>
-                                </div><!-- End .intro-price -->
-
-                                <a href="category.html" class="btn btn-primary btn-round">
-                                    <span>Shop More</span>
-                                    <i class="icon-long-arrow-right"></i>
-                                </a>
-                            </div><!-- End .col-md-6 offset-md-6 -->
-                        </div><!-- End .row -->
-                    </div><!-- End .intro-content -->
-                </div><!-- End .intro-slide -->
-            </div><!-- End .intro-slider owl-carousel owl-simple -->
-
-            <span class="slider-loader"></span><!-- End .slider-loader -->
-        </div><!-- End .intro-slider-container -->
-
-
+                            <h3 class="cat-block-title">{{cat.name}}</h3><!-- End .cat-block-title -->
+                        </a>
+                    </div><!-- End .col-sm-4 col-lg-2 -->
+                    {% endfor %}
+                </div><!-- End .row -->
+            </div><!-- End .cat-blocks-container -->
+        </div><!-- End .container -->
 
         <div class="mb-4"></div><!-- End .mb-4 -->
 
+        <div class="container for-you">
+            <div class="heading heading-flex mb-3">
+                <div class="heading-left">
+                    <h2 class="title">New Arrivals</h2><!-- End .title -->
+                </div><!-- End .heading-left -->
 
+               <div class="heading-right">
+                    <a href="#" class="title-link">View All Products <i class="icon-long-arrow-right"></i></a>
+               </div><!-- End .heading-right -->
+            </div><!-- End .heading -->
 
-        <div class="mb-6"></div><!-- End .mb-6 -->
+            <div class="products">
+                <div class="row justify-content-center">
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="product product-2">
+                            <figure class="product-media">
+                                <span class="product-label label-circle label-sale">Sale</span>
+                                <a href="product.html">
+                                    <img src={% static "assets/images/demos/demo-4/products/product-10.jpg" %} alt="Product image" class="product-image">
+                                </a>
 
+                                <div class="product-action-vertical">
+                                    <a href="#" class="btn-product-icon btn-wishlist" title="Add to wishlist"></a>
+                                </div><!-- End .product-action -->
 
+                                <div class="product-action">
+                                    <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to cart</span></a>
+                                    <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"><span>quick view</span></a>
+                                </div><!-- End .product-action -->
+                            </figure><!-- End .product-media -->
 
+                            <div class="product-body">
+                                <div class="product-cat">
+                                    <a href="#">Headphones</a>
+                                </div><!-- End .product-cat -->
+                                <h3 class="product-title"><a href="product.html">Beats by Dr. Dre Wireless  Headphones</a></h3><!-- End .product-title -->
+                                <div class="product-price">
+                                    <span class="new-price">$279.99</span>
+                                    <span class="old-price">Was $349.99</span>
+                                </div><!-- End .product-price -->
+                                <div class="ratings-container">
+                                    <div class="ratings">
+                                        <div class="ratings-val" style="width: 40%;"></div><!-- End .ratings-val -->
+                                    </div><!-- End .ratings -->
+                                    <span class="ratings-text">( 4 Reviews )</span>
+                                </div><!-- End .rating-container -->
 
+                               
+                            </div><!-- End .product-body -->
+                        </div><!-- End .product -->
+                    </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
+                </div>
+            </div>
+        </div>
+        {% comment %} <div class="mb-6"></div><!-- End .mb-6 --> {% endcomment %}
+        <div class="mb-4"></div><!-- End .mb-4 --> 
 
+        <div class="container for-you">
+            <div class="heading heading-flex mb-3">
+                <div class="heading-left">
+                    <h2 class="title">All Products</h2><!-- End .title -->
+                </div><!-- End .heading-left -->
 
+            
+            </div><!-- End .heading -->
 
+            <div class="products">
+                <div class="row justify-content-center">
+                    {% for product in products %}
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="product product-2">
+                            <figure class="product-media">
+                                <span class="product-label label-circle label-sale">Sale</span>
+                                <a href="{% url 'website:product-detail' product.pk %}">
+                                    <img style='width:277px;height:277px' src={{product.images.first.image.url}} alt="Product image" class="product-image">
+                                </a>
 
+                                <div class="product-action-vertical">
+                                    <a href="#" class="btn-product-icon btn-wishlist" title="Add to wishlist"></a>
+                                </div><!-- End .product-action -->
 
-        <div class="mb-4"></div><!-- End .mb-4 -->
+                                <div class="product-action">
+                                    <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to cart</span></a>
+                                    <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"><span>quick view</span></a>
+                                </div><!-- End .product-action -->
+                            </figure><!-- End .product-media -->
+
+                            <div class="product-body">
+                                <div class="product-cat">
+                                    <a href="#">Headphones</a>
+                                </div><!-- End .product-cat -->
+                                <h3 class="product-title"><a href="product.html">{{product.name}}</a></h3><!-- End .product-title -->
+                                <div class="product-price">
+                                    <span class="new-price">${{product.price}}</span>
+                                    {% comment %} <span class="old-price">Was $349.99</span> {% endcomment %}
+                                </div><!-- End .product-price -->
+                                <div class="ratings-container">
+                                    <div class="ratings">
+                                        <div class="ratings-val" style="width: 40%;"></div><!-- End .ratings-val -->
+                                    </div><!-- End .ratings -->
+                                    <span class="ratings-text">( 4 Reviews )</span>
+                                </div><!-- End .rating-container -->
+
+                               
+                            </div><!-- End .product-body -->
+                        </div><!-- End .product -->
+                    </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+
 
 
 
 
 
     {% comment %} footer {% endcomment %}
+    
 </div><!-- End .page-wrapper -->
 <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
 
 <!-- Mobile Menu -->
 <div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
 
-<div class="mobile-menu-container mobile-menu-light">
+{% comment %} <div class="mobile-menu-container mobile-menu-light">
     <div class="mobile-menu-wrapper">
         <span class="mobile-menu-close"><i class="icon-close"></i></span>
         
@@ -179,10 +247,10 @@
             <a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
         </div><!-- End .social-icons -->
     </div><!-- End .mobile-menu-wrapper -->
-</div><!-- End .mobile-menu-container -->
+</div><!-- End .mobile-menu-container --> {% endcomment %}
 
 <!-- Sign in / Register Modal -->
-<div class="modal fade" id="signin-modal" tabindex="-1" role="dialog" aria-hidden="true">
+{% comment %} <div class="modal fade" id="signin-modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body">
@@ -261,7 +329,7 @@
             </div><!-- End .modal-body -->
         </div><!-- End .modal-content -->
     </div><!-- End .modal-dialog -->
-</div><!-- End .modal -->
+</div><!-- End .modal --> {% endcomment %}
 
 
 

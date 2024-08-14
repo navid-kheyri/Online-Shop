@@ -1,0 +1,132 @@
+{% load static %}
+<!-- Sidebar Start -->
+<aside class="left-sidebar">
+    <!-- Sidebar scroll-->
+    <div>
+      <div class="brand-logo d-flex align-items-center justify-content-between">
+        <a href="./index.html" class="text-nowrap logo-img">
+          <img src={% static "assets3/images/logos/dark-logo.svg" %} width="180" alt="" />
+        </a>
+        <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
+          <i class="ti ti-x fs-8"></i>
+        </div>
+      </div>
+      <!-- Sidebar navigation-->
+      <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+        <ul id="sidebarnav">
+          <li class="nav-small-cap">
+            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+            <span class="hide-menu">Home</span>
+          </li>
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="./index.html" aria-expanded="false">
+              <span>
+                <i class="ti ti-layout-dashboard"></i>
+              </span>
+              <span class="hide-menu">Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-small-cap">
+            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+            <span class="hide-menu">UI COMPONENTS</span>
+          </li>
+          {% comment %} <li class="sidebar-item">
+            <a class="sidebar-link" href="./ui-buttons.html" aria-expanded="false">
+              <span>
+                <i class="ti ti-article"></i>
+              </span>
+              <span class="hide-menu">Buttons</span>
+            </a>
+          </li> {% endcomment %}
+
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'vendors:create-vendor' %}" aria-expanded="false">
+              <span>
+                <i class="ti ti-file-description"></i>
+              </span>
+              <span class="hide-menu">Add Vendor</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'accounts:edit-employee' request.user.pk %}" aria-expanded="false">
+              <span>
+                <i class="ti ti-file-description"></i>
+              </span>
+              <span class="hide-menu">Edit Profile</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'accounts:change-password' %}" aria-expanded="false">
+              <span>
+                <i class="ti ti-file-description"></i>
+              </span>
+              <span class="hide-menu">Change Password</span>
+            </a>
+          </li>
+          <li class="nav-small-cap">
+            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+            <span class="hide-menu">My Vendors</span>
+            {% comment %} <h6>{% if not vendor %}No vendor yet :({% endif %}</h6> {% endcomment %}
+          </li>
+          {% for shop in vendor  %}
+          
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'vendors:my-vendor' shop.pk %}" aria-expanded="false">
+              <span>
+                <i class="ti ti-file-description"></i>  
+              </span>
+              <span class="hide-menu">{{shop.name}}</span>
+            </a>
+          </li>
+          {% endfor %}
+          
+         
+          
+          {% comment %} <li class="nav-small-cap">
+            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+            <span class="hide-menu">AUTH</span>
+          </li>
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="./authentication-login.html" aria-expanded="false">
+              <span>
+                <i class="ti ti-login"></i>
+              </span>
+              <span class="hide-menu">Login</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="./authentication-register.html" aria-expanded="false">
+              <span>
+                <i class="ti ti-user-plus"></i>
+              </span>
+              <span class="hide-menu">Register</span>
+            </a>
+          </li>
+          <li class="nav-small-cap">
+            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+            <span class="hide-menu">EXTRA</span>
+          </li>
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="./icon-tabler.html" aria-expanded="false">
+              <span>
+                <i class="ti ti-mood-happy"></i>
+              </span>
+              <span class="hide-menu">Icons</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="./sample-page.html" aria-expanded="false">
+              <span>
+                <i class="ti ti-aperture"></i>
+              </span>
+              <span class="hide-menu">Sample Page</span>
+            </a>
+          </li> {% endcomment %}
+        </ul>
+
+      </nav>
+      <!-- End Sidebar navigation -->
+    </div>
+    <!-- End Sidebar scroll-->
+  </aside>
+  <!--  Sidebar End -->

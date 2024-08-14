@@ -1,4 +1,5 @@
 from django.db import models
+from django_jalali.db import models as jmodels
 from django.contrib.auth.models import AbstractUser, AbstractBaseUser, PermissionsMixin
 from django.core.validators import RegexValidator
 from accounts.managers import CustomUserManager
@@ -45,3 +46,15 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.email
+
+
+class UserImage(models.Model):
+    title = models.CharField(max_length=100, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    image = models.ImageField(upload_to='product/%Y/%m/%d/')
+    created_at = jmodels.jDateTimeField(auto_now_add=True)
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.DO_NOTHING, related_name="images")
+
+    def __str__(self):
+        return self.title
