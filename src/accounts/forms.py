@@ -2,6 +2,8 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from accounts.models import CustomUser, UserImage
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.core.validators import RegexValidator
+phone_number_regex = RegexValidator(r'^(09\d{9})$')
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -42,3 +44,6 @@ class CustomUserChangeForm(forms.ModelForm):
     
 class OTPForm(forms.Form):
     otp = forms.CharField(max_length=4)
+
+class PhoneNumberForm(forms.Form):
+    phone_number = forms.CharField(validators=[phone_number_regex])
