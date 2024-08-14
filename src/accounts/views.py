@@ -215,3 +215,42 @@ class OtpRegisterView(View):
             return redirect('accounts:verify-otp')
         else:
             return render(request, 'accounts/otp-register.html', {'form': form})
+
+
+class VerifyOtpView(View):
+    def get(self, request):
+        form = OTPForm()
+        return render(request, 'accounts/verify-otp.html', {'form': form})
+
+    def post(self, request):
+        form = OTPForm(request.POST)
+        if form.is_valid():
+            entered_otp = form.cleaned_data.get('otp')
+            print(entered_otp)
+            stored_otp = request.session.get('otp')
+            print(stored_otp)
+            if entered_otp == stored_otp:
+                phone_number = request.session.get('phone_number')
+                email = request.session.get('email')
+                age = request.session.get('age')
+                city = request.session.get('city')
+                first_name = request.session.get('first_name')
+                last_name = request.session.get('last_name')
+                password1= request.session.get('password1')
+
+
+                user = User.objects.create_user(email=email, phone_number=phone_number,password=password1,
+                                                age=age, city=city, first_name=first_name, last_name=last_name)
+                user.save()
+                # age boden pass bekhaim
+                # user, created = User.objects.get_or_create(email=email, phone_number=phone_number,age=age,city=city,first_name=first_name,last_name=last_name)
+                # if created:
+                #     user.set_unusable_password()
+                #     user.save()
+
+                return redirect('/')
+            else:
+                return render(request, 'accounts/verify-otp.html', {'error': 'کد تایید شما نامعتبر است'})
+
+        else:
+            return render(request, 'accounts/verify-otp.html', {'form': form})
