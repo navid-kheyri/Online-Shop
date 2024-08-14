@@ -6,8 +6,11 @@
     <title>Document</title>
 </head>
 <body>
-    <form>
+    <form method="post" action="{% url 'accounts:verify-otp' %}">
+        {% csrf_token %}
         {{form.as_p}}
+        <input type="submit" value="confirm">
     </form>
+    
 </body>
 </html>

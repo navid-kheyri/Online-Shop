@@ -29,6 +29,7 @@
                                         </ul>
                                     </div><!-- End .header-menu -->
                                 </div>
+                                <a href="{% url 'accounts:otp-register' %}"> opt register</a>
                             </li>
                             {% if request.user.is_authenticated %}
                             <a href="{% url 'dashboard:user' request.user.pk  %}" >{{request.user.email}}</a> <a href="{% url "accounts:logout" %}" style='margin-left:20px'>Sign Out</a>

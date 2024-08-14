@@ -7,7 +7,10 @@ from django.contrib.auth import authenticate, login, logout
 from .forms import *
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.views import PasswordChangeView
+import random
+from kavenegar import *
 from django.contrib.auth import get_user_model
+
 User = get_user_model()
 
 # Create your views here.
@@ -141,6 +144,74 @@ class EmployeeUpdateView(UpdateView):
 
 
 class ChangePasswordView(PasswordChangeView):
-    form_class=PasswordChangeForm
+    form_class = PasswordChangeForm
     success_url = reverse_lazy('dashboard:owner-dashboard')
-    template_name='accounts/change-password.html'
+    template_name = 'accounts/change-password.html'
+
+
+############## for OTP Verification ####################
+
+
+class OtpRegisterView(View):
+    def generate_otp(self):
+        return str(random.randint(1000, 9999))
+
+    def send_otp(self, phone_number, otp):
+        try:
+            api = KavenegarAPI(
+                '36636E4153466D5A4E4273615A344C6C6A76506C35306B775933424F4F745353466278634566344D41524D3D')
+            params = {
+                'receptor': phone_number,
+                'template': 'verify-otp',
+                'token': otp,
+                'type': 'sms',
+            }
+            response = api.verify_lookup(params)
+            print(response)
+        except APIException as e:
+            print(e)
+        except HTTPException as e:
+            print(e)
+
+    def get(self, request):
+        form = CustomUserCreationForm()
+        return render(request, 'accounts/otp-register.html', {'form': form})
+
+    def post(self, request):
+        form = CustomUserCreationForm(request.POST)
+        print('*****************************')
+        if form.is_valid():
+            email = form.cleaned_data.get("email")
+            phone_number = form.cleaned_data.get("phone_number")
+            password1 = form.cleaned_data.get("password1")
+            password2 = form.cleaned_data.get("password2")
+            age = form.cleaned_data.get("age")
+            city = form.cleaned_data.get("city")
+            first_name = form.cleaned_data.get("first_name")
+            last_name = form.cleaned_data.get("last_name")
+            otp = self.generate_otp()
+            print(otp)
+            print('===========================')
+
+            request.session['otp'] = otp
+            request.session['email'] = email
+            request.session['phone_number'] = phone_number
+            request.session['password1'] = password1
+            request.session['password2'] = password2
+            request.session['age'] = age
+            request.session['city'] = city
+            request.session['first_name'] = first_name
+            request.session['last_name'] = last_name
+            self.send_otp(phone_number, otp)
+
+            if User.objects.filter(email=email) or User.objects.filter(phone_number=phone_number):
+                form.add_error(
+                    None, 'User with this email or phone number already exists.')
+                return render(request, 'accounts/otp-register.html', {'form': form})
+            else:
+                if password1 != password2:
+                    raise ValueError('password is not match')
+
+            return redirect('accounts:verify-otp')
+        else:
+            return render(request, 'accounts/otp-register.html', {'form': form})

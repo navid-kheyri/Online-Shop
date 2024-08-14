@@ -8,7 +8,8 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ["email", "phone_number"]
+        fields = ['email', 'phone_number',
+                  'first_name', 'last_name', 'age', 'city']
 
 
 class CustomUserChangeForm(forms.ModelForm):
@@ -38,3 +39,6 @@ class CustomUserChangeForm(forms.ModelForm):
             UserImage.objects.create(
                 user=user, image=self.cleaned_data['input_image'])
         return user
+    
+class OTPForm(forms.Form):
+    otp = forms.CharField(max_length=4)
