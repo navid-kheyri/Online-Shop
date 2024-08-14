@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product, ProductImage
+from .models import Product, ProductImage,Comment
 from vendors.models import Vendor
 
 
@@ -36,3 +36,8 @@ class AddProductModelForm(forms.ModelForm):
             ProductImage.objects.create(
                 product=product, image=self.cleaned_data['input_image'])
         return product
+    
+class CommentModelForm(forms.ModelForm):
+    class Meta:
+        model=Comment
+        fields=['title','description']

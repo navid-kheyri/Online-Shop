@@ -155,6 +155,7 @@ class ChangePasswordView(PasswordChangeView):
 def generate_otp():
     return str(random.randint(1000, 9999))
 
+
 def send_otp(phone_number, otp):
     try:
         api = KavenegarAPI(
@@ -172,8 +173,11 @@ def send_otp(phone_number, otp):
     except HTTPException as e:
         print(e)
 
-class OtpRegisterView(View):
 
+class OtpRegisterView(View):
+    """
+    برای رجیستر کاربر معمولی با OTP
+    """
 
     def get(self, request):
         form = CustomUserCreationForm()
@@ -220,6 +224,10 @@ class OtpRegisterView(View):
 
 
 class VerifyOtpView(View):
+    """
+    برای تایید کد تایید با OTP
+    """
+
     def get(self, request):
         form = OTPForm()
         return render(request, 'accounts/verify-otp.html', {'form': form})
@@ -236,13 +244,12 @@ class VerifyOtpView(View):
                 city = request.session.get('city')
                 first_name = request.session.get('first_name')
                 last_name = request.session.get('last_name')
-                password1= request.session.get('password1')
+                password1 = request.session.get('password1')
 
-
-                user = User.objects.create_user(email=email, phone_number=phone_number,password=password1,
+                user = User.objects.create_user(email=email, phone_number=phone_number, password=password1,
                                                 age=age, city=city, first_name=first_name, last_name=last_name)
                 user.save()
-                # age boden pass bekhaim
+                # >>>>>age boden pass bekhaim<<<<
                 # user, created = User.objects.get_or_create(email=email, phone_number=phone_number,age=age,city=city,first_name=first_name,last_name=last_name)
                 # if created:
                 #     user.set_unusable_password()
@@ -254,27 +261,36 @@ class VerifyOtpView(View):
 
         else:
             return render(request, 'accounts/verify-otp.html', {'form': form})
-        
+
 
 class OtpLoginView(View):
-    def get(self,request):
+    """
+    برای ورود با OTP
+    """
+
+    def get(self, request):
         form = PhoneNumberForm()
-        return render(request,'accounts/otp-login.html',{'form':form})
-    
-    def post(self,request):
+        return render(request, 'accounts/otp-login.html', {'form': form})
+
+    def post(self, request):
         form = PhoneNumberForm(request.POST)
         if form.is_valid():
-            phone_number=request.POST.get('phone_number')
-            otp=generate_otp()
+            phone_number = request.POST.get('phone_number')
+            otp = generate_otp()
             print(otp)
             print('++++++++++++++++++++++++++++')
-            request.session['otp']=otp
-            request.session['phone_number']=phone_number
-            send_otp(phone_number,otp)
+            request.session['otp'] = otp
+            request.session['phone_number'] = phone_number
+            send_otp(phone_number, otp)
             return redirect('accounts:verify-login-otp')
-        return render(request,'accounts/otp-login.html',{'form':form})
+        return render(request, 'accounts/otp-login.html', {'form': form})
+
 
 class VerifyLoginOtpView(View):
+    """
+    برای تایید کد تایید با OTP 
+    """
+
     def get(self, request):
         form = OTPForm()
         return render(request, 'accounts/verify-login-otp.html', {'form': form})
@@ -282,12 +298,13 @@ class VerifyLoginOtpView(View):
     def post(self, request):
         form = OTPForm(request.POST)
         if form.is_valid():
-            stored_otp=request.session.get('otp')
+            stored_otp = request.session.get('otp')
             entered_otp = form.cleaned_data.get('otp')
-            phone_number=request.session.get('phone_number')
-            if entered_otp==stored_otp:
-                user, created = User.objects.get_or_create(phone_number=phone_number)
-                login(request, user) 
+            phone_number = request.session.get('phone_number')
+            if entered_otp == stored_otp:
+                user, created = User.objects.get_or_create(
+                    phone_number=phone_number)
+                login(request, user)
                 if request.user.user_type == 'customer':
                     return redirect("website:index")
                 elif (user.user_type == 'owner' or user.user_type == 'manager' or user.user_type == 'operator'):
@@ -295,4 +312,4 @@ class VerifyLoginOtpView(View):
             else:
                 form.add_error('otp', 'Invalid OTP')
 
-        return render(request, 'accounts/otp-login.html',{'form':form})
+        return render(request, 'accounts/otp-login.html', {'form': form})

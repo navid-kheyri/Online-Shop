@@ -41,65 +41,6 @@
                         </a>
                     </div><!-- End .col-sm-4 col-lg-2 -->
                     {% endfor %}
-                    {% comment %} <div class="col-6 col-sm-4 col-lg-2">
-                        <a href="category.html" class="cat-block">
-                            <figure>
-                                <span>
-                                    <img src={% static "assets/images/demos/demo-4/cats/2.png" %} alt="Category image">
-                                </span>
-                            </figure>
-
-                            <h3 class="cat-block-title">Digital Cameras</h3><!-- End .cat-block-title -->
-                        </a>
-                    </div><!-- End .col-sm-4 col-lg-2 -->
-
-                    <div class="col-6 col-sm-4 col-lg-2">
-                        <a href="category.html" class="cat-block">
-                            <figure>
-                                <span>
-                                    <img src={% static "assets/images/demos/demo-4/cats/3.png" %} alt="Category image">
-                                </span>
-                            </figure>
-
-                            <h3 class="cat-block-title">Smart Phones</h3><!-- End .cat-block-title -->
-                        </a>
-                    </div><!-- End .col-sm-4 col-lg-2 -->
-
-                    <div class="col-6 col-sm-4 col-lg-2">
-                        <a href="category.html" class="cat-block">
-                            <figure>
-                                <span>
-                                    <img src={% static "assets/images/demos/demo-4/cats/4.png" %} alt="Category image">
-                                </span>
-                            </figure>
-
-                            <h3 class="cat-block-title">Televisions</h3><!-- End .cat-block-title -->
-                        </a>
-                    </div><!-- End .col-sm-4 col-lg-2 -->
-
-                    <div class="col-6 col-sm-4 col-lg-2">
-                        <a href="category.html" class="cat-block">
-                            <figure>
-                                <span>
-                                    <img src={% static "assets/images/demos/demo-4/cats/5.png" %} alt="Category image">
-                                </span>
-                            </figure>
-
-                            <h3 class="cat-block-title">Audio</h3><!-- End .cat-block-title -->
-                        </a>
-                    </div><!-- End .col-sm-4 col-lg-2 -->
-
-                    <div class="col-6 col-sm-4 col-lg-2">
-                        <a href="category.html" class="cat-block">
-                            <figure>
-                                <span>
-                                    <img src={% static "assets/images/demos/demo-4/cats/6.png" %} alt="Category image">
-                                </span>
-                            </figure>
-
-                            <h3 class="cat-block-title">Smart Watches</h3><!-- End .cat-block-title -->
-                        </a>
-                    </div><!-- End .col-sm-4 col-lg-2 --> {% endcomment %}
                 </div><!-- End .row -->
             </div><!-- End .cat-blocks-container -->
         </div><!-- End .container -->
@@ -153,31 +94,79 @@
                                     <span class="ratings-text">( 4 Reviews )</span>
                                 </div><!-- End .rating-container -->
 
-                                <div class="product-nav product-nav-dots">
-                                    <a href="#" class="active" style="background: #666666;"><span class="sr-only">Color name</span></a>
-                                    <a href="#" style="background: #ff887f;"><span class="sr-only">Color name</span></a>
-                                    <a href="#" style="background: #6699cc;"><span class="sr-only">Color name</span></a>
-                                    <a href="#" style="background: #f3dbc1;"><span class="sr-only">Color name</span></a>
-                                    <a href="#" style="background: #eaeaec;"><span class="sr-only">Color name</span></a>
-                                </div><!-- End .product-nav -->
+                               
                             </div><!-- End .product-body -->
                         </div><!-- End .product -->
                     </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
                 </div>
+            </div>
+        </div>
+        {% comment %} <div class="mb-6"></div><!-- End .mb-6 --> {% endcomment %}
+        <div class="mb-4"></div><!-- End .mb-4 --> 
+
+        <div class="container for-you">
+            <div class="heading heading-flex mb-3">
+                <div class="heading-left">
+                    <h2 class="title">All Products</h2><!-- End .title -->
+                </div><!-- End .heading-left -->
 
             
-                
+            </div><!-- End .heading -->
 
-        {% comment %} <div class="mb-6"></div><!-- End .mb-6 -->
+            <div class="products">
+                <div class="row justify-content-center">
+                    {% for product in products %}
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="product product-2">
+                            <figure class="product-media">
+                                <span class="product-label label-circle label-sale">Sale</span>
+                                <a href="{% url 'website:product-detail' product.pk %}">
+                                    <img style='width:277px;height:277px' src={{product.images.first.image.url}} alt="Product image" class="product-image">
+                                </a>
 
-        <div class="mb-4"></div><!-- End .mb-4 --> {% endcomment %}
+                                <div class="product-action-vertical">
+                                    <a href="#" class="btn-product-icon btn-wishlist" title="Add to wishlist"></a>
+                                </div><!-- End .product-action -->
+
+                                <div class="product-action">
+                                    <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to cart</span></a>
+                                    <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"><span>quick view</span></a>
+                                </div><!-- End .product-action -->
+                            </figure><!-- End .product-media -->
+
+                            <div class="product-body">
+                                <div class="product-cat">
+                                    <a href="#">Headphones</a>
+                                </div><!-- End .product-cat -->
+                                <h3 class="product-title"><a href="product.html">{{product.name}}</a></h3><!-- End .product-title -->
+                                <div class="product-price">
+                                    <span class="new-price">${{product.price}}</span>
+                                    {% comment %} <span class="old-price">Was $349.99</span> {% endcomment %}
+                                </div><!-- End .product-price -->
+                                <div class="ratings-container">
+                                    <div class="ratings">
+                                        <div class="ratings-val" style="width: 40%;"></div><!-- End .ratings-val -->
+                                    </div><!-- End .ratings -->
+                                    <span class="ratings-text">( 4 Reviews )</span>
+                                </div><!-- End .rating-container -->
+
+                               
+                            </div><!-- End .product-body -->
+                        </div><!-- End .product -->
+                    </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+
 
 
 
 
 
     {% comment %} footer {% endcomment %}
-    </div>
+    
 </div><!-- End .page-wrapper -->
 <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
 
