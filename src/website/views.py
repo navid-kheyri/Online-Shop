@@ -88,7 +88,7 @@ class ProductDetailView(DetailView):
         context['form'] = CommentModelForm()
         return context
 
-    def post(self, request):
+    def post(self, request,*args,**kwargs):
         form = CommentModelForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
@@ -97,4 +97,4 @@ class ProductDetailView(DetailView):
             comment.save()
             return redirect('website:product-detail', pk=self.get_object().id)
         # ==> age form valid nabood method get DetailView seda zade mishe
-        return self.get(request)
+        return self.get(request,*args,**kwargs)
