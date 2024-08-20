@@ -1,0 +1,31 @@
+<!-- templates/delete_order.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Delete Order</h1>
+<form id="deleteOrderForm">
+    <label for="order_id">Order ID:</label>
+    <input type="text" id="order_id" name="order_id"><br>
+    <button type="submit">Delete Order</button>
+</form>
+
+<script>
+$('#deleteOrderForm').on('submit', function(event) {
+    event.preventDefault();
+    const order_id = $('#order_id').val();
+    $.ajax({
+        url: `/api/orders/${order_id}/`,
+        method: 'DELETE',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        success: function(response) {
+            alert('Order deleted successfully');
+        },
+        error: function(error) {
+            console.error('Error deleting order:', error);
+        }
+    });
+});
+</script>
+{% endblock %}

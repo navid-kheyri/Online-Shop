@@ -1,0 +1,39 @@
+<!-- templates/create_order.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Create Order</h1>
+<form id="createOrderForm">
+    <label for="user">User ID:</label>
+    <input type="text" id="user" name="user"><br>
+    <label for="is_paid">Is Paid:</label>
+    <input type="checkbox" id="is_paid" name="is_paid"><br>
+    <button type="submit">Create Order</button>
+</form>
+
+<script>
+$('#createOrderForm').on('submit', function(event) {
+    event.preventDefault();
+    const user = $('#user').val();
+    const is_paid = $('#is_paid').is(':checked');
+    $.ajax({
+        url: '/api/orders/',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            user: user,
+            is_paid: is_paid
+        }),
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        success: function(response) {
+            alert('Order created successfully');
+        },
+        error: function(error) {
+            console.error('Error creating order:', error);
+        }
+    });
+});
+</script>
+{% endblock %}

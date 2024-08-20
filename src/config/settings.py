@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'orders',
     'django_jalali',
     'accounts',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -70,6 +71,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'website.context_processors.product_and_category',
+                'orders.context_processors.cart'
             ],
         },
     },

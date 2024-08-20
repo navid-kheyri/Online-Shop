@@ -1,0 +1,27 @@
+<!-- templates/list_orders.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Orders</h1>
+<button onclick="fetchOrders()">Fetch Orders</button>
+<div id="orders"></div>
+
+<script>
+function fetchOrders() {
+    $.ajax({
+        url: '/api/orders/',
+        method: 'GET',
+        success: function(response) {
+            let ordersHtml = '';
+            response.forEach(order => {
+                ordersHtml += `<p>Order ID: ${order.id}, User: ${order.user}, Is Paid: ${order.is_paid}</p>`;
+            });
+            $('#orders').html(ordersHtml);
+        },
+        error: function(error) {
+            console.error('Error fetching orders:', error);
+        }
+    });
+}
+</script>
+{% endblock %}

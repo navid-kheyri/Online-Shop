@@ -1,0 +1,42 @@
+<!-- templates/update_order.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Update Order</h1>
+<form id="updateOrderForm">
+    <label for="order_id">Order ID:</label>
+    <input type="text" id="order_id" name="order_id"><br>
+    <label for="user">User ID:</label>
+    <input type="text" id="user" name="user"><br>
+    <label for="is_paid">Is Paid:</label>
+    <input type="checkbox" id="is_paid" name="is_paid"><br>
+    <button type="submit">Update Order</button>
+</form>
+
+<script>
+$('#updateOrderForm').on('submit', function(event) {
+    event.preventDefault();
+    const order_id = $('#order_id').val();
+    const user = $('#user').val();
+    const is_paid = $('#is_paid').is(':checked');
+    $.ajax({
+        url: `/api/orders/${order_id}/`,
+        method: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            user: user,
+            is_paid: is_paid
+        }),
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        success: function(response) {
+            alert('Order updated successfully');
+        },
+        error: function(error) {
+            console.error('Error updating order:', error);
+        }
+    });
+});
+</script>
+{% endblock %}
