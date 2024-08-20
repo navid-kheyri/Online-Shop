@@ -24,3 +24,14 @@ class CartDetailView(View):
             products.append({'product': product, 'quantity': quantity,
                             'product_total_price': product_total_price})
         return render(request, 'orders/cart-detail.html', {'total': total, 'products': products})
+
+
+class NewAddressCreateView(CreateView):
+    model = Address
+    template_name = 'orders/add-address.html'
+    form_class = AddressModelForm
+    success_url = reverse_lazy("orders:cart-detail")
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
