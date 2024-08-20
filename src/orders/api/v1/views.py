@@ -5,12 +5,13 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from ...models import Order, OrderItem
-from .serializers import OrderItemModelSerializer,OrderModelSerializer
+from .serializers import OrderItemModelSerializer, OrderModelSerializer
 from website.models import Product
 from ...cart import Cart
 
 from customers.models import Address
-from .serializers import CartAddSerializer, CartRemoveSerializer,AddressSerializer
+from .serializers import CartAddSerializer, CartRemoveSerializer, AddressSerializer
+
 
 class OrderListCreateAPIView(APIView):
     def get(self, request, *args, **kwargs):
@@ -24,7 +25,8 @@ class OrderListCreateAPIView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+
 class OrderDetailAPIView(APIView):
     def get(self, request, pk, *args, **kwargs):
         try:
@@ -52,7 +54,7 @@ class OrderDetailAPIView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         order.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
+
 
 class OrderItemListCreateAPIView(APIView):
     def get(self, request, *args, **kwargs):
@@ -66,7 +68,7 @@ class OrderItemListCreateAPIView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
 
 class OrderItemDetailAPIView(APIView):
     def get(self, request, pk, *args, **kwargs):
@@ -95,19 +97,20 @@ class OrderItemDetailAPIView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         order_item.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
+
 
 class AddToCartAPIView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = CartAddSerializer(data=request.data)
         if serializer.is_valid():
-            product = get_object_or_404(Product, id=serializer.validated_data['product_id'])
+            product = get_object_or_404(
+                Product, id=serializer.validated_data['product_id'])
             quantity = serializer.validated_data['quantity']
             cart = Cart(request)
             cart.add(product, quantity)
             return Response({'message': 'Product added to cart'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
 
 class RemoveFromCartAPIView(APIView):
 
@@ -124,39 +127,42 @@ class RemoveFromCartAPIView(APIView):
                 'total_price': product.price * item['quantity']
             })
         return Response(cart_items, status=status.HTTP_200_OK)
+
     def post(self, request, *args, **kwargs):
         serializer = CartRemoveSerializer(data=request.data)
         if serializer.is_valid():
-            product = get_object_or_404(Product, id=serializer.validated_data['product_id'])
+            product = get_object_or_404(
+                Product, id=serializer.validated_data['product_id'])
             quantity = serializer.validated_data['quantity']
             cart = Cart(request)
             cart.remove(product, quantity)
             return Response({'message': 'Product removed from cart'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
 
 class DeleteFromCartAPIView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = CartRemoveSerializer(data=request.data)
         if serializer.is_valid():
-            product = get_object_or_404(Product, id=serializer.validated_data['product_id'])
+            product = get_object_or_404(
+                Product, id=serializer.validated_data['product_id'])
             cart = Cart(request)
             cart.deleteitem(product)
             return Response({'message': 'Product deleted from cart'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
 
 class UpdateCartAPIView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = CartAddSerializer(data=request.data)
         if serializer.is_valid():
-            product = get_object_or_404(Product, id=serializer.validated_data['product_id'])
+            product = get_object_or_404(
+                Product, id=serializer.validated_data['product_id'])
             quantity = serializer.validated_data['quantity']
             cart = Cart(request)
             cart.update(product, quantity)
             return Response({'message': 'Cart updated successfully'}, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
-
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CartDetailAPIView(APIView):
@@ -173,8 +179,7 @@ class CartDetailAPIView(APIView):
                 'total_price': product.price * item['quantity'],
                 # 'image_url': product.images.first().image.url
             })
-        return Response({'cart_items':cart_items}, status=status.HTTP_200_OK)
-    
+        return Response({'cart_items': cart_items}, status=status.HTTP_200_OK)
 
 
 class CheckoutAPIView(APIView):
@@ -194,14 +199,14 @@ class CheckoutAPIView(APIView):
             })
 
         addresses = Address.objects.filter(user=request.user)
-        address_data = AddressSerializer(addresses,many=True).data
+        address_data = AddressSerializer(addresses, many=True).data
         response_data = {
             'user_id': request.user.id,
             'cart_items': cart_items,
             'addresses': address_data
         }
         return Response(response_data, status=status.HTTP_200_OK)
-    
+
     def post(self, request, *args, **kwargs):
         cart = Cart(request)
         if not cart.cart:
@@ -209,21 +214,23 @@ class CheckoutAPIView(APIView):
 
         address_data = request.data.get('address')
         address_id = request.data.get('address_id')
-        
+
         if address_data:
             address_data['user'] = request.user.id
-            address_serializer = AddressSerializer(data=address_data, context={'request': request})
+            address_serializer = AddressSerializer(
+                data=address_data, context={'request': request})
             if address_serializer.is_valid():
                 address = address_serializer.save()
             else:
                 return Response(address_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         elif address_id:
-            address = Address.objects.filter(id=address_id, user=request.user).first()
+            address = Address.objects.filter(
+                id=address_id, user=request.user).first()
             if not address:
                 return Response({'message': 'Invalid address ID'}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({'message': 'Address is required'}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         order = Order.objects.create(user=request.user, address=address)
 
         for key, item in cart.cart.items():
@@ -233,8 +240,14 @@ class CheckoutAPIView(APIView):
                 order=order,
                 product=product,
                 quantity=item['quantity'],
-                item_total_price=item_total_price 
+                item_total_price=item_total_price
             )
 
         cart.clear()
         return Response({'message': 'Order created successfully'}, status=status.HTTP_201_CREATED)
+
+
+class CartCountAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        cart = Cart(request)
+        return JsonResponse({'cart_count': len(cart)})
