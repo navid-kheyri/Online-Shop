@@ -174,3 +174,67 @@ class CartDetailAPIView(APIView):
                 # 'image_url': product.images.first().image.url
             })
         return Response({'cart_items':cart_items}, status=status.HTTP_200_OK)
+    
+
+
+class CheckoutAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        cart = Cart(request)
+        if not cart.cart:
+            return Response({'message': 'Cart is empty'}, status=status.HTTP_200_OK)
+        cart_items = []
+        for key, item in cart.cart.items():
+            product = Product.objects.get(id=key)
+            cart_items.append({
+                'product_id': product.id,
+                'product_name': product.name,
+                'quantity': item['quantity'],
+                'price': product.price,
+                'total_price': product.price * item['quantity']
+            })
+
+        addresses = Address.objects.filter(user=request.user)
+        address_data = AddressSerializer(addresses,many=True).data
+        response_data = {
+            'user_id': request.user.id,
+            'cart_items': cart_items,
+            'addresses': address_data
+        }
+        return Response(response_data, status=status.HTTP_200_OK)
+    
+    def post(self, request, *args, **kwargs):
+        cart = Cart(request)
+        if not cart.cart:
+            return Response({'message': 'Cart is empty'}, status=status.HTTP_400_BAD_REQUEST)
+
+        address_data = request.data.get('address')
+        address_id = request.data.get('address_id')
+        
+        if address_data:
+            address_data['user'] = request.user.id
+            address_serializer = AddressSerializer(data=address_data, context={'request': request})
+            if address_serializer.is_valid():
+                address = address_serializer.save()
+            else:
+                return Response(address_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        elif address_id:
+            address = Address.objects.filter(id=address_id, user=request.user).first()
+            if not address:
+                return Response({'message': 'Invalid address ID'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({'message': 'Address is required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        order = Order.objects.create(user=request.user, address=address)
+
+        for key, item in cart.cart.items():
+            product = Product.objects.get(id=key)
+            item_total_price = product.price * item['quantity']
+            OrderItem.objects.create(
+                order=order,
+                product=product,
+                quantity=item['quantity'],
+                item_total_price=item_total_price 
+            )
+
+        cart.clear()
+        return Response({'message': 'Order created successfully'}, status=status.HTTP_201_CREATED)
