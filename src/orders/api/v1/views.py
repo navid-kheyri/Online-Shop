@@ -133,3 +133,14 @@ class RemoveFromCartAPIView(APIView):
             cart.remove(product, quantity)
             return Response({'message': 'Product removed from cart'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class DeleteFromCartAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = CartRemoveSerializer(data=request.data)
+        if serializer.is_valid():
+            product = get_object_or_404(Product, id=serializer.validated_data['product_id'])
+            cart = Cart(request)
+            cart.deleteitem(product)
+            return Response({'message': 'Product deleted from cart'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
