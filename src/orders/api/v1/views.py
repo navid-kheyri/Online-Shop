@@ -155,4 +155,22 @@ class UpdateCartAPIView(APIView):
             cart = Cart(request)
             cart.update(product, quantity)
             return Response({'message': 'Cart updated successfully'}, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+
+
+
+class CartDetailAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        cart = Cart(request)
+        cart_items = []
+        for key, item in cart.cart.items():
+            product = Product.objects.get(id=key)
+            cart_items.append({
+                'product_id': product.id,
+                'product_name': product.name,
+                'quantity': item['quantity'],
+                'price': product.price,
+                'total_price': product.price * item['quantity'],
+                # 'image_url': product.images.first().image.url
+            })
+        return Response({'cart_items':cart_items}, status=status.HTTP_200_OK)
