@@ -95,3 +95,15 @@ class OrderItemDetailAPIView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         order_item.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+class AddToCartAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = CartAddSerializer(data=request.data)
+        if serializer.is_valid():
+            product = get_object_or_404(Product, id=serializer.validated_data['product_id'])
+            quantity = serializer.validated_data['quantity']
+            cart = Cart(request)
+            cart.add(product, quantity)
+            return Response({'message': 'Product added to cart'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
