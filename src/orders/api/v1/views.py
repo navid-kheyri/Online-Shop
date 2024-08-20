@@ -107,3 +107,29 @@ class AddToCartAPIView(APIView):
             cart.add(product, quantity)
             return Response({'message': 'Product added to cart'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class RemoveFromCartAPIView(APIView):
+
+    def get(self, request, *args, **kwargs):
+        cart = Cart(request)
+        cart_items = []
+        for key, item in cart.cart.items():
+            product = Product.objects.get(id=key)
+            cart_items.append({
+                'product_id': product.id,
+                'product_name': product.name,
+                'quantity': item['quantity'],
+                'price': product.price,
+                'total_price': product.price * item['quantity']
+            })
+        return Response(cart_items, status=status.HTTP_200_OK)
+    def post(self, request, *args, **kwargs):
+        serializer = CartRemoveSerializer(data=request.data)
+        if serializer.is_valid():
+            product = get_object_or_404(Product, id=serializer.validated_data['product_id'])
+            quantity = serializer.validated_data['quantity']
+            cart = Cart(request)
+            cart.remove(product, quantity)
+            return Response({'message': 'Product removed from cart'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
