@@ -95,3 +95,10 @@ class CustomerUpdateView(UpdateView):
         kwargs['request'] = self.request
         return kwargs
     
+class CustomerChangePasswordView(PasswordChangeView):
+    form_class = PasswordChangeForm
+    success_url = reverse_lazy('dashboard:user')
+    template_name = 'dashboard/customer-change-password.html'
+
+    def get_success_url(self):
+        return reverse_lazy('dashboard:user', kwargs={'pk': self.request.user.pk})
