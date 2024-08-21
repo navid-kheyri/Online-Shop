@@ -27,4 +27,4 @@ class RatingModelAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentModelAdmin(admin.ModelAdmin):
-    list_display = ['title', 'product', 'user', 'created_at']
+    list_display = ['title', 'product', 'user', 'created_at','comment_type']

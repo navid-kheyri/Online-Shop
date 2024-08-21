@@ -16,7 +16,7 @@ class CustomUserCreationForm(UserCreationForm):
 
 class CustomUserChangeForm(forms.ModelForm):
     password = ReadOnlyPasswordHashField()
-    input_image = forms.ImageField(label='Image')
+    input_image = forms.ImageField(label='Image',required=False)
 
     class Meta:
         model = CustomUser

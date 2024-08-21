@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Orders</title>
+</head>
+<body>
+
+    {% for orderitem in order_items  %}
+    Product name: {{orderitem.product}}<br>
+    Quantity: {{orderitem.quantity}}<br>
+    Price: ${{orderitem.product.price}}<hr>
+    
+    {% endfor %}
+
+</body>
+</html>

@@ -6,8 +6,12 @@
     <title>Document</title>
 </head>
 <body>
-    <form>
+    <form method="post" action="">
+        {% csrf_token %}
         {{form.as_p}}
+
+        <input type="submit" value="MAKE ADDRESS">
     </form>
+    
 </body>
 </html>

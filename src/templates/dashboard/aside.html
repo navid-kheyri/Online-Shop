@@ -19,7 +19,7 @@
             <span class="hide-menu">Home</span>
           </li>
           <li class="sidebar-item">
-            <a class="sidebar-link" href="./index.html" aria-expanded="false">
+            <a class="sidebar-link" href="{% url 'dashboard:owner-dashboard' %}" aria-expanded="false">
               <span>
                 <i class="ti ti-layout-dashboard"></i>
               </span>
@@ -68,7 +68,7 @@
             <span class="hide-menu">My Vendors</span>
             {% comment %} <h6>{% if not vendor %}No vendor yet :({% endif %}</h6> {% endcomment %}
           </li>
-          {% for shop in vendor  %}
+          {% for shop in my_vendor  %}
           
           <li class="sidebar-item">
             <a class="sidebar-link" href="{% url 'vendors:my-vendor' shop.pk %}" aria-expanded="false">

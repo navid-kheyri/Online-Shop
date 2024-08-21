@@ -1,3 +1,5 @@
+from django.http import HttpRequest, HttpResponseForbidden
+from django.http.response import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.generic import View
@@ -7,8 +9,11 @@ from django.contrib.auth import authenticate, login, logout
 from .forms import *
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.views import PasswordChangeView
+from django.utils.decorators import method_decorator
+from .decorators import roles_required
 import random
 from kavenegar import *
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -35,8 +40,6 @@ class CustomLoginView(View):
             if request.user.user_type == 'customer':
                 return redirect("website:index")
             elif (user.user_type == 'owner' or user.user_type == 'manager' or user.user_type == 'operator'):
-                print(user.user_type)
-                print('***================================')
                 return redirect("dashboard:owner-dashboard")
 
         return render(request, self.template_name)
@@ -125,10 +128,17 @@ class RegisterOwner(View):
         return render(request, self.template_name, context={'message': message})
 
 
-class EmployeeUpdateView(UpdateView):
+class EmployeeUpdateView(LoginRequiredMixin,UpdateView):
     """
     برای آپدیت کردن اطلاعات کارمندان
     """
+    def dispatch(self, request, *args, **kwargs) :
+        if int(kwargs.get('pk')) != self.request.user.pk:
+            return self.handle_no_permission()
+        if not (request.user.is_owner or request.user.is_operator or request.user.is_manager):
+            return HttpResponseForbidden("You are not allowed to access this page.")
+        return super().dispatch(request, *args, **kwargs)
+
     model = User
     template_name = 'accounts/edit-employee.html'
     success_url = reverse_lazy('dashboard:owner-dashboard')
@@ -142,7 +152,7 @@ class EmployeeUpdateView(UpdateView):
         kwargs['request'] = self.request
         return kwargs
 
-
+@method_decorator( roles_required('manager','operator','owner') , name='dispatch')
 class ChangePasswordView(PasswordChangeView):
     form_class = PasswordChangeForm
     success_url = reverse_lazy('dashboard:owner-dashboard')

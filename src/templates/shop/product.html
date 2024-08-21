@@ -22,7 +22,7 @@ Categories
                                 <div class="product-gallery product-gallery-vertical">
                                     <div class="row">
                                         <figure class="product-main-image">
-                                            <img id="product-zoom" src={{product.images.first.image.url}} data-zoom-image="assets/images/products/single/1-big.jpg" alt="product image">
+                                            <img style='width:457px;height:457px;' id="product-zoom" src={{product.images.first.image.url}} data-zoom-image="assets/images/products/single/1-big.jpg" alt="product image">
                                             
                                             <a href="#" id="btn-product-gallery" class="btn-product-gallery">
                                                 <i class="icon-arrows"></i>
@@ -30,13 +30,13 @@ Categories
                                         </figure><!-- End .product-main-image -->
                                         
                                         <div id="product-zoom-gallery" class="product-image-gallery">
-                                            <a class="product-gallery-item active" href="#" data-image="assets/images/products/single/1.jpg" data-zoom-image="assets/images/products/single/1-big.jpg">
-                                                <img src={{product.images.first.image.url}} alt="product side">
-                                            </a>
+                                            {% comment %} <a class="product-gallery-item active" href="#" data-image="assets/images/products/single/1.jpg" data-zoom-image="assets/images/products/single/1-big.jpg">
+                                                <img style='width:106px;height:106px;'  src={{product.images.first.image.url}} alt="product side">
+                                            </a> {% endcomment %}
                                             
-                                            {% for img in product.images.all|slice:'1:5'  %}
+                                            {% for img in product.images.all|slice:'0:5'  %}
                                             <a class="product-gallery-item" href="#" data-image="assets/images/products/single/2.jpg" data-zoom-image="assets/images/products/single/2-big.jpg">
-                                                <img src={{img.image.url}} alt="product cross">
+                                                <img style='width:106px;height:106px;' src={{img.image.url}} alt="product cross">
                                             </a>
 
                             
@@ -75,7 +75,7 @@ Categories
                                     </div><!-- End .details-filter-row -->
 
                                     <div class="product-details-action">
-                                        <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
+                                        <a href="#" class="btn-product btn-cart" data-product-id="{{ product.id }}"><span>add to cart</span></a>
                                     </div><!-- End .product-details-action -->
 
                                     <div class="product-details-footer">
@@ -113,17 +113,22 @@ Categories
                         <div class="tab-content">
                             <div class="tab-pane fade" id="product-shipping-tab" role="tabpanel" aria-labelledby="product-shipping-link">
                                 <div class="product-desc-content">
+                                    {% if request.user.is_authenticated %}
                                     <form method='post'>
                                         {% csrf_token %}
                                         {{form.as_p}}
                                         <button type="submit">Submit</button>
                                     </form>
+                                    {% else %}
+                                     <h3>You must be logged in to leave a review.</h3>
+                                    {% endif %}
                                 </div><!-- End .product-desc-content -->
                             </div><!-- .End .tab-pane -->
                             <div class="tab-pane fade show active" id="product-review-tab" role="tabpanel" aria-labelledby="product-review-link">
                                 <div class="reviews">
                                     <h3>Reviews (2)</h3>
                                     {% for cmt in comments %}
+                                    {% if cmt.comment_type == 'confirmed' %}
                                     <div class="review">
                                         <div class="row no-gutters">
                                             <div class="col-auto">
@@ -145,6 +150,7 @@ Categories
                                             </div><!-- End .col-auto -->
                                         </div><!-- End .row -->
                                     </div><!-- End .review -->
+                                    {% endif %}
                                     {% endfor %}
 
 
@@ -190,3 +196,44 @@ Categories
 {% block footer %}
 {% include "website/footer.html" %}
 {% endblock footer %}
+{% block script %}
+<script >
+    $(document).ready(function() {
+        $('.btn-cart').click(function(event) {
+            event.preventDefault();
+            
+            var productId = $(this).data('product-id');
+            var quantity = $('#qty').val();
+            
+            $.ajax({
+                url: '{% url "orders:api-v1:cart-add" %}',
+                method: 'POST',
+                data: {
+                    product_id: productId,
+                    quantity: quantity,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    alert(response.message);
+                    updateCartCount();
+                },
+                error: function(response) {
+                    alert('Error: ' + response.responseJSON);
+                }
+            });
+        });
+    
+        function updateCartCount() {
+            $.ajax({
+                url: '{% url "orders:api-v1:cart-count" %}', // Create a URL pattern for this view
+                method: 'GET',
+                success: function(response) {
+                    $('.cart-count').text(response.cart_count);
+                }
+            });
+        }
+    });
+    
+    
+</script>
+{% endblock script %}

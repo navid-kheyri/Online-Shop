@@ -20,4 +20,4 @@ class Address(models.Model):
         User, on_delete=models.CASCADE, related_name='address')
 
     def __str__(self):
-        return f"{self.id} {self.state}, {self.city}, {self.street}"
+        return f"{self.state}, {self.city}, {self.street}"

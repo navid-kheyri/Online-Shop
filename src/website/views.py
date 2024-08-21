@@ -1,4 +1,5 @@
 from django.db.models.query import QuerySet
+from django.http import HttpResponseForbidden
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
@@ -6,13 +7,15 @@ from django.views.generic import CreateView, ListView, DetailView
 from .models import Product, Category, Comment
 from vendors.models import Vendor
 from .forms import AddProductModelForm, CommentModelForm
+from django.utils.decorators import method_decorator
+from accounts.decorators import roles_required
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
 # Create your views here.
 
-
+@method_decorator( roles_required('manager','owner') , name='dispatch')
 class AddProductCreateView(CreateView):
     model = Product
     template_name = 'website/add-product.html'
@@ -35,21 +38,13 @@ class AddProductCreateView(CreateView):
         kwargs['request'] = self.request
         return kwargs
 
-
+@method_decorator( roles_required('customer','admin','anonymous') , name='dispatch')
 class IndexListView(ListView):
     template_name = 'index.html'
     model = Product
 
-    # def get_queryset(self):
-    #     category=Category.objects.all()
-    #     return category
 
-    # def get_context_data(self, **kwargs):
-    #     context=super().get_context_data(**kwargs)
-    #     context['category']=self.get_queryset()
-    #     return context
-
-
+@method_decorator( roles_required('customer','admin','anonymous') , name='dispatch')
 class CategoryProductDetailView(DetailView):
     model = Category
     template_name = 'shop/category.html'
@@ -66,7 +61,7 @@ class CategoryProductDetailView(DetailView):
 
         return context
 
-
+@method_decorator( roles_required('customer','admin','anonymous') , name='dispatch')
 class AllCategoriesListView(ListView):
     """
     برای دیدن دسته بندی ها در صفحه all categories
@@ -74,7 +69,7 @@ class AllCategoriesListView(ListView):
     model = Category
     template_name = 'website/all-categories.html'
 
-
+@method_decorator( roles_required('customer','admin','anonymous') , name='dispatch')
 class ProductDetailView(DetailView):
     model = Product
     template_name = 'shop/product.html'
@@ -94,6 +89,7 @@ class ProductDetailView(DetailView):
             comment = form.save(commit=False)
             comment.user = request.user
             comment.product = self.get_object()
+            comment.comment_type='pending'
             comment.save()
             return redirect('website:product-detail', pk=self.get_object().id)
         # ==> age form valid nabood method get DetailView seda zade mishe

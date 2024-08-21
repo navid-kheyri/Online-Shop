@@ -21,7 +21,7 @@
             <span class="hide-menu">Home</span>
           </li>
           <li class="sidebar-item">
-            <a class="sidebar-link" href="./index.html" aria-expanded="false">
+            <a class="sidebar-link" href="{% url 'dashboard:owner-dashboard' %}" aria-expanded="false">
               <span>
                 <i class="ti ti-layout-dashboard"></i>
               </span>
@@ -76,12 +76,41 @@
               <span class="hide-menu">My Products</span>
             </a>
           </li>
+          <li class="sidebar-item">
+            
+            <a class="sidebar-link" href="{% url 'vendors:update-vendor' vendor.pk %}" aria-expanded="false">
+              
+              <span>
+                <i class="ti ti-file-description"></i>
+              </span>
+              <span class="hide-menu">Change Vendor Details</span>
+            </a>
+          </li>
         </ul>
-       
       </nav>
       <!-- End Sidebar navigation -->
     </div>
     <!-- End Sidebar scroll-->
   </aside>
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <div class="body-wrapper">
+  <div class="container-fluid">
+    <div class="card w-100 h-100 position-relative overflow-hidden">
+      <div class="card-body">
+        <h5 class="card-title fw-semibold mb-4">Vendor Information</h5>
+        Name: {{vendor.name}}<br>
+        Phone: {{vendor.phone}}<br>
+        Email: {{vendor.email}}<br>
+        Open/Close: {{vendor.status}}<br>
+        Establishment: {{vendor.created_at}}<br>
+        Owner: {{owner}}<br>
+        Address: {{vendor.address}}<br>
+        
+      </div>
+    </div>
+  </div>
+  
   <!--  Sidebar End -->
   {% endblock content %}
+
