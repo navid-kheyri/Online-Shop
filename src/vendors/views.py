@@ -4,6 +4,8 @@ from django.views.generic import CreateView,DetailView,ListView,UpdateView
 from .models import Vendor
 from website.models import Product
 from .forms import ProductDetailModelForm, VendorModelForms,UserModelForm,VendorChangeDetailForm
+from django.utils.decorators import method_decorator
+from accounts.decorators import roles_required
 from django.contrib.auth import get_user_model
 
 User = get_user_model()

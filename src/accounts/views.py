@@ -7,6 +7,8 @@ from django.contrib.auth import authenticate, login, logout
 from .forms import *
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.views import PasswordChangeView
+from django.utils.decorators import method_decorator
+from .decorators import roles_required
 import random
 from kavenegar import *
 from django.contrib.auth import get_user_model

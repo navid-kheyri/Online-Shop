@@ -1,4 +1,3 @@
-from django.db.models.query import QuerySet
 from django.shortcuts import get_object_or_404, redirect, render
 from .forms import AddressModelForm
 from django.views.generic import DetailView,CreateView,ListView,UpdateView
@@ -12,6 +11,8 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.views import PasswordChangeView
 from orders.models import Order,OrderItem
 from website.models import Comment
+from django.utils.decorators import method_decorator
+from accounts.decorators import roles_required
 
 User = get_user_model()
 
@@ -142,6 +143,8 @@ class MyCommentDetailView(DetailView):
     def get_object(self):
         pk = self.kwargs.get('pk')
         return pk
+
+    # chera in ravesh kar nakard????
 
     # def get_queryset(self) :
     #     user=self.request.user

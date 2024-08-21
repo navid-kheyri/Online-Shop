@@ -6,6 +6,8 @@ from django.views.generic import CreateView, ListView, DetailView
 from .models import Product, Category, Comment
 from vendors.models import Vendor
 from .forms import AddProductModelForm, CommentModelForm
+from django.utils.decorators import method_decorator
+from accounts.decorators import roles_required
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
