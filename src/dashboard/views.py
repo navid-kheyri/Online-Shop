@@ -102,3 +102,18 @@ class CustomerChangePasswordView(PasswordChangeView):
 
     def get_success_url(self):
         return reverse_lazy('dashboard:user', kwargs={'pk': self.request.user.pk})
+    
+class CustomerOrdersListView(ListView):
+    model=Order
+    template_name='dashboard/customer-orders.html'
+
+    def get_queryset(self) :
+        user=self.request.user
+        user_order=Order.objects.filter(user=user)
+        print(user_order)
+        return user_order
+    
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        context['myorder'] = self.get_queryset()
+        return context
