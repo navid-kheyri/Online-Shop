@@ -98,3 +98,8 @@ class ProductDetailModelForm(forms.ModelForm):
             for field in self.fields.values():
                 field.disabled = True
             
+class VendorChangeDetailForm(forms.ModelForm):
+    input_image=forms.ImageField(label='image',required=False)
+    class Meta:
+        model=Vendor
+        exclude=['created_at','user']

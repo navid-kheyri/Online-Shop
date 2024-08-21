@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView,DetailView,ListView,UpdateView
 from .models import Vendor
 from website.models import Product
-from .forms import ProductDetailModelForm, VendorModelForms,UserModelForm
+from .forms import ProductDetailModelForm, VendorModelForms,UserModelForm,VendorChangeDetailForm
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -74,7 +74,9 @@ class MyVendorDetatilView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         vendor=self.object
+        owner=vendor.user.get(user_type='owner')
         context['vendor']=vendor
+        context['owner']=owner
         return context
     
     
@@ -116,3 +118,12 @@ class ProductUpdateView(UpdateView):
         kwargs = super().get_form_kwargs()
         kwargs['request'] = self.request
         return kwargs
+    
+
+class VendorUpdateView(UpdateView):
+    model=Vendor
+    template_name='shop/vendor-change-detail.html'
+    form_class=VendorChangeDetailForm
+    
+    def get_success_url(self) :
+        return reverse_lazy('vendors:my-vendor' , kwargs={'pk':self.object.pk})

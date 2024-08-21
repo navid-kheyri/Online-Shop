@@ -14,8 +14,6 @@ class OrderItem(models.Model):
     item_total_price = models.DecimalField(max_digits=10, decimal_places=2)
     product = models.ForeignKey(
         Product, on_delete=models.DO_NOTHING, related_name="product_item")
-    # cart = models.ForeignKey(
-    #     'Cart', on_delete=models.DO_NOTHING, related_name='cart_item')
     order = models.ForeignKey(
         'Order', on_delete=models.CASCADE, related_name='order_item')
 

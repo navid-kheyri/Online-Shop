@@ -86,8 +86,10 @@
                         {{ field.label_tag }}
                         {{ field }}<br><br>
                     {% endfor %}
-                
+                    {% if request.user.user_type == 'operator' %}
+                    {% else %}
                     <button type="submit" class="btn btn-primary">Submit</button>
+                    {% endif %}
                   </form>
                 </div>
               </div>

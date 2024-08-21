@@ -1,4 +1,5 @@
-from django.shortcuts import redirect, render
+from django.db.models.query import QuerySet
+from django.shortcuts import get_object_or_404, redirect, render
 from .forms import AddressModelForm
 from django.views.generic import DetailView,CreateView,ListView,UpdateView
 from django.urls import reverse_lazy
@@ -6,6 +7,10 @@ from django.views.generic import View
 from django.contrib.auth import get_user_model
 from vendors.models import Vendor
 from customers.models import Address
+from accounts.forms import CustomUserChangeForm
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.views import PasswordChangeView
+from orders.models import Order,OrderItem
 
 User = get_user_model()
 
