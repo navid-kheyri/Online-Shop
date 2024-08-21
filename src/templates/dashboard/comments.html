@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+{% for comment  in mycomment  %}
+    Title: {{comment.title}}<br>
+    Description: {{comment.description}}<br>
+    Product: {{comment.product}}<br>
+    Status: {{comment.comment_type}}<hr>
+    {% endfor %} 
+    
+    
+</body>
+</html>

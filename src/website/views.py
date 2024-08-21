@@ -94,6 +94,7 @@ class ProductDetailView(DetailView):
             comment = form.save(commit=False)
             comment.user = request.user
             comment.product = self.get_object()
+            comment.comment_type='pending'
             comment.save()
             return redirect('website:product-detail', pk=self.get_object().id)
         # ==> age form valid nabood method get DetailView seda zade mishe

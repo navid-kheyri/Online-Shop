@@ -72,6 +72,11 @@ class Rating(models.Model):
 
 
 class Comment(models.Model):
+    COMMENT_TYPES = (
+        ('confirmed', 'Confirmed'),
+        ('pending', 'Pending'),
+        ('rejected', 'Rejected'),
+    )
     title = models.CharField(max_length=100)
     description = models.TextField()
     created_at = jmodels.jDateTimeField(auto_now_add=True)
@@ -79,6 +84,8 @@ class Comment(models.Model):
         User, on_delete=models.DO_NOTHING, related_name='user_comments')
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name='Product_comments')
+    comment_type = models.CharField(
+        max_length=10, choices=COMMENT_TYPES, default='pending')
 
     def __str__(self):
         return self.title

@@ -124,6 +124,7 @@ Categories
                                 <div class="reviews">
                                     <h3>Reviews (2)</h3>
                                     {% for cmt in comments %}
+                                    {% if cmt.comment_type == 'confirmed' %}
                                     <div class="review">
                                         <div class="row no-gutters">
                                             <div class="col-auto">
@@ -145,6 +146,7 @@ Categories
                                             </div><!-- End .col-auto -->
                                         </div><!-- End .row -->
                                     </div><!-- End .review -->
+                                    {% endif %}
                                     {% endfor %}
 
 

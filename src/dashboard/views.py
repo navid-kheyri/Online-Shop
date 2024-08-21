@@ -11,6 +11,7 @@ from accounts.forms import CustomUserChangeForm
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.views import PasswordChangeView
 from orders.models import Order,OrderItem
+from website.models import Comment
 
 User = get_user_model()
 
@@ -131,4 +132,26 @@ class CustomerOrderItemDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         order_items=OrderItem.objects.filter(order=self.get_object())
         context['order_items'] = order_items
+        return context
+    
+
+class MyCommentDetailView(DetailView):
+    model=Comment
+    template_name='dashboard/comments.html'
+
+    def get_object(self):
+        pk = self.kwargs.get('pk')
+        return pk
+
+    # def get_queryset(self) :
+    #     user=self.request.user
+    #     user_comment=Comment.objects.filter(user=user)
+    #     print(user_comment)
+    #     return user_comment
+    
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        user_comment=Comment.objects.filter(user=self.get_object())
+        context['mycomment'] = user_comment
+        # context['mycomment'] = self.get_queryset()
         return context
