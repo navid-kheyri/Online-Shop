@@ -117,3 +117,18 @@ class CustomerOrdersListView(ListView):
         context =  super().get_context_data(**kwargs)
         context['myorder'] = self.get_queryset()
         return context
+    
+
+class CustomerOrderItemDetailView(DetailView):
+    model=OrderItem
+    template_name='dashboard/customer-order-item.html'
+
+    def get_object(self):
+        pk = self.kwargs.get('pk')
+        return pk
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        order_items=OrderItem.objects.filter(order=self.get_object())
+        context['order_items'] = order_items
+        return context
