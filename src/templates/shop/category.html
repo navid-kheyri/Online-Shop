@@ -64,7 +64,7 @@ Categories
                                                 <span class="product-label label-new">New</span>
                                                 <a href="{% url 'website:product-detail' product.pk %}">
 													
-                                                    <img style='width:277px;height:277px' src={{image.first.image.url}} alt="Product image" >
+                                                    <img style='width:277px;height:277px' src={{product.images.first.image.url}} alt="Product image" >
                                                 </a>
 
                                             </figure><!-- End .product-media -->

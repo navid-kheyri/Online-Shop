@@ -11,7 +11,7 @@ from accounts.decorators import roles_required
 
 # Create your views here.
 
-
+@method_decorator( roles_required('customer','admin','anonymous') , name='dispatch')
 class CartDetailView(View):
     def get(self, request):
         cart = Cart(request)

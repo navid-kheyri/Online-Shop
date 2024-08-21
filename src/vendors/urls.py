@@ -10,6 +10,6 @@ urlpatterns = [
     path('my_vendors/<pk>/',MyVendorDetatilView.as_view(),name='my-vendor'),
     path('my_vendors/<pk>/my_products/',MyProductsListView.as_view(),name='my-products'),
     path('update_product/<pk>/',ProductUpdateView.as_view(),name='update-product'),
-    path('vendor/<pk>/update/',VendorUpdateView.as_view(),name='update-vendor')
+    path('vendor/<pk>/update/',VendorUpdateView.as_view(),name='update-vendor'),
 
 ]

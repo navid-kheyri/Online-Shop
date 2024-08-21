@@ -1,4 +1,5 @@
 from django.db.models.query import QuerySet
+from django.http import HttpResponseForbidden
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
@@ -14,7 +15,7 @@ User = get_user_model()
 
 # Create your views here.
 
-
+@method_decorator( roles_required('manager','owner') , name='dispatch')
 class AddProductCreateView(CreateView):
     model = Product
     template_name = 'website/add-product.html'
@@ -37,21 +38,13 @@ class AddProductCreateView(CreateView):
         kwargs['request'] = self.request
         return kwargs
 
-
+@method_decorator( roles_required('customer','admin','anonymous') , name='dispatch')
 class IndexListView(ListView):
     template_name = 'index.html'
     model = Product
 
-    # def get_queryset(self):
-    #     category=Category.objects.all()
-    #     return category
 
-    # def get_context_data(self, **kwargs):
-    #     context=super().get_context_data(**kwargs)
-    #     context['category']=self.get_queryset()
-    #     return context
-
-
+@method_decorator( roles_required('customer','admin','anonymous') , name='dispatch')
 class CategoryProductDetailView(DetailView):
     model = Category
     template_name = 'shop/category.html'
@@ -68,7 +61,7 @@ class CategoryProductDetailView(DetailView):
 
         return context
 
-
+@method_decorator( roles_required('customer','admin','anonymous') , name='dispatch')
 class AllCategoriesListView(ListView):
     """
     برای دیدن دسته بندی ها در صفحه all categories
@@ -76,7 +69,7 @@ class AllCategoriesListView(ListView):
     model = Category
     template_name = 'website/all-categories.html'
 
-
+@method_decorator( roles_required('customer','admin','anonymous') , name='dispatch')
 class ProductDetailView(DetailView):
     model = Product
     template_name = 'shop/product.html'

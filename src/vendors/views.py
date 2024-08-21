@@ -1,4 +1,7 @@
-from django.shortcuts import render
+from django.http import HttpRequest, HttpResponseForbidden
+from django.http.response import HttpResponse as HttpResponse
+from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView,DetailView,ListView,UpdateView
 from .models import Vendor
@@ -7,13 +10,14 @@ from .forms import ProductDetailModelForm, VendorModelForms,UserModelForm,Vendor
 from django.utils.decorators import method_decorator
 from accounts.decorators import roles_required
 from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 User = get_user_model()
 
 # Create your views here.
 
 
-    
+@method_decorator( roles_required('manager','owner') , name='dispatch')
 class AddVendorCreateView(CreateView):
     """
     این کلاس برای ایجاد فروشگاه جدید نوشته شده است.
@@ -33,6 +37,7 @@ class AddVendorCreateView(CreateView):
         form.save()
         return response
 
+@method_decorator( roles_required('manager','owner') , name='dispatch')
 class AddEmployeeCreateView(CreateView):
     """
     این کلاس برای ایجاد منیجر و اوپراتور توسط مدیر نوشته شده است.
@@ -65,13 +70,14 @@ class AddEmployeeCreateView(CreateView):
         form.save_m2m()
         return super().form_valid(form)
     
-
-class MyVendorDetatilView(DetailView):
+method_decorator((roles_required('owner','manager','operator')),name='dispatch')
+class MyVendorDetatilView(LoginRequiredMixin,DetailView):
     """
     برای دیدن آپشن های هر فروشگاه
     """
     model = Vendor
     template_name='shop/my-vendors.html'
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -81,7 +87,7 @@ class MyVendorDetatilView(DetailView):
         context['owner']=owner
         return context
     
-    
+@method_decorator( roles_required('manager','operator','owner') , name='dispatch')   
 class MyProductsListView(ListView):
     """
     برای دیدن محصولات هر فزوشگاه
@@ -105,12 +111,20 @@ class MyProductsListView(ListView):
         return context
 
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(LoginRequiredMixin,UpdateView):
     model=Product
     template_name='shop/dashboard-product-detail.html'
     # fields=['name','quantity_in_stock','description','price','discount','average_rating','category']
     form_class=ProductDetailModelForm
     success_url=reverse_lazy("dashboard:owner-dashboard")
+
+    # def dispatch(self, request, *args, **kwargs) :
+    #     if int(kwargs.get('pk')) != self.request.user.pk:
+    #         return self.handle_no_permission()
+    #     if not (request.user.is_manager or request.user.is_owner):
+    #         return HttpResponseForbidden("You are not allowed to access this page.")
+    #     return super().dispatch(request, *args, **kwargs)
+
 
     def get_form_kwargs(self):
         """
@@ -122,10 +136,20 @@ class ProductUpdateView(UpdateView):
         return kwargs
     
 
-class VendorUpdateView(UpdateView):
+class VendorUpdateView(LoginRequiredMixin,UpdateView):
     model=Vendor
     template_name='shop/vendor-change-detail.html'
     form_class=VendorChangeDetailForm
     
+
+    def dispatch(self, request, *args, **kwargs) :
+        if int(kwargs.get('pk')) != self.request.user.pk:
+            return self.handle_no_permission()
+        if not (request.user.is_manager or request.user.is_owner):
+            return HttpResponseForbidden("You are not allowed to access this page.")
+        return super().dispatch(request, *args, **kwargs)
+
     def get_success_url(self) :
         return reverse_lazy('vendors:my-vendor' , kwargs={'pk':self.object.pk})
+    
+

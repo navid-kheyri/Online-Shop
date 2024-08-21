@@ -142,11 +142,14 @@
 	                						</tr><!-- End .summary-total -->
 	                					</tbody>
 	                				</table><!-- End .table table-summary -->
-
+									{% if request.user.is_authenticated %}
 	                				<button type="submit">Place Order</button>
-														</form>
+								</form>
+									{% else %}
+									<a href="{% url 'accounts:login' %}">Proceed</a>
+									{% endif %}
 	                			</div><!-- End .summary -->
-							</form>
+							{% comment %} </form> {% endcomment %}
 
 		            			<a href="{% url 'website:all-categories' %}" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE SHOPPING</span><i class="icon-refresh"></i></a>
 	                		</aside><!-- End .col-lg-3 -->
@@ -236,7 +239,7 @@
 					}
 				},
 				error: function(xhr, status, error) {
-					alert('An error occurred: ' + error); // Handle any errors
+					alert('Choose an Address or Make New one.'); // Handle any errors
 				}
 			});
 		});

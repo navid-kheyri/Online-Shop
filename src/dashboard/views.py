@@ -1,3 +1,4 @@
+from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from .forms import AddressModelForm
 from django.views.generic import DetailView,CreateView,ListView,UpdateView
@@ -13,20 +14,28 @@ from orders.models import Order,OrderItem
 from website.models import Comment
 from django.utils.decorators import method_decorator
 from accounts.decorators import roles_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 User = get_user_model()
 
 
 
 # Create your views here.
-
-class CustomerDetailView (DetailView):
+@method_decorator( roles_required('customer') , name='dispatch')
+class CustomerDetailView (LoginRequiredMixin,DetailView):
     """
     برای نشان دادن داشبورد کاستومر
     """
     model=User
     template_name='dashboard/dashboard.html'
     success_url= success_url=reverse_lazy('dashboard:index')
+
+    def dispatch(self, request, *args, **kwargs):
+        if int(kwargs.get('pk')) != self.request.user.pk:
+            return self.handle_no_permission()
+        if not (request.user.is_customer ):
+            return HttpResponseForbidden("You are not allowed to access this page.")
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs) :
         context= super().get_context_data(**kwargs)
@@ -57,7 +66,7 @@ class CustomerDetailView (DetailView):
 #         return render(request,'dashboard/owner-dashboard.html')
 #         # return render(request,'test.html')
 
-
+@method_decorator( roles_required('manager','operator','owner') , name='dispatch')
 class MyVendorListView(ListView):
     """
     برای دیدن فروشگاه های خود
@@ -76,18 +85,20 @@ class MyVendorListView(ListView):
 #     model=Address
 #     template_name=
 
-class CustomerUpdateView(UpdateView):
+class CustomerUpdateView(LoginRequiredMixin,UpdateView):
     model = User
     template_name='dashboard/customer-detail-change.html'
     form_class=CustomUserChangeForm
 
+    def dispatch(self, request, *args, **kwargs):
+        if int(kwargs.get('pk')) != self.request.user.pk:
+            return self.handle_no_permission()
+        if not (request.user.is_customer ):
+            return HttpResponseForbidden("You are not allowed to access this page.")
+        return super().dispatch(request, *args, **kwargs)
+
     def get_success_url(self):
         return reverse_lazy('dashboard:user', kwargs={'pk': self.object.pk})
-
-
-    # def get_context_data(self, **kwargs) :
-    #     context= super().get_context_data(**kwargs)
-    #     context['customer_update']=CustomUserChangeForm()
 
     def get_form_kwargs(self):
         """
@@ -97,6 +108,7 @@ class CustomerUpdateView(UpdateView):
         kwargs['request'] = self.request
         return kwargs
     
+@method_decorator( roles_required('customer') , name='dispatch')
 class CustomerChangePasswordView(PasswordChangeView):
     form_class = PasswordChangeForm
     success_url = reverse_lazy('dashboard:user')
@@ -104,7 +116,8 @@ class CustomerChangePasswordView(PasswordChangeView):
 
     def get_success_url(self):
         return reverse_lazy('dashboard:user', kwargs={'pk': self.request.user.pk})
-    
+
+@method_decorator( roles_required('customer') , name='dispatch')
 class CustomerOrdersListView(ListView):
     model=Order
     template_name='dashboard/customer-orders.html'
@@ -121,9 +134,16 @@ class CustomerOrdersListView(ListView):
         return context
     
 
-class CustomerOrderItemDetailView(DetailView):
+class CustomerOrderItemDetailView(LoginRequiredMixin,DetailView):
     model=OrderItem
     template_name='dashboard/customer-order-item.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if int(kwargs.get('pk')) != self.request.user.pk:
+            return self.handle_no_permission()
+        if not (request.user.is_customer ):
+            return HttpResponseForbidden("You are not allowed to access this page.")
+        return super().dispatch(request, *args, **kwargs)
 
     def get_object(self):
         pk = self.kwargs.get('pk')
@@ -136,9 +156,16 @@ class CustomerOrderItemDetailView(DetailView):
         return context
     
 
-class MyCommentDetailView(DetailView):
+class MyCommentDetailView(LoginRequiredMixin,DetailView):
     model=Comment
     template_name='dashboard/comments.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if int(kwargs.get('pk')) != self.request.user.pk:
+            return self.handle_no_permission()
+        if not (request.user.is_customer ):
+            return HttpResponseForbidden("You are not allowed to access this page.")
+        return super().dispatch(request, *args, **kwargs)
 
     def get_object(self):
         pk = self.kwargs.get('pk')

@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -8,9 +8,10 @@ from ...models import Order, OrderItem
 from .serializers import OrderItemModelSerializer, OrderModelSerializer
 from website.models import Product
 from ...cart import Cart
-
+from django.contrib.auth.decorators import login_required
 from customers.models import Address
 from .serializers import CartAddSerializer, CartRemoveSerializer, AddressSerializer
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class OrderListCreateAPIView(APIView):
@@ -182,7 +183,8 @@ class CartDetailAPIView(APIView):
         return Response({'cart_items': cart_items}, status=status.HTTP_200_OK)
 
 
-class CheckoutAPIView(APIView):
+class CheckoutAPIView(LoginRequiredMixin,APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request, *args, **kwargs):
         cart = Cart(request)
         if not cart.cart:
