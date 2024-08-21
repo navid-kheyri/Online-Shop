@@ -73,3 +73,25 @@ class MyVendorListView(ListView):
 # class AdressCreateView(CreateView):
 #     model=Address
 #     template_name=
+
+class CustomerUpdateView(UpdateView):
+    model = User
+    template_name='dashboard/customer-detail-change.html'
+    form_class=CustomUserChangeForm
+
+    def get_success_url(self):
+        return reverse_lazy('dashboard:user', kwargs={'pk': self.object.pk})
+
+
+    # def get_context_data(self, **kwargs) :
+    #     context= super().get_context_data(**kwargs)
+    #     context['customer_update']=CustomUserChangeForm()
+
+    def get_form_kwargs(self):
+        """
+        در اینجا ما در واقع  ریکوئست را به فرم پاس میدهیم  
+        """
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+    
