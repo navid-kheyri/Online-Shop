@@ -76,16 +76,18 @@
               <span class="hide-menu">My Products</span>
             </a>
           </li>
+          {% if  request.user.user_type != 'operator' %}
           <li class="sidebar-item">
             
             <a class="sidebar-link" href="{% url 'vendors:update-vendor' vendor.pk %}" aria-expanded="false">
-              
               <span>
                 <i class="ti ti-file-description"></i>
               </span>
               <span class="hide-menu">Change Vendor Details</span>
             </a>
           </li>
+          {% else %}
+              {% endif %}
         </ul>
       </nav>
       <!-- End Sidebar navigation -->

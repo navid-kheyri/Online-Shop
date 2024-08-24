@@ -69,6 +69,7 @@ class AddEmployeeCreateView(CreateView):
         self.object.save()
         form.save_m2m()
         return super().form_valid(form)
+
     
 method_decorator((roles_required('owner','manager','operator')),name='dispatch')
 class MyVendorDetatilView(LoginRequiredMixin,DetailView):
@@ -141,13 +142,13 @@ class VendorUpdateView(LoginRequiredMixin,UpdateView):
     template_name='shop/vendor-change-detail.html'
     form_class=VendorChangeDetailForm
     
-
-    def dispatch(self, request, *args, **kwargs) :
-        if int(kwargs.get('pk')) != self.request.user.pk:
-            return self.handle_no_permission()
-        if not (request.user.is_manager or request.user.is_owner):
-            return HttpResponseForbidden("You are not allowed to access this page.")
-        return super().dispatch(request, *args, **kwargs)
+    #TODO fix this  for Vendor seekers!!!!
+    # def dispatch(self, request, *args, **kwargs) :
+    #     if int(kwargs.get('pk')) != self.request.user.pk:
+    #         return self.handle_no_permission()
+    #     if not (request.user.is_manager or request.user.is_owner):
+    #         return HttpResponseForbidden("You are not allowed to access this page.")
+    #     return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self) :
         return reverse_lazy('vendors:my-vendor' , kwargs={'pk':self.object.pk})

@@ -1,19 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <form method="post" action="{% url 'vendors:update-vendor' vendor.pk %}" enctype="multipart/form-data">
-        {% csrf_token %}
-        {% for field in form %}
-            {{ field.label_tag }}
-            {{ field }}<br><br>
-        {% endfor %}
+{% extends "dashboard/base.html" %}
+{% load static %}
+<!-- Sidebar Start -->
+ {% block content %}
+
+ <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <div class="body-wrapper">
+  <div class="container-fluid">
+    <div class="card w-100 h-100 position-relative overflow-hidden">
+      <div class="card-body">
+        <h4 class="card-title fw-semibold mb-4">Update Vendor Information</h4>
+        <form method="post" action="{% url 'vendors:update-vendor' vendor.pk %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form %}
+                {{ field.label_tag }}
+                {{ field }}<br><br>
+            {% endfor %}
+        
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+          {% endblock content %}
+        
+      </div>
+    </div>
+  </div>
     
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
-</body>
-</html>

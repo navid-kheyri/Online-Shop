@@ -191,17 +191,13 @@
 					'csrfmiddlewaretoken': '{{ csrf_token }}'
 				},
 				success: function(response) {
-					// Handle success response
-					// No alert message
 				},
 				error: function(response) {
-					// Handle error response
-					// No alert message
 				}
 			});
 		});
 	
-		// Handle delete button click
+
 		$('.btn-remove').on('click', function() {
 			var productId = $(this).data('product-id');
 			
@@ -222,10 +218,9 @@
 			});
 		});
 	
-		// Handle checkout form submission
 		$('#checkout-form').on('submit', function(event) {
-			event.preventDefault(); // Prevent the form from submitting the traditional way
-			var formData = $(this).serialize(); // Serialize the form data
+			event.preventDefault();
+			var formData = $(this).serialize(); 
 	
 			$.ajax({
 				type: 'POST',
@@ -233,13 +228,13 @@
 				data: formData,
 				success: function(response) {
 					if (response.message === 'Order created successfully') {
-						window.location.href = "{% url 'website:index' %}"; // Redirect to the index page
+						window.location.href = "{% url 'website:index' %}"; 
 					} else {
-						alert(response.message); // Display any error messages
+						alert(response.message); 
 					}
 				},
 				error: function(xhr, status, error) {
-					alert('Choose an Address or Make New one.'); // Handle any errors
+					alert('Choose an Address or Make New one.'); 
 				}
 			});
 		});

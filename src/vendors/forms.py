@@ -65,8 +65,11 @@ class UserModelForm(forms.ModelForm):
         user.password=make_password(self.cleaned_data['password'])
         if commit:
             user.save()
+            self.save_m2m()
             UserImage.objects.create(
                 user=user, image=self.cleaned_data['input_image'])
+            user.vendors.set(self.cleaned_data['vendors'])
+            
         return user
 
     def clean(self):
