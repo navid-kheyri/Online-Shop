@@ -31,7 +31,10 @@ class Product(models.Model):
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     updated_at = jmodels.jDateTimeField(auto_now=True)
     average_rating = models.DecimalField(
-        max_digits=3, decimal_places=2, default=0.00)
+        max_digits=3, decimal_places=2, default=0.00,validators=[
+                                            MinValueValidator(1.0), 
+                                            MaxValueValidator(5.0)
+                                        ])
     category = models.ForeignKey(
         Category, on_delete=models.DO_NOTHING, related_name="category_products")
     vendor = models.ManyToManyField(
@@ -64,7 +67,7 @@ class Rating(models.Model):
         Product, on_delete=models.CASCADE, related_name='product_ratings')
 
     def __str__(self):
-        return self.rating
+        return str(self.rating)
 
     # TODO later
     def add_avg_rate_to_prod(self):

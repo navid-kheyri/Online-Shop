@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product, ProductImage,Comment
+from .models import Product, ProductImage,Comment,Rating
 from vendors.models import Vendor
 
 
@@ -43,3 +43,8 @@ class CommentModelForm(forms.ModelForm):
     class Meta:
         model=Comment
         fields=['title','description']
+
+class RatingProductModelForm(forms.ModelForm):
+    class Meta:
+        model = Rating
+        fields = ['rating']
