@@ -3,15 +3,37 @@ from .models import (Category, Product, ProductImage, Rating, Comment)
 # Register your models here.
 
 
+class ProductInline(admin.StackedInline):
+    model=Product
+    extra = 0
+
+
+class CommenttInline(admin.StackedInline):
+    model=Comment
+    extra = 0
+
+class RatingInline(admin.StackedInline):
+    model=Rating
+    extra = 0
+
+
 @admin.register(Category)
 class CategoryModelAdmin(admin.ModelAdmin):
+    inlines=[ProductInline]
     list_display = ['name', 'image', 'parent']
+    search_fields=['name']
 
+
+class ProductImageInline(admin.StackedInline):
+    model = ProductImage
+    extra = 0
 
 @admin.register(Product)
 class ProductModelAdmin(admin.ModelAdmin):
-    exclude = ['description']
+    inlines = [ProductImageInline,CommenttInline,RatingInline]
+    list_display = ['name' , 'quantity_in_stock','price','discount','average_rating','category']
     ordering = ['created_at', 'discount']
+    search_fields=['name','price','discount','quantity_in_stock']
 
 
 @admin.register(ProductImage)

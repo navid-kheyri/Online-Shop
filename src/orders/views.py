@@ -25,7 +25,7 @@ class CartDetailView(View):
             product_total_price = float(my_cart[prod_id]['price']) * quantity
             products.append({'product': product, 'quantity': quantity,
                             'product_total_price': product_total_price})
-        return render(request, 'orders/cart-detail.html', {'total': total, 'products': products})
+        return render(request, 'orders/cart-detail.html', {'total': total, 'products': products} )
 
 
 class NewAddressCreateView(CreateView):

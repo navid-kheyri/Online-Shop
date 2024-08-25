@@ -33,8 +33,10 @@ class AddProductModelForm(forms.ModelForm):
         product = super().save(commit=False)
         if commit:
             product.save()
+            self.save_m2m()
             ProductImage.objects.create(
                 product=product, image=self.cleaned_data['input_image'])
+            product.vendor.set(self.cleaned_data['vendors'])
         return product
     
 class CommentModelForm(forms.ModelForm):

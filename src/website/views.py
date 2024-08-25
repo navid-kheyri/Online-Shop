@@ -1,3 +1,4 @@
+from django.db.models.base import Model as Model
 from django.db.models.query import QuerySet
 from django.http import HttpResponseForbidden
 from django.shortcuts import redirect, render
@@ -43,6 +44,12 @@ class IndexListView(ListView):
     template_name = 'index.html'
     model = Product
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        last_products=Product.objects.all().order_by('-created_at')[:4]
+        context['last_products'] = last_products
+        return context
+
 
 @method_decorator( roles_required('customer','admin','anonymous') , name='dispatch')
 class CategoryProductDetailView(DetailView):
@@ -53,11 +60,7 @@ class CategoryProductDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         category = self.object
         category_product = category.category_products.all()
-        for prod in category_product:
-            image = prod.images.all()
-
         context['category_product'] = category_product
-        context['image'] = image
 
         return context
 
@@ -94,3 +97,21 @@ class ProductDetailView(DetailView):
             return redirect('website:product-detail', pk=self.get_object().id)
         # ==> age form valid nabood method get DetailView seda zade mishe
         return self.get(request,*args,**kwargs)
+    
+
+class SubCategoriesDetailView(DetailView):
+    model=Category
+    template_name = 'shop/sub-categories.html'
+
+    def get_object(self):
+        pk = self.kwargs.get('pk')
+        print(pk)
+        return pk
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        category=Category.objects.get(id=self.get_object())
+        sub_cat=category.sub_categories.all()
+        context['sub_cat']=sub_cat
+        print(sub_cat)
+        return context

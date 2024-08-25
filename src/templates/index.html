@@ -30,7 +30,7 @@
                 <div class="row">
                     {% for cat in categories|slice:'0:6' %}
                     <div class="col-6 col-sm-4 col-lg-2">
-                        <a href="{% url 'website:category-product' cat.pk %}" class="cat-block">
+                        <a href="{% url 'website:sub-categories' cat.pk %}" class="cat-block">
                             <figure>
                                 <span>
                                     <img src={{cat.image.url}} alt="Category image">
@@ -60,12 +60,13 @@
 
             <div class="products">
                 <div class="row justify-content-center">
+                    {% for product in last_products %}
                     <div class="col-6 col-md-4 col-lg-3">
                         <div class="product product-2">
                             <figure class="product-media">
                                 <span class="product-label label-circle label-sale">Sale</span>
                                 <a href="product.html">
-                                    <img src={% static "assets/images/demos/demo-4/products/product-10.jpg" %} alt="Product image" class="product-image">
+                                    <img src={{product.images.first.image.url}} alt="Product image" class="product-image">
                                 </a>
                          
                             </figure><!-- End .product-media -->
@@ -74,7 +75,7 @@
                                 <div class="product-cat">
                                     <a href="#">Headphones</a>
                                 </div><!-- End .product-cat -->
-                                <h3 class="product-title"><a href="product.html">Beats by Dr. Dre Wireless  Headphones</a></h3><!-- End .product-title -->
+                                <h3 class="product-title"><a href="product.html">{{product.name}}</a></h3><!-- End .product-title -->
                                 <div class="product-price">
                                     <span class="new-price">$279.99</span>
                                     <span class="old-price">Was $349.99</span>
@@ -90,6 +91,7 @@
                             </div><!-- End .product-body -->
                         </div><!-- End .product -->
                     </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
+                    {%endfor%}
                 </div>
             </div>
         </div>

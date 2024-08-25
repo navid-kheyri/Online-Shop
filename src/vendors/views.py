@@ -154,3 +154,19 @@ class VendorUpdateView(LoginRequiredMixin,UpdateView):
         return reverse_lazy('vendors:my-vendor' , kwargs={'pk':self.object.pk})
     
 
+class AllShopsListView(ListView):
+    model = Vendor
+    template_name='shop/all-shops.html'
+
+
+class ShopPageDetailView(DetailView):
+    model = Vendor
+    template_name='shop/shop-page.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        vendor = Vendor.objects.get(id=self.object.id)
+        products=Product.objects.prefetch_related('vendor').filter(vendor=self.object.id)
+        context['products']=products
+        context['vendor']=vendor
+        return context

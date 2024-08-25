@@ -34,7 +34,7 @@ class VendorImage(models.Model):
     image = models.ImageField(upload_to='product/%Y/%m/%d/',default='default.jpg')
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     vendor = models.ForeignKey(
-        Vendor, on_delete=models.DO_NOTHING, related_name="images")
+        Vendor, on_delete=models.CASCADE, related_name="images")
 
     def __str__(self):
-        return self.image
+        return self.image.url

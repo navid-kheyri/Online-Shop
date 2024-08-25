@@ -54,7 +54,7 @@ class UserImage(models.Model):
     image = models.ImageField(upload_to='product/%Y/%m/%d/')
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     user = models.ForeignKey(
-        CustomUser, on_delete=models.DO_NOTHING, related_name="images")
+        CustomUser, on_delete=models.CASCADE, related_name="images")
 
     def __str__(self):
-        return self.title
+        return self.image.url

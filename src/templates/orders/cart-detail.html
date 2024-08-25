@@ -50,13 +50,13 @@
 											<td class="product-col">
 												<div class="product">
 													<figure class="product-media">
-														<a href="#">
+														<a href="{% url 'website:product-detail' prod.product.pk %}">
 															<img src={{prod.product.images.first.image.url}} alt="Product image">
 														</a>
 													</figure>
 
 													<h3 class="product-title">
-														<a href="#">{{prod.product.name}}</a>
+														<a href="{% url 'website:product-detail' prod.product.pk %}">{{prod.product.name}}</a>
 													</h3><!-- End .product-title -->
 												</div><!-- End .product -->
 											</td>

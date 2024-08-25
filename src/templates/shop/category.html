@@ -57,6 +57,7 @@ Categories
 
                             <div class="products mb-3">
                                 <div class="row justify-content-center">
+									
 									{% for product  in category_product %}
                                     <div class="col-6 col-md-4 col-lg-4">
                                         <div class="product product-7 text-center">
@@ -73,7 +74,7 @@ Categories
                                                 {% comment %} <div class="product-cat">
                                                     <a href="#">Women</a>
                                                 </div><!-- End .product-cat --> {% endcomment %}
-                                                <h3 class="product-title"><a href="product.html">{{product.name}}</a></h3><!-- End .product-title -->
+                                                <h3 class="product-title"><a href="{% url 'website:product-detail' product.pk %}">{{product.name}}</a></h3><!-- End .product-title -->
                                                 <div class="product-price">
                                                     ${{product.price}}
                                                 </div><!-- End .product-price -->
@@ -83,13 +84,17 @@ Categories
                                                     </div><!-- End .ratings -->
                                                     <span class="ratings-text">( 2 Reviews )</span>
                                                 </div><!-- End .rating-container -->
-												{% for img in image|slice:'1:'  %}
+												{% comment %} {% if product.image %} {% endcomment %}
+												{% for img in product.image|slice:'1:'  %}
                                                 <div class="product-nav product-nav-thumbs">
                                                     <a href="#" class="active">
                                                         <img src={{img.image.url}} alt="product desc">
                                                     </a>
                                             {% endfor %}
-                                                </div><!-- End .product-nav -->
+										</div><!-- End .product-nav -->
+										{% comment %} {% else %}
+									
+										{% endif %} {% endcomment %}
                                             </div><!-- End .product-body -->
                                         </div><!-- End .product -->{% endfor %}
                                     </div><!-- End .col-sm-6 col-lg-4 -->

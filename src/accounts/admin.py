@@ -32,6 +32,7 @@ class CustomUserAdmin(BaseUserAdmin):
     search_fields = ('email', 'full_name',)
     ordering = ('email', 'phone_number',)
     filter_horizontal = ('groups', 'user_permissions',)
+    
 
     # def get_form(self, request, obj=None, **kwargs):
     #     form = super().get_form(request, obj, **kwargs)

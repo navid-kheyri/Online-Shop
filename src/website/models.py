@@ -47,7 +47,7 @@ class ProductImage(models.Model):
     image = models.ImageField(upload_to='product/%Y/%m/%d/',default='default.jpg')
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     product = models.ForeignKey(
-        Product, on_delete=models.DO_NOTHING, related_name="images")
+        Product, on_delete=models.CASCADE, related_name="images")
 
     def __str__(self):
         return self.image.url
@@ -59,7 +59,7 @@ class Rating(models.Model):
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     updated_at = jmodels.jDateTimeField(auto_now=True)
     user = models.ForeignKey(
-        User, on_delete=models.DO_NOTHING, related_name='user_ratings')
+        User, on_delete=models.CASCADE, related_name='user_ratings')
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name='product_ratings')
 
@@ -81,7 +81,7 @@ class Comment(models.Model):
     description = models.TextField()
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     user = models.ForeignKey(
-        User, on_delete=models.DO_NOTHING, related_name='user_comments')
+        User, on_delete=models.CASCADE, related_name='user_comments')
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name='Product_comments')
     comment_type = models.CharField(
