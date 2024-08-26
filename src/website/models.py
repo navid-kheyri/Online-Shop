@@ -1,4 +1,5 @@
 from django.db import models
+from django.shortcuts import get_object_or_404
 from django.core.validators import (MaxValueValidator, MinValueValidator)
 from django_jalali.db import models as jmodels
 from vendors.models import Vendor
@@ -30,6 +31,8 @@ class Product(models.Model):
         max_digits=10, decimal_places=0, blank=True, null=True)
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     updated_at = jmodels.jDateTimeField(auto_now=True)
+    rating_count = models.IntegerField(default=0)
+    sum_rating = models.IntegerField(default=0)
     average_rating = models.DecimalField(
         max_digits=3, decimal_places=2, default=0.00,validators=[
                                             MinValueValidator(1.0), 
@@ -42,6 +45,13 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def update_average_rating(self):
+        if self.rating_count > 0:
+            self.average_rating = round(self.sum_rating / self.rating_count, 1)
+    
+    def count_comments(self):
+        return Comment.objects.filter(product=self,comment_type='confirmed').count()
 
 
 class ProductImage(models.Model):
@@ -69,9 +79,12 @@ class Rating(models.Model):
     def __str__(self):
         return str(self.rating)
 
-    # TODO later
-    def add_avg_rate_to_prod(self):
-        pass
+    def save(self, *args, **kwargs):
+        self.product.rating_count += 1  
+        self.product.sum_rating += self.rating
+        self.product.update_average_rating()
+        self.product.save()
+        super().save(*args, **kwargs)
 
 
 class Comment(models.Model):

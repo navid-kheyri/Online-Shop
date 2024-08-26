@@ -2,7 +2,7 @@ from django.db.models.base import Model as Model
 from django.db.models.query import QuerySet
 from django.forms import BaseModelForm
 from django.http import HttpResponse, HttpResponseForbidden
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, ListView, DetailView
@@ -94,11 +94,13 @@ class ProductDetailView(DetailView):
             for item in orderitems:
                 prod=item.product.name
                 product_name.append(prod)
-        comments = product.Product_comments.all()
+        rating=Rating.objects.filter(product=product ,user=user)
+        comments = product.Product_comments.filter(comment_type='confirmed')
         context['comments'] = comments
         context['product'] = product
         context['form'] = CommentModelForm()
         context['orderitems']= set(product_name)
+        context['my_rating']=rating
         return context
 
     def post(self, request, *args, **kwargs):
@@ -120,7 +122,7 @@ class RatingProductCreateView(CreateView):
     form_class=RatingProductModelForm
 
     def get_success_url(self) :
-        return reverse_lazy('website:product-detail', kwargs={'pk': self.object.pk})
+        return reverse_lazy('website:product-detail', kwargs={'pk': self.kwargs.get('pk')})
     
     def form_valid(self, form) :
         rating = form.save(commit=False)
