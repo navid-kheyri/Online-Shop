@@ -22,3 +22,9 @@ class VendorModelAdmin(admin.ModelAdmin):
 @admin.register(VendorImage)
 class VendorImageModelAdmin(admin.ModelAdmin):
     list_display=['title','image','created_at','vendor']
+
+
+@admin.register(VendorRating)
+class VendorRatingModelAdmin(admin.ModelAdmin):
+    list_display = ['rating', 'vendor', 'user']
+    ordering = ['rating']

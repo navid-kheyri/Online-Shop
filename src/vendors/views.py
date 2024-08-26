@@ -189,3 +189,19 @@ class ShopPageDetailView(DetailView):
         context['my_rating'] = rating
         context['shops'] = set(vendors)
         return context
+
+
+class VendorRateCreateView(CreateView):
+    model = VendorRating
+    form_class = VendorRatingForm
+    template_name = 'shop/shop-rating.html'
+
+    def get_success_url(self):
+        return reverse_lazy('vendors:shop-page', kwargs={'pk': self.kwargs.get('pk')})
+
+    def form_valid(self, form):
+        rating = form.save(commit=False)
+        rating.user = self.request.user
+        rating.vendor = Vendor.objects.get(pk=self.kwargs['pk'])
+        rating.save()
+        return super().form_valid(form)

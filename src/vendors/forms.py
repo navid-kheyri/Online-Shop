@@ -1,6 +1,6 @@
 from typing import Any
 from django import forms
-from .models import Vendor, VendorImage ,VendorRating
+from .models import Vendor, VendorImage, VendorRating
 from accounts.models import UserImage
 from website.models import Product
 from django.contrib.auth import get_user_model
@@ -45,7 +45,7 @@ class UserModelForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['email', 'phone_number', 'password', 'confirm_password',
-                  'first_name', 'last_name', 'age', 'city', 'user_type', 'input_image','vendors']
+                  'first_name', 'last_name', 'age', 'city', 'user_type', 'input_image', 'vendors']
 
     def __init__(self, *args, **kwargs):
         """
@@ -59,18 +59,19 @@ class UserModelForm(forms.ModelForm):
                 ('manager', 'Manager'),
                 ('operator', 'Operator')
             ]
-            self.fields['vendors'].queryset = Vendor.objects.filter(user=self.request.user.id)
+            self.fields['vendors'].queryset = Vendor.objects.filter(
+                user=self.request.user.id)
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.password=make_password(self.cleaned_data['password'])
+        user.password = make_password(self.cleaned_data['password'])
         if commit:
             user.save()
             self.save_m2m()
             UserImage.objects.create(
                 user=user, image=self.cleaned_data['input_image'])
             user.vendors.set(self.cleaned_data['vendors'])
-            
+
         return user
 
     def clean(self):
@@ -86,11 +87,12 @@ class UserModelForm(forms.ModelForm):
 
 class ProductDetailModelForm(forms.ModelForm):
     input_image = forms.ImageField(label='Image')
+
     class Meta:
-        model=Product
-        exclude=['vendor']
+        model = Product
+        exclude = ['vendor']
         # fields=['name']
-    
+
     def __init__(self, *args, **kwargs):
         """
         دسترسی رول های زیر را برای تغیر فیلد های داده شده میبندیم
@@ -98,13 +100,20 @@ class ProductDetailModelForm(forms.ModelForm):
         """
         self.request = kwargs.pop('request', None)
         super(ProductDetailModelForm, self).__init__(*args, **kwargs)
-        if self.request and (self.request.user.user_type == 'operator' or  self.request.user.user_type == 'customer'):
+        if self.request and (self.request.user.user_type == 'operator' or self.request.user.user_type == 'customer'):
             for field in self.fields.values():
                 field.disabled = True
-            
-class VendorChangeDetailForm(forms.ModelForm):
-    input_image=forms.ImageField(label='image',required=False)
-    class Meta:
-        model=Vendor
-        exclude=['created_at','user']
 
+
+class VendorChangeDetailForm(forms.ModelForm):
+    input_image = forms.ImageField(label='image', required=False)
+
+    class Meta:
+        model = Vendor
+        exclude = ['created_at', 'user']
+
+
+class VendorRatingForm(forms.ModelForm):
+    class Meta:
+        model = VendorRating
+        fields = ['rating']
