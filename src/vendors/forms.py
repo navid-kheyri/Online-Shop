@@ -1,5 +1,6 @@
+from typing import Any
 from django import forms
-from .models import Vendor, VendorImage
+from .models import Vendor, VendorImage ,VendorRating
 from accounts.models import UserImage
 from website.models import Product
 from django.contrib.auth import get_user_model
@@ -106,3 +107,4 @@ class VendorChangeDetailForm(forms.ModelForm):
     class Meta:
         model=Vendor
         exclude=['created_at','user']
+

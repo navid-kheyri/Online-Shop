@@ -14,8 +14,16 @@
 
         <main class="main">
         	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
-        		<div class="container">
+        		<div class="container" style="display: flex; justify-content: space-between; align-items: center;">
         			<h1 class="page-title">{{vendor.name}}<span>Shop</span></h1>
+					{% if vendor.name in shops and not my_rating %}
+        			<a href="{% url 'vendors:shop-rating' vendor.pk %}"><h1 style="color:#39f" class="page-title">Rate This Shop</h1></a>
+					{% elif not  vendor.name in shops %}
+					<h1 style="color:#39f" class="page-title">You Should Buy From<br> This Shop To Rate!</h1>
+					{% else %}
+					<h1 style="color:#39f" class="page-title">Your Rate to This Shop: {{my_rating.first}}</h1>
+					{% endif %}
+        			<h1 class="page-title">Shop Rate<span>{{vendor.average_rating}} ({{vendor.rating_count}} Rate)</span></h1>
         		</div><!-- End .container -->
         	</div><!-- End .page-header -->
 
@@ -37,9 +45,9 @@
                 						<label for="sortby">Sort by:</label>
                 						<div class="select-custom">
 											<select name="sortby" id="sortby" class="form-control">
-												<option value="popularity" selected="selected">Most Popular</option>
+												<option value="popularity" selected="selected">Most Selling</option>
 												<option value="rating">Most Rated</option>
-												<option value="date">Date</option>
+												<option value="date">Price</option>
 											</select>
 										</div>
                 					</div><!-- End .toolbox-sort -->
@@ -63,10 +71,10 @@
                                                 <h3 class="product-title"><a href="{% url 'website:product-detail' prod.pk %}">{{prod.name}}</a></h3><!-- End .product-title -->
 
                                                 <div class="ratings-container">
-                                                    <div class="ratings">
-                                                        <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->
+                                                    <div >
+                                                        {{prod.average_rating}}
                                                     </div><!-- End .ratings -->
-                                                    <span class="ratings-text">( 2 Reviews )</span>
+                                                    <span class="ratings-text">( {{prod.count_comments}} Reviews )</span>
                                                 </div><!-- End .rating-container -->
                                             </div><!-- End .product-body -->
                                         </div><!-- End .product -->

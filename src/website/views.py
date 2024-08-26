@@ -127,9 +127,7 @@ class RatingProductCreateView(CreateView):
     def form_valid(self, form) :
         rating = form.save(commit=False)
         rating.user = self.request.user
-        print('==============================')
         rating.product = Product.objects.get(pk=self.kwargs.get('pk'))
-        print(self.kwargs.get('pk'))
         rating.save()
         return super().form_valid(form)
 
