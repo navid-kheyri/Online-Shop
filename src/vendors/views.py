@@ -207,7 +207,7 @@ class VendorRateCreateView(CreateView):
         rating.save()
         return super().form_valid(form)
     
-class MostSellingShopListView(ListView):
+class MostSellingVendorsListView(ListView):
     model = Product
     template_name = 'filters/most-selling-vendors.html'
 
@@ -219,4 +219,14 @@ class MostSellingShopListView(ListView):
         for vendor in total_sales:
             shops.append(Vendor.objects.get(id=vendor['product__vendor']))
         context['vendors'] = shops
+        return context
+    
+class TopRatedVendorsListView(ListView):
+    model = Vendor
+    template_name = 'filters/top-rated-vendors.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        vendors = Vendor.objects.order_by('-average_rating')
+        context['vendors'] = vendors
         return context

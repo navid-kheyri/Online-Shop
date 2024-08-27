@@ -174,8 +174,8 @@ class TopRatedListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        orderitems = Product.objects.order_by('-average_rating')
-        context['products'] = orderitems
+        products = Product.objects.order_by('-average_rating')
+        context['products'] = products
         return context
 
 
@@ -185,6 +185,6 @@ class MostExpensiveListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        orderitems = Product.objects.order_by('-price')
-        context['products'] = orderitems
+        products = Product.objects.order_by('-price')
+        context['products'] = products
         return context
