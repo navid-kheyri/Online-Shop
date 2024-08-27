@@ -155,7 +155,7 @@ class SubCategoriesDetailView(DetailView):
 from django.db.models import Sum
 
 class TopSellingListView(ListView):
-    model = Vendor
+    model = Product
     template_name = 'filters/top-selling-mainpage.html'
 
     def get_context_data(self, **kwargs):
@@ -167,3 +167,15 @@ class TopSellingListView(ListView):
             products.append(Product.objects.get(id=product['product_id']))
         context['products'] = products
         return context
+    
+
+class TopRatedListView(ListView):
+    model = Product
+    template_name = 'filters/top-rated-mainpage.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        orderitems=Product.objects.order_by('-average_rating')
+        context['products'] = orderitems
+        return context
+    
