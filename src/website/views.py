@@ -150,3 +150,20 @@ class SubCategoriesDetailView(DetailView):
         context['sub_cat'] = sub_cat
         print(sub_cat)
         return context
+    
+
+from django.db.models import Sum
+
+class TopSellingListView(ListView):
+    model = Vendor
+    template_name = 'filters/top-selling-mainpage.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        orders=OrderItem.objects.filter(order__is_paid=True)
+        total_sales=orders.values('product_id').annotate(total=Sum('quantity')).order_by('-total')
+        products=[]
+        for product in total_sales:
+            products.append(Product.objects.get(id=product['product_id']))
+        context['products'] = products
+        return context

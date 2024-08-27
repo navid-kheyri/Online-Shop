@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (AddProductCreateView ,IndexListView,CategoryProductDetailView,AllCategoriesListView,ProductDetailView,SubCategoriesDetailView,
-                    RatingProductCreateView)
+                    RatingProductCreateView,TopSellingListView)
 
 app_name='website'
 
@@ -11,5 +11,6 @@ urlpatterns = [
     path('all_categories/',AllCategoriesListView.as_view(),name='all-categories'),
     path('product_detail/<pk>/',ProductDetailView.as_view(),name='product-detail'),
     path('sub-categories/<pk>/',SubCategoriesDetailView.as_view(),name='sub-categories'),
-    path('product/<pk>/rating-product/',RatingProductCreateView.as_view(),name='rating-product')
+    path('product/<pk>/rating-product/',RatingProductCreateView.as_view(),name='rating-product'),
+    path('top_selling/',TopSellingListView.as_view(),name='top-selling')
 ]

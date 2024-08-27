@@ -28,7 +28,7 @@
                                 <div class="filter-items filter-items-count">
                                     <div class="filter-item">
                                         <div class="custom-control custom-checkbox">
-                                            <a href="{% url 'website:top-selling' %}">Top Selling Products</a><br>
+                                            {% comment %} <a href="{% url 'website:top-selling' %}">Top Selling Products</a><br> {% endcomment %}
                                             <a href="">Top Rated Products</a><br>
                                             <a href="">Most Expensive Products</a>
                                             {% comment %} <input type="checkbox" class="custom-control-input" id="cat-1">
@@ -73,67 +73,15 @@
             </div><!-- End .cat-blocks-container -->
         </div><!-- End .container -->
 
-        <div class="mb-4"></div><!-- End .mb-4 -->
 
-        <div class="container for-you">
-            <div class="heading heading-flex mb-3">
-                <div class="heading-left">
-                    <h2 class="title">New Arrivals</h2><!-- End .title -->
-                </div><!-- End .heading-left -->
 
-               <div class="heading-right">
-                    <a href="#" class="title-link">View All Products <i class="icon-long-arrow-right"></i></a>
-               </div><!-- End .heading-right -->
-            </div><!-- End .heading -->
 
-            <div class="products">
-                <div class="row justify-content-center">
-                    {% for product in last_products %}
-                    {% comment %} {% for cmt in comments  %} {% endcomment %}
-                    <div class="col-6 col-md-4 col-lg-3">
-                        <div class="product product-2">
-                            <figure class="product-media">
-                                <span class="product-label label-circle label-sale">Sale</span>
-                                <a href="{% url 'website:product-detail' product.pk %}">
-                                    <img src={{product.images.first.image.url}} alt="Product image" class="product-image">
-                                </a>
-                         
-                            </figure><!-- End .product-media -->
-
-                            <div class="product-body">
-                                <div class="product-cat">
-                                    <a href="#">Headphones</a>
-                                </div><!-- End .product-cat -->
-                                <h3 class="product-title"><a href="{% url 'website:product-detail' product.pk %}">{{product.name}}</a></h3><!-- End .product-title -->
-                                <div class="product-price">
-                                    <span class="new-price">${{product.price}}</span>
-                                    <span class="old-price">Was $349.99</span>
-                                </div><!-- End .product-price -->
-                                <div class="ratings-container">
-                                    <div >
-                                        {{product.average_rating}}
-                                    </div><!-- End .ratings -->
-                                    
-                                    
-                                    <span class="ratings-text">( {{product.count_comments}} Reviews )</span>
-                                </div><!-- End .rating-container -->
-                                
-                                
-                            </div><!-- End .product-body -->
-                        </div><!-- End .product -->
-                    </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
-                    {% comment %} {% endfor %} {% endcomment %}
-                    {%endfor%}
-                </div>
-            </div>
-        </div>
-        {% comment %} <div class="mb-6"></div><!-- End .mb-6 --> {% endcomment %}
         <div class="mb-4"></div><!-- End .mb-4 --> 
 
         <div class="container for-you">
             <div class="heading heading-flex mb-3">
                 <div class="heading-left">
-                    <h2 class="title">All Products</h2><!-- End .title -->
+                    <h2 class="title">Top Selling Products</h2><!-- End .title -->
                 </div><!-- End .heading-left -->
 
             
