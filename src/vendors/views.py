@@ -259,9 +259,16 @@ class TopSellingProductShop(DetailView):
             product = Product.objects.filter(id=product['product_id'],vendor=self.kwargs['pk']).first()
             if product:
                 products.append(product)
-        print(products)
         context['products'] = products
         return context
     
-
-
+class TopRatedProductShop(DetailView):
+    model = Vendor
+    template_name = 'filters/top-rated-product-shop.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        products = Product.objects.filter(vendor=self.kwargs['pk']).order_by('-average_rating')
+        context['products'] = products
+        return context
+    
