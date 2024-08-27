@@ -272,3 +272,12 @@ class TopRatedProductShop(DetailView):
         context['products'] = products
         return context
     
+class MostExpensiveProductShop(DetailView):
+    model = Vendor
+    template_name = 'filters/expensive-product-shop.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        products = Product.objects.filter(vendor=self.kwargs['pk']).order_by('-price')
+        context['products'] = products
+        return context

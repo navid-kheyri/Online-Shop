@@ -65,7 +65,9 @@
                                             <div class="product-body">
 
                                                 <h3 class="product-title"><a href="{% url 'website:product-detail' prod.pk %}">{{prod.name}}</a></h3><!-- End .product-title -->
-
+                                                <div class="product-price">
+                                                    ${{prod.price}}
+                                                </div><!-- End .product-price -->
                                                 <div class="ratings-container">
                                                     <div >
                                                         {{prod.average_rating}}
@@ -115,7 +117,7 @@
 													<div class="custom-control custom-checkbox">
 														<a href="{% url 'vendors:top-selling-p-shop' vendor.pk %}">Most Selling Product</a><br>
 														<a href="{% url 'vendors:top-rating-p-shop' vendor.pk %}">Top Rated Products</a><br>
-														<a href="{% url 'vendors:newest-vendors' %}">Most Expensive Products</a>
+														<a href="{% url 'vendors:expensie-p-shop' vendor.pk %}">Most Expensive Products</a>
 														{% comment %} <input type="checkbox" class="custom-control-input" id="cat-1">
 														<label class="custom-control-label" for="cat-1">Dresses</label> {% endcomment %}
 													</div><!-- End .custom-checkbox -->
