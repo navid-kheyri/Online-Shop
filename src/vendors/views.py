@@ -206,21 +206,24 @@ class VendorRateCreateView(CreateView):
         rating.vendor = Vendor.objects.get(pk=self.kwargs['pk'])
         rating.save()
         return super().form_valid(form)
-    
+
+
 class MostSellingVendorsListView(ListView):
     model = Product
     template_name = 'filters/most-selling-vendors.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        orders=OrderItem.objects.filter(order__is_paid=True)
-        total_sales=orders.values('product__vendor').annotate(total=Sum('quantity')).order_by('-total')
-        shops=[]
+        orders = OrderItem.objects.filter(order__is_paid=True)
+        total_sales = orders.values('product__vendor').annotate(
+            total=Sum('quantity')).order_by('-total')
+        shops = []
         for vendor in total_sales:
             shops.append(Vendor.objects.get(id=vendor['product__vendor']))
         context['vendors'] = shops
         return context
-    
+
+
 class TopRatedVendorsListView(ListView):
     model = Vendor
     template_name = 'filters/top-rated-vendors.html'
@@ -229,4 +232,15 @@ class TopRatedVendorsListView(ListView):
         context = super().get_context_data(**kwargs)
         vendors = Vendor.objects.order_by('-average_rating')
         context['vendors'] = vendors
+        return context
+
+
+class NewestVendorsListView(ListView):
+    template_name = 'filters/newest-vendors.html'
+    model = Vendor
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        last_vendors = Vendor.objects.all().order_by('-created_at')
+        context['last_vendors'] = last_vendors
         return context
