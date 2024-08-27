@@ -10,6 +10,7 @@ from website.models import Product
 from .forms import ProductDetailModelForm, VendorModelForms, UserModelForm, VendorChangeDetailForm, VendorRatingForm
 from django.utils.decorators import method_decorator
 from accounts.decorators import roles_required
+from django.db.models import Sum
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -205,3 +206,17 @@ class VendorRateCreateView(CreateView):
         rating.vendor = Vendor.objects.get(pk=self.kwargs['pk'])
         rating.save()
         return super().form_valid(form)
+    
+class MostSellingShopListView(ListView):
+    model = Product
+    template_name = 'filters/most-selling-vendors.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        orders=OrderItem.objects.filter(order__is_paid=True)
+        total_sales=orders.values('product__vendor').annotate(total=Sum('quantity')).order_by('-total')
+        shops=[]
+        for vendor in total_sales:
+            shops.append(Vendor.objects.get(id=vendor['product__vendor']))
+        context['vendors'] = shops
+        return context

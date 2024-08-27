@@ -6,12 +6,13 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, ListView, DetailView
-from .models import Product, Category, Comment,Rating
+from .models import Product, Category, Comment, Rating
 from vendors.models import Vendor
-from orders.models import Order , OrderItem
+from orders.models import Order, OrderItem
 from .forms import AddProductModelForm, CommentModelForm, RatingProductModelForm
 from django.utils.decorators import method_decorator
 from accounts.decorators import roles_required
+from django.db.models import Sum
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -86,21 +87,22 @@ class ProductDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         product = self.object
-        user=self.request.user.id
-        paid_orders=Order.objects.filter(user=user,is_paid=True).prefetch_related('order_item__product')
+        user = self.request.user.id
+        paid_orders = Order.objects.filter(
+            user=user, is_paid=True).prefetch_related('order_item__product')
         product_name = []
         for order in paid_orders:
-            orderitems=order.order_item.all()
+            orderitems = order.order_item.all()
             for item in orderitems:
-                prod=item.product.name
+                prod = item.product.name
                 product_name.append(prod)
-        rating=Rating.objects.filter(product=product ,user=user)
+        rating = Rating.objects.filter(product=product, user=user)
         comments = product.Product_comments.filter(comment_type='confirmed')
         context['comments'] = comments
         context['product'] = product
         context['form'] = CommentModelForm()
-        context['orderitems']= set(product_name)
-        context['my_rating']=rating
+        context['orderitems'] = set(product_name)
+        context['my_rating'] = rating
         return context
 
     def post(self, request, *args, **kwargs):
@@ -114,24 +116,22 @@ class ProductDetailView(DetailView):
             return redirect('website:product-detail', pk=self.get_object().id)
         # ==> age form valid nabood method get DetailView seda zade mishe
         return self.get(request, *args, **kwargs)
-    
+
 
 class RatingProductCreateView(CreateView):
     model = Rating
     template_name = 'website/rating-product.html'
-    form_class=RatingProductModelForm
+    form_class = RatingProductModelForm
 
-    def get_success_url(self) :
+    def get_success_url(self):
         return reverse_lazy('website:product-detail', kwargs={'pk': self.kwargs.get('pk')})
-    
-    def form_valid(self, form) :
+
+    def form_valid(self, form):
         rating = form.save(commit=False)
         rating.user = self.request.user
         rating.product = Product.objects.get(pk=self.kwargs.get('pk'))
         rating.save()
         return super().form_valid(form)
-
-
 
 
 class SubCategoriesDetailView(DetailView):
@@ -150,9 +150,7 @@ class SubCategoriesDetailView(DetailView):
         context['sub_cat'] = sub_cat
         print(sub_cat)
         return context
-    
 
-from django.db.models import Sum
 
 class TopSellingListView(ListView):
     model = Product
@@ -160,14 +158,15 @@ class TopSellingListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        orders=OrderItem.objects.filter(order__is_paid=True)
-        total_sales=orders.values('product_id').annotate(total=Sum('quantity')).order_by('-total')
-        products=[]
+        orders = OrderItem.objects.filter(order__is_paid=True)
+        total_sales = orders.values('product_id').annotate(
+            total=Sum('quantity')).order_by('-total')
+        products = []
         for product in total_sales:
             products.append(Product.objects.get(id=product['product_id']))
         context['products'] = products
         return context
-    
+
 
 class TopRatedListView(ListView):
     model = Product
@@ -175,16 +174,17 @@ class TopRatedListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        orderitems=Product.objects.order_by('-average_rating')
+        orderitems = Product.objects.order_by('-average_rating')
         context['products'] = orderitems
         return context
-    
+
+
 class MostExpensiveListView(ListView):
     model = Product
     template_name = 'filters/most-expensive-mainpage.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        orderitems=Product.objects.order_by('-price')
+        orderitems = Product.objects.order_by('-price')
         context['products'] = orderitems
         return context
