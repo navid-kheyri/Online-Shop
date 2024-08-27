@@ -14,8 +14,16 @@
 
         <main class="main">
         	<div class="page-header text-center" style="background-image: url('{% static "assets/images/page-header-bg.jpg" %}')">
-        		<div class="container">
-        			<h1 class="page-title">Shop List<span></span></h1>
+        		<div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+        			<h1 class="page-title">{{vendor.name}}<span>Shop</span></h1>
+					{% if vendor.name in shops and not my_rating %}
+        			<a href="{% url 'vendors:shop-rating' vendor.pk %}"><h1 style="color:#39f" class="page-title">Rate This Shop</h1></a>
+					{% elif not  vendor.name in shops %}
+					<h1 style="color:#39f" class="page-title">You Should Buy From<br> This Shop To Rate!</h1>
+					{% else %}
+					<h1 style="color:#39f" class="page-title">Your Rate to This Shop: {{my_rating.first}}</h1>
+					{% endif %}
+        			<h1 class="page-title">Shop Rate<span>{{vendor.average_rating}} ({{vendor.rating_count}} Rate)</span></h1>
         		</div><!-- End .container -->
         	</div><!-- End .page-header -->
 
@@ -36,11 +44,7 @@
                 					<div class="toolbox-sort">
                 						<label for="sortby">Sort by:</label>
                 						<div class="select-custom">
-											<select name="sortby" id="sortby" class="form-control">
-												<option value="popularity" selected="selected">Most Selling</option>
-												<option value="rating">Most Rated</option>
-												<option value="date">Newest</option>
-											</select>
+											Most Selling Product
 										</div>
                 					</div><!-- End .toolbox-sort -->
                 				</div><!-- End .toolbox-right -->
@@ -48,24 +52,25 @@
 
                             <div class="products mb-3">
                                 <div class="row justify-content-center">
-                                    {% for shop in vendors  %}
+                                    {% for prod in products  %}
                                     <div class="col-6 col-md-4 col-lg-4">
                                         <div class="product product-7 text-center">
                                             <figure class="product-media">
                                                 <span class="product-label label-new">New</span>
-                                                <a href="{% url 'vendors:shop-page' shop.pk %}">
-                                                    <img style='width:277px;height:277px' src={{ shop.images.first.image.url }} alt="Product image" class="product-image">
+                                                <a href="{% url 'website:product-detail' prod.pk %}">
+                                                    <img style='width:277px;height:277px' src={{ prod.images.first.image.url }} alt="Product image" class="product-image">
                                                 </a>
                                             </figure><!-- End .product-media -->
 
                                             <div class="product-body">
 
-                                                <h3 class="product-title"><a href="{% url 'vendors:shop-page' shop.pk %}">{{shop.name}}</a></h3><!-- End .product-title -->
+                                                <h3 class="product-title"><a href="{% url 'website:product-detail' prod.pk %}">{{prod.name}}</a></h3><!-- End .product-title -->
 
                                                 <div class="ratings-container">
-                                                    <div style="color:#39f">
-                                                        {{shop.average_rating}}
+                                                    <div >
+                                                        {{prod.average_rating}}
                                                     </div><!-- End .ratings -->
+                                                    <span class="ratings-text">( {{prod.count_comments}} Reviews )</span>
                                                 </div><!-- End .rating-container -->
                                             </div><!-- End .product-body -->
                                         </div><!-- End .product -->
@@ -108,9 +113,9 @@
 											<div class="filter-items filter-items-count">
 												<div class="filter-item">
 													<div class="custom-control custom-checkbox">
-														<a href="{% url 'vendors:most-selling' %}">Most Selling Shops</a><br>
-														<a href="{% url 'vendors:most-rating' %}">Top Rated Shops</a><br>
-														<a href="{% url 'vendors:newest-vendors' %}">Newest Shops</a>
+														<a href="{% url 'vendors:top-selling-p-shop' vendor.pk %}">Most Selling Product</a><br>
+														<a href="{% url 'vendors:most-rating' %}">Top Rated Products</a><br>
+														<a href="{% url 'vendors:newest-vendors' %}">Most Expensive Products</a>
 														{% comment %} <input type="checkbox" class="custom-control-input" id="cat-1">
 														<label class="custom-control-label" for="cat-1">Dresses</label> {% endcomment %}
 													</div><!-- End .custom-checkbox -->

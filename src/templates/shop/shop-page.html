@@ -13,7 +13,7 @@
     <div class="page-wrapper">
 
         <main class="main">
-        	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+        	<div class="page-header text-center" style="background-image: url('{% static "assets/images/page-header-bg.jpg" %}')">
         		<div class="container" style="display: flex; justify-content: space-between; align-items: center;">
         			<h1 class="page-title">{{vendor.name}}<span>Shop</span></h1>
 					{% if vendor.name in shops and not my_rating %}
@@ -104,29 +104,28 @@
                 		</div><!-- End .col-lg-9 -->
 
                 		<aside class="col-lg-3 order-lg-first">
-                			<div class="sidebar sidebar-shop">
-                				<div class="widget widget-clean">
-                					<label>Filters:</label>
-                					<a href="#" class="sidebar-filter-clear">Clean All</a>
-                				</div><!-- End .widget widget-clean -->
-
-        						<div class="widget widget-collapsible">
-    								<h3 class="widget-title">
-									    <a data-toggle="collapse" href="#widget-5" role="button" aria-expanded="true" aria-controls="widget-5">
-									        Price
-									    </a>
+							<div class="sidebar sidebar-shop">
+								<div class="widget widget-collapsible">
+									<h3 class="widget-title">
+										<a data-toggle="collapse" href="#widget-1" role="button" aria-expanded="true" aria-controls="widget-1">
+											Filters
+										</a>
 									</h3><!-- End .widget-title -->
 
-									<div class="collapse show" id="widget-5">
+									<div class="collapse show" id="widget-1">
 										<div class="widget-body">
-                                            <div class="filter-price">
-                                                <div class="filter-price-text">
-                                                    Price Range:
-                                                    <span id="filter-price-range"></span>
-                                                </div><!-- End .filter-price-text -->
-
-                                                <div id="price-slider"></div><!-- End #price-slider -->
-                                            </div><!-- End .filter-price -->
+											<div class="filter-items filter-items-count">
+												<div class="filter-item">
+													<div class="custom-control custom-checkbox">
+														<a href="{% url 'vendors:top-selling-p-shop' vendor.pk %}">Most Selling Product</a><br>
+														<a href="{% url 'vendors:most-rating' %}">Top Rated Products</a><br>
+														<a href="{% url 'vendors:newest-vendors' %}">Most Expensive Products</a>
+														{% comment %} <input type="checkbox" class="custom-control-input" id="cat-1">
+														<label class="custom-control-label" for="cat-1">Dresses</label> {% endcomment %}
+													</div><!-- End .custom-checkbox -->
+													<span class="item-count">3</span>
+												</div><!-- End .filter-item -->
+											</div><!-- End .filter-items -->
 										</div><!-- End .widget-body -->
 									</div><!-- End .collapse -->
         						</div><!-- End .widget -->

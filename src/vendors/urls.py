@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (AddVendorCreateView, AddEmployeeCreateView, MyVendorDetatilView,MyProductsListView, ProductUpdateView, VendorUpdateView, 
-                    AllShopsListView, ShopPageDetailView, VendorRateCreateView, MostSellingVendorsListView,TopRatedVendorsListView,NewestVendorsListView)
+                    AllShopsListView, ShopPageDetailView, VendorRateCreateView, MostSellingVendorsListView,TopRatedVendorsListView,NewestVendorsListView,TopSellingProductShop)
 
 app_name = 'vendors'
 
@@ -17,5 +17,6 @@ urlpatterns = [
     path('most_selling/', MostSellingVendorsListView.as_view(), name='most-selling'),
     path('most_rating/', TopRatedVendorsListView.as_view(), name='most-rating'),
     path('newest_vendors/', NewestVendorsListView.as_view(), name='newest-vendors'),
+    path('top_selling_product_shop/<pk>/', TopSellingProductShop.as_view(), name='top-selling-p-shop'),
 
 ]

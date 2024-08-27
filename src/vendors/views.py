@@ -244,3 +244,24 @@ class NewestVendorsListView(ListView):
         last_vendors = Vendor.objects.all().order_by('-created_at')
         context['last_vendors'] = last_vendors
         return context
+    
+class TopSellingProductShop(DetailView):
+    model = Vendor
+    template_name = 'filters/top-selling-product-shop.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        orders = OrderItem.objects.filter(order__is_paid=True)
+        total_sales = orders.values('product_id').annotate(
+            total=Sum('quantity')).order_by('-total')
+        products = []
+        for product in total_sales:
+            product = Product.objects.filter(id=product['product_id'],vendor=self.kwargs['pk']).first()
+            if product:
+                products.append(product)
+        print(products)
+        context['products'] = products
+        return context
+    
+
+
