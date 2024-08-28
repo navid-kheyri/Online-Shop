@@ -38,6 +38,7 @@
 										<tr>
 											<th>Product</th>
 											<th>Price</th>
+											<th>Discount</th>
 											<th>Quantity</th>
 											<th>Total</th>
 											<th></th>
@@ -61,6 +62,7 @@
 												</div><!-- End .product -->
 											</td>
 											<td class="price-col">${{prod.product.price}}</td>
+											<td class="price-col">${{prod.product.discount}}</td>
 											<td class="quantity-col">
                                                 <div class="cart-product-quantity">
 													<input type="number" class="form-control cart-quantity" value="{{prod.quantity}}" min="1" max="10" step="1" data-product-id="{{prod.product.id}}" required>

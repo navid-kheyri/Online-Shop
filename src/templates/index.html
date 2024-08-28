@@ -106,8 +106,12 @@
                                 </div><!-- End .product-cat -->
                                 <h3 class="product-title"><a href="{% url 'website:product-detail' product.pk %}">{{product.name}}</a></h3><!-- End .product-title -->
                                 <div class="product-price">
+                                    {% if product.discount %}
+                                    <span class="new-price">${{product.count_discount}}</span>
+                                    <span class="old-price">Was ${{product.price}}</span>
+                                    {% else %}
                                     <span class="new-price">${{product.price}}</span>
-                                    <span class="old-price">Was $349.99</span>
+                                    {% endif %}
                                 </div><!-- End .product-price -->
                                 <div class="ratings-container">
                                     <div >
@@ -158,8 +162,12 @@
                                 </div><!-- End .product-cat -->
                                 <h3 class="product-title"><a href="{% url 'website:product-detail' product.pk %}">{{product.name}}</a></h3><!-- End .product-title -->
                                 <div class="product-price">
+                                {% if product.discount %}
+                                    <span class="new-price">${{product.count_discount}}</span>
+                                    <span class="old-price">Was ${{product.price}}</span>
+                                    {% else %}
                                     <span class="new-price">${{product.price}}</span>
-                                    {% comment %} <span class="old-price">Was $349.99</span> {% endcomment %}
+                                    {% endif %}
                                 </div><!-- End .product-price -->
                                 <div class="ratings-container">
                                     <div >

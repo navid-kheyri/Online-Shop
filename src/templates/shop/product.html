@@ -65,7 +65,12 @@ Categories
                                     Your Rate to This Product: {{my_rating.first}}
                                     {% endif %}
                                     <div class="product-price">
-                                        ${{product.price}}
+                                        {% if product.discount %}
+                                        <span class="new-price">${{product.count_discount}}</span>
+                                        <span class="old-price">Was ${{product.price}}</span>
+                                        {% else %}
+                                        <span class="new-price">${{product.price}}</span>
+                                        {% endif %}
                                     </div><!-- End .product-price -->
 
                                     <div class="product-content">

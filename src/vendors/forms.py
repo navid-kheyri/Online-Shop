@@ -86,7 +86,7 @@ class UserModelForm(forms.ModelForm):
 
 
 class ProductDetailModelForm(forms.ModelForm):
-    input_image = forms.ImageField(label='Image')
+    input_image = forms.ImageField(label='Image',required=False)
 
     class Meta:
         model = Product

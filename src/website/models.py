@@ -27,14 +27,14 @@ class Product(models.Model):
     quantity_in_stock = models.PositiveIntegerField()
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    discount = models.DecimalField(
+    discount = models.DecimalField(default=0,
         max_digits=10, decimal_places=0, blank=True, null=True)
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     updated_at = jmodels.jDateTimeField(auto_now=True)
     rating_count = models.IntegerField(default=0)
     sum_rating = models.IntegerField(default=0)
     average_rating = models.DecimalField(
-        max_digits=3, decimal_places=2, default=0.00,validators=[
+        max_digits=3, decimal_places=2, default=1.00,validators=[
                                             MinValueValidator(1.0), 
                                             MaxValueValidator(5.0)
                                         ])
@@ -52,8 +52,14 @@ class Product(models.Model):
     
     def count_comments(self):
         return Comment.objects.filter(product=self,comment_type='confirmed').count()
-
-
+    
+    def count_discount(self):
+        if self.discount <= self.price:
+            final_price= self.price - self.discount
+            return final_price
+        else :
+            raise ValueError("Invalid discount: discount cannot exceed the price")
+        
 class ProductImage(models.Model):
     title = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
@@ -78,13 +84,6 @@ class Rating(models.Model):
 
     def __str__(self):
         return str(self.rating)
-
-    def save(self, *args, **kwargs):
-        self.product.rating_count += 1  
-        self.product.sum_rating += self.rating
-        self.product.update_average_rating()
-        self.product.save()
-        super().save(*args, **kwargs)
 
 
 class Comment(models.Model):

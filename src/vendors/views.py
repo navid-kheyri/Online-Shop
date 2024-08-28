@@ -208,7 +208,12 @@ class VendorRateCreateView(CreateView):
     def form_valid(self, form):
         rating = form.save(commit=False)
         rating.user = self.request.user
-        rating.vendor = Vendor.objects.get(pk=self.kwargs['pk'])
+        vendor = Vendor.objects.get(pk=self.kwargs['pk'])
+        rating.vendor = vendor
+        vendor.rating_count += 1
+        vendor.sum_rating += rating.rating
+        vendor.update_average_rating()
+        vendor.save()
         rating.save()
         return super().form_valid(form)
 

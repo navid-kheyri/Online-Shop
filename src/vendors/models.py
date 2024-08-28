@@ -20,7 +20,7 @@ class Vendor(models.Model):
     rating_count = models.IntegerField(default=0)
     sum_rating = models.IntegerField(default=0)
     average_rating = models.DecimalField(
-        max_digits=3, decimal_places=2, default=0.00,validators=[
+        max_digits=3, decimal_places=2, default=1.00,validators=[
                                             MinValueValidator(1.0), 
                                             MaxValueValidator(5.0)
                                         ])
@@ -65,13 +65,6 @@ class VendorRating(models.Model):
     
     def __str__(self):
         return str(self.rating)
-    
-    def save(self, *args, **kwargs):
-        self.vendor.rating_count += 1  
-        self.vendor.sum_rating += self.rating
-        self.vendor.update_average_rating()
-        self.vendor.save()
-        super().save(*args, **kwargs)
 
     
     

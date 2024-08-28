@@ -180,14 +180,18 @@ class CheckoutAPIView(LoginRequiredMixin,APIView):
         cart_items = []
         for key, item in cart.cart.items():
             product = Product.objects.get(id=key)
+            #####
+            if product.discount:
+                price= product.count_discount()
+            else:
+                price= product.price
             cart_items.append({
                 'product_id': product.id,
                 'product_name': product.name,
                 'quantity': item['quantity'],
                 'price': product.price,
-                'total_price': product.price * item['quantity']
+                'total_price': price * item['quantity']
             })
-
         addresses = Address.objects.filter(user=request.user)
         address_data = AddressSerializer(addresses, many=True).data
         response_data = {
@@ -225,7 +229,13 @@ class CheckoutAPIView(LoginRequiredMixin,APIView):
 
         for key, item in cart.cart.items():
             product = Product.objects.get(id=key)
-            item_total_price = product.price * item['quantity']
+            if product.discount:
+                price = product.count_discount()
+                print('=====================')
+                print(price)
+                item_total_price = price * item['quantity']
+            else:
+                item_total_price = product.price * item['quantity']
             OrderItem.objects.create(
                 order=order,
                 product=product,

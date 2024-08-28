@@ -26,7 +26,7 @@
                     {% for orderitem in order_items  %}
                     <h2 class="title">Product name: {{orderitem.product}}</h2><!-- End .title -->
                     <p>Quantity: {{orderitem.quantity}}</p>
-                    <p>Price: ${{orderitem.product.price}}</p>
+                    <p>Price: ${{orderitem.item_total_price}}</p>
                     <hr class="mt-4 mb-4">
                     {% endfor %}
                 </div><!-- End .container -->

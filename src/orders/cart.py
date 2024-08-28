@@ -13,7 +13,11 @@ class Cart():
             self.cart[product_id]['quantity']+=quantity
         else:
             # Object of type Decimal is not JSON serializable age str nazarim in erroe mide
-            self.cart[product_id]={'quantity':quantity,'price':str(product.price)}
+            if product.count_discount:
+                discount_price = product.count_discount()
+                self.cart[product_id]={'quantity':quantity,'price':str(discount_price)}
+            else:
+                self.cart[product_id]={'quantity':quantity,'price':str(product.price)}
         self.save()
 
     def save(self):
