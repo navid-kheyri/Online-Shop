@@ -13,7 +13,7 @@
 
     <div class="page-wrapper">
         <main class="main">
-        	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+        	<div class="page-header text-center" style="background-image: url('{% static "assets/images/page-header-bg.jpg" %}')">
         		<div class="container">
         			<h1 class="page-title">Shopping Cart<span>Shop</span></h1>
         		</div><!-- End .container -->
@@ -38,6 +38,7 @@
 										<tr>
 											<th>Product</th>
 											<th>Price</th>
+											<th>Discount</th>
 											<th>Quantity</th>
 											<th>Total</th>
 											<th></th>
@@ -50,17 +51,18 @@
 											<td class="product-col">
 												<div class="product">
 													<figure class="product-media">
-														<a href="#">
+														<a href="{% url 'website:product-detail' prod.product.pk %}">
 															<img src={{prod.product.images.first.image.url}} alt="Product image">
 														</a>
 													</figure>
 
 													<h3 class="product-title">
-														<a href="#">{{prod.product.name}}</a>
+														<a href="{% url 'website:product-detail' prod.product.pk %}">{{prod.product.name}}</a>
 													</h3><!-- End .product-title -->
 												</div><!-- End .product -->
 											</td>
 											<td class="price-col">${{prod.product.price}}</td>
+											<td class="price-col">${{prod.product.discount}}</td>
 											<td class="quantity-col">
                                                 <div class="cart-product-quantity">
 													<input type="number" class="form-control cart-quantity" value="{{prod.quantity}}" min="1" max="10" step="1" data-product-id="{{prod.product.id}}" required>
@@ -191,17 +193,13 @@
 					'csrfmiddlewaretoken': '{{ csrf_token }}'
 				},
 				success: function(response) {
-					// Handle success response
-					// No alert message
 				},
 				error: function(response) {
-					// Handle error response
-					// No alert message
 				}
 			});
 		});
 	
-		// Handle delete button click
+
 		$('.btn-remove').on('click', function() {
 			var productId = $(this).data('product-id');
 			
@@ -222,10 +220,9 @@
 			});
 		});
 	
-		// Handle checkout form submission
 		$('#checkout-form').on('submit', function(event) {
-			event.preventDefault(); // Prevent the form from submitting the traditional way
-			var formData = $(this).serialize(); // Serialize the form data
+			event.preventDefault();
+			var formData = $(this).serialize(); 
 	
 			$.ajax({
 				type: 'POST',
@@ -233,13 +230,13 @@
 				data: formData,
 				success: function(response) {
 					if (response.message === 'Order created successfully') {
-						window.location.href = "{% url 'website:index' %}"; // Redirect to the index page
+						window.location.href = "{% url 'website:index' %}"; 
 					} else {
-						alert(response.message); // Display any error messages
+						alert(response.message); 
 					}
 				},
 				error: function(xhr, status, error) {
-					alert('Choose an Address or Make New one.'); // Handle any errors
+					alert('Choose an Address or Make New one.'); 
 				}
 			});
 		});

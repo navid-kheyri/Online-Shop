@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product, ProductImage,Comment
+from .models import Product, ProductImage,Comment,Rating
 from vendors.models import Vendor
 
 
@@ -16,7 +16,7 @@ class AddProductModelForm(forms.ModelForm):
 
     class Meta:
         model = Product
-        exclude=['average_rating','vendor']
+        exclude=['average_rating','vendor','rating_count','sum_rating']
 
     def __init__(self, *args, **kwargs):
         """
@@ -33,11 +33,18 @@ class AddProductModelForm(forms.ModelForm):
         product = super().save(commit=False)
         if commit:
             product.save()
+            self.save_m2m()
             ProductImage.objects.create(
                 product=product, image=self.cleaned_data['input_image'])
+            product.vendor.set(self.cleaned_data['vendors'])
         return product
     
 class CommentModelForm(forms.ModelForm):
     class Meta:
         model=Comment
         fields=['title','description']
+
+class RatingProductModelForm(forms.ModelForm):
+    class Meta:
+        model = Rating
+        fields = ['rating']

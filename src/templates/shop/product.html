@@ -51,14 +51,26 @@ Categories
                                     <h1 class="product-title">{{product.name}}</h1><!-- End .product-title -->
 
                                     <div class="ratings-container">
-                                        <div class="ratings">
-                                            <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
+                                        <div style='color:#39f' >
+                                            {{product.average_rating}}
+                                            {% comment %} <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val --> {% endcomment %}
                                         </div><!-- End .ratings -->
-                                        <a class="ratings-text" href="#product-review-link" id="review-link">( 2 Reviews )</a>
+                                        <a style='color:#39f' class="ratings-text" href="" id="review-link">( {{product.rating_count}} Rate )</a>
                                     </div><!-- End .rating-container -->
-
+                                    {% if product.name in orderitems and not my_rating  %}
+                                    <a href="{% url 'website:rating-product' product.pk %}">Rate This Product</a>
+                                    {% elif not  product.name in orderitems %}
+                                    You Should Buy This Product To Rate!
+                                    {% else %}
+                                    Your Rate to This Product: {{my_rating.first}}
+                                    {% endif %}
                                     <div class="product-price">
-                                        ${{product.price}}
+                                        {% if product.discount %}
+                                        <span class="new-price">${{product.count_discount}}</span>
+                                        <span class="old-price">Was ${{product.price}}</span>
+                                        {% else %}
+                                        <span class="new-price">${{product.price}}</span>
+                                        {% endif %}
                                     </div><!-- End .product-price -->
 
                                     <div class="product-content">
@@ -104,10 +116,13 @@ Categories
                         <ul class="nav nav-pills justify-content-center" role="tablist">
 
                             <li class="nav-item">
-                                <a class="nav-link active" id="product-review-link" data-toggle="tab" href="#product-review-tab" role="tab" aria-controls="product-review-tab" aria-selected="false">Reviews (2)</a>
+                                <a class="nav-link active" id="product-review-link" data-toggle="tab" href="#product-review-tab" role="tab" aria-controls="product-review-tab" aria-selected="false">Reviews ({{comments|length}})</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" id="product-shipping-link" data-toggle="tab" href="#product-shipping-tab" role="tab" aria-controls="product-shipping-tab" aria-selected="false">Comment</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="product-rating-link" data-toggle="tab" href="#product-rating-tab" role="tab" aria-controls="product-rating-tab" aria-selected="false">Rating</a>
                             </li>
                         </ul>
                         <div class="tab-content">
@@ -124,19 +139,35 @@ Categories
                                     {% endif %}
                                 </div><!-- End .product-desc-content -->
                             </div><!-- .End .tab-pane -->
+                            <div class="tab-pane fade" id="product-rating-tab" role="tabpanel" aria-labelledby="product-rating-link">
+                                <div class="product-desc-content">
+                                    {% if request.user.is_authenticated %}
+                                    <form method='post'>
+                                        {% comment %} {% csrf_token %}
+                                        {{form.as_p}}
+                                        <button type="submit">Submit</button> {% endcomment %}
+                                    </form>
+                                    {% else %}
+                                     <h3>You must be logged in to leave a review.</h3>
+                                    {% endif %}
+                                </div><!-- End .product-desc-content -->
+                            </div><!-- .End .tab-pane -->
                             <div class="tab-pane fade show active" id="product-review-tab" role="tabpanel" aria-labelledby="product-review-link">
                                 <div class="reviews">
-                                    <h3>Reviews (2)</h3>
+                                    <h3>Reviews ({{comments|length}})</h3>
                                     {% for cmt in comments %}
-                                    {% if cmt.comment_type == 'confirmed' %}
                                     <div class="review">
                                         <div class="row no-gutters">
                                             <div class="col-auto">
                                                 <h4><a href="#">{{cmt.user.first_name}}</a></h4>
                                                 <div class="ratings-container">
-                                                    <div class="ratings">
-                                                        <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                                                    </div><!-- End .ratings -->
+                                                    {% comment %} <div >
+                                                        {% if my_rating %}
+                                                        {{my_rating.first}}
+                                                        {% else %}
+                                                        No Rate!
+                                                        {% endif %}
+                                                    </div><!-- End .ratings --> {% endcomment %}
                                                 </div><!-- End .rating-container -->
                                                 <span class="review-date">{{cmt.created_at}}</span>
                                             </div><!-- End .col -->
@@ -150,7 +181,6 @@ Categories
                                             </div><!-- End .col-auto -->
                                         </div><!-- End .row -->
                                     </div><!-- End .review -->
-                                    {% endif %}
                                     {% endfor %}
 
 

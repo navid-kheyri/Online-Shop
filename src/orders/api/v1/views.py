@@ -30,18 +30,14 @@ class OrderListCreateAPIView(APIView):
 
 class OrderDetailAPIView(APIView):
     def get(self, request, pk, *args, **kwargs):
-        try:
-            order = Order.objects.get(pk=pk)
-        except Order.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+        order = get_object_or_404(Order,pk=pk)
         serializer = OrderModelSerializer(order)
         return Response(serializer.data)
 
     def put(self, request, pk, *args, **kwargs):
-        try:
-            order = Order.objects.get(pk=pk)
-        except Order.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        order=get_object_or_404(Order,pk=pk)
         serializer = OrderModelSerializer(order, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -49,10 +45,8 @@ class OrderDetailAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, *args, **kwargs):
-        try:
-            order = Order.objects.get(pk=pk)
-        except Order.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        order=get_object_or_404(Order,pk=pk)
         order.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -73,18 +67,14 @@ class OrderItemListCreateAPIView(APIView):
 
 class OrderItemDetailAPIView(APIView):
     def get(self, request, pk, *args, **kwargs):
-        try:
-            order_item = OrderItem.objects.get(pk=pk)
-        except OrderItem.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+        order_item = get_object_or_404(OrderItem,pk=pk)
         serializer = OrderItemModelSerializer(order_item)
         return Response(serializer.data)
 
     def put(self, request, pk, *args, **kwargs):
-        try:
-            order_item = OrderItem.objects.get(pk=pk)
-        except OrderItem.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        order_item = get_object_or_404(OrderItem,pk=pk)
         serializer = OrderItemModelSerializer(order_item, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -92,10 +82,8 @@ class OrderItemDetailAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, *args, **kwargs):
-        try:
-            order_item = OrderItem.objects.get(pk=pk)
-        except OrderItem.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+        order_item = get_object_or_404(OrderItem,pk=pk)
         order_item.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -192,14 +180,18 @@ class CheckoutAPIView(LoginRequiredMixin,APIView):
         cart_items = []
         for key, item in cart.cart.items():
             product = Product.objects.get(id=key)
+            #####
+            if product.discount:
+                price= product.count_discount()
+            else:
+                price= product.price
             cart_items.append({
                 'product_id': product.id,
                 'product_name': product.name,
                 'quantity': item['quantity'],
                 'price': product.price,
-                'total_price': product.price * item['quantity']
+                'total_price': price * item['quantity']
             })
-
         addresses = Address.objects.filter(user=request.user)
         address_data = AddressSerializer(addresses, many=True).data
         response_data = {
@@ -237,7 +229,13 @@ class CheckoutAPIView(LoginRequiredMixin,APIView):
 
         for key, item in cart.cart.items():
             product = Product.objects.get(id=key)
-            item_total_price = product.price * item['quantity']
+            if product.discount:
+                price = product.count_discount()
+                print('=====================')
+                print(price)
+                item_total_price = price * item['quantity']
+            else:
+                item_total_price = product.price * item['quantity']
             OrderItem.objects.create(
                 order=order,
                 product=product,

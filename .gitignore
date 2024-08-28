@@ -4,3 +4,4 @@ __pycache__/
 online shop/venv
 *.pyc
 venv
+.env

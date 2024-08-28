@@ -39,6 +39,7 @@
             </a>
           </li> {% endcomment %}
 
+          {% if  request.user.user_type != 'operator' %}
           <li class="sidebar-item">
             <a class="sidebar-link" href="{% url 'vendors:create-vendor' %}" aria-expanded="false">
               <span>
@@ -47,6 +48,8 @@
               <span class="hide-menu">Add Vendor</span>
             </a>
           </li>
+              {% else %}
+              {% endif %}
           <li class="sidebar-item">
             <a class="sidebar-link" href="{% url 'accounts:edit-employee' request.user.pk %}" aria-expanded="false">
               <span>

@@ -34,7 +34,7 @@
               <li class="nav-item dropdown">
                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                   aria-expanded="false">
-                  <img src="../assets/images/profile/user-1.jpg" alt="" width="35" height="35" class="rounded-circle">
+                  <img src="{{request.user.images.first.image.url}}" alt="" width="35" height="35" class="rounded-circle">
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                   <div class="message-body">
@@ -63,23 +63,10 @@
         <div class="container-fluid">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title fw-semibold mb-4">Add New Empolyee</h5>
+              <h5 class="card-title fw-semibold mb-4">Update Product</h5>
               <div class="card">
                 <div class="card-body">
-                  <form method="post" action="{% url 'vendors:add-employee' %}" enctype="multipart/form-data">
-                    {% comment %} <div class="mb-3">
-                      <label for="exampleInputEmail1" class="form-label">Email address</label>
-                      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                      <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-                    </div>
-                    <div class="mb-3">
-                      <label for="exampleInputPassword1" class="form-label">Password</label>
-                      <input type="password" class="form-control" id="exampleInputPassword1">
-                    </div>
-                    <div class="mb-3 form-check">
-                      <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                      <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                    </div> {% endcomment %}
+                  <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     {% for field in form %}
                         {{ field.label_tag }}
@@ -92,33 +79,6 @@
                   </form>
                 </div>
               </div>
-              {% comment %} <h5 class="card-title fw-semibold mb-4">Disabled forms</h5>
-              <div class="card mb-0">
-                <div class="card-body">
-                  <form>
-                    <fieldset disabled>
-                      <legend>Disabled fieldset example</legend>
-                      <div class="mb-3">
-                        <label for="disabledTextInput" class="form-label">Disabled input</label>
-                        <input type="text" id="disabledTextInput" class="form-control" placeholder="Disabled input">
-                      </div>
-                      <div class="mb-3">
-                        <label for="disabledSelect" class="form-label">Disabled select menu</label>
-                        <select id="disabledSelect" class="form-select">
-                          <option>Disabled select</option>
-                        </select>
-                      </div>
-                      <div class="mb-3">
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" id="disabledFieldsetCheck" disabled>
-                          <label class="form-check-label" for="disabledFieldsetCheck">
-                            Can't check this
-                          </label>
-                        </div>
-                      </div>
-                      <button type="submit" class="btn btn-primary">Submit</button>
-                    </fieldset>
-                  </form> {% endcomment %}
                 </div>
               </div>
             </div>

@@ -1,0 +1,70 @@
+{% extends "website/base.html" %}
+{% load static %}
+
+{% block title %}
+{% endblock title %}
+
+{% block header %}
+{% include "website/header.html" with category=category %}
+{% endblock header %}
+
+{% block content %}
+<div class="page-wrapper">
+
+    <main class="main">
+        <div class="mb-4"></div><!-- End .mb-4 -->
+        <div class="container">
+            <h2 class="title text-center mb-4">Explore Categories</h2>
+            
+            {% comment %} <h2 class="title text-center mb-4">Explore Popular Categories</h2><!-- End .title text-center --> {% endcomment %}
+            
+            <div class="cat-blocks-container">
+                <div class="row">
+                    {% for cat in sub_cat %}
+                    {% if cat.parent %}
+                    <div class="col-6 col-sm-4 col-lg-2">
+                        <a href="{% url 'website:category-product' cat.pk %}" class="cat-block">
+                            <figure>
+                                <span>
+                                    <img src={{cat.image.url}} alt="Category image">
+                                </span>
+                            </figure>
+
+                            <h3 class="cat-block-title">{{cat.name}}</h3><!-- End .cat-block-title -->
+                        </a>
+                    </div><!-- End .col-sm-4 col-lg-2 -->
+                    {% endif %}
+                    {% endfor %}
+
+                </div><!-- End .row -->
+            </div><!-- End .cat-blocks-container -->
+        </div><!-- End .container -->
+
+
+        {% comment %} <div class="mb-6"></div><!-- End .mb-6 -->
+
+        <div class="mb-4"></div><!-- End .mb-4 --> {% endcomment %}
+
+
+
+
+
+    {% comment %} footer {% endcomment %}
+    </div>
+</div><!-- End .page-wrapper -->
+<button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
+
+
+
+
+
+{% endblock content %}
+
+
+
+{% block footer %}
+{% include "website/footer.html" %}
+{% endblock footer %}

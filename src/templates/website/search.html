@@ -1,0 +1,157 @@
+{% extends "website/base.html" %}
+{% load static %}
+
+{% block title %}
+{% endblock title %}
+
+{% block header %}
+{% include "website/header.html" with category=category %}
+{% endblock header %}
+
+{% block content %}
+<div class="page-wrapper">
+
+    <main class="main">
+        <div class="mb-4"></div><!-- End .mb-4 -->
+        <div class="container">
+            <div class="heading heading-flex mb-3">
+                <div class="heading-left">
+                    <h2 class="title">Explore Categories </h2><!-- End .title -->
+                </div><!-- End .heading-left -->
+
+               <div class="heading-right">
+                    <a href="{% url 'website:all-categories' %}" class="title-link">View All Categories <i class="icon-long-arrow-right"></i></a>
+               </div><!-- End .heading-right -->
+            </div><!-- End .heading -->
+            
+            {% comment %} <h2 class="title text-center mb-4">Explore Popular Categories</h2><!-- End .title text-center --> {% endcomment %}
+            
+            <div class="cat-blocks-container">
+                <div class="row">
+                    {% for cat in categories|slice:'0:6' %}
+                    <div class="col-6 col-sm-4 col-lg-2">
+                        <a href="{% url 'website:sub-categories' cat.pk %}" class="cat-block">
+                            <figure>
+                                <span>
+                                    <img src={{cat.image.url}} alt="Category image">
+                                </span>
+                            </figure>
+
+                            <h3 class="cat-block-title">{{cat.name}}</h3><!-- End .cat-block-title -->
+                        </a>
+                    </div><!-- End .col-sm-4 col-lg-2 -->
+                    {% endfor %}
+                </div><!-- End .row -->
+            </div><!-- End .cat-blocks-container -->
+        </div><!-- End .container -->
+
+        <div class="mb-4"></div><!-- End .mb-4 -->
+
+        <div class="container for-you">
+            <div class="heading heading-flex mb-3">
+                <div class="heading-left">
+                    <h2 class="title">Search for Vendors</h2><!-- End .title -->
+                </div><!-- End .heading-left -->
+
+            
+            </div><!-- End .heading -->
+
+            <div class="products">
+                <div class="row justify-content-center">
+                    {% if vendorss %}
+                    {% for shop in vendorss %}
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="product product-7 text-center">
+                            <figure class="product-media">
+                                <span class="product-label label-circle label-sale">Sale</span>
+                                <a href="{% url 'vendors:shop-page' shop.pk %}">
+                                    <img style='width:277px;height:277px' src={{shop.images.first.image.url}} alt="Product image" class="product-image">
+                                </a>
+                
+                            </figure><!-- End .product-media -->
+
+                            <div class="product-body">
+                                <h3 class="product-title"><a href="{% url 'vendors:shop-page' shop.pk %}">{{shop.name}}</a></h3><!-- End .product-title -->
+                                <div class="ratings-container">
+                                    <div style="color:#39f">
+                                        {{shop.average_rating}}
+                                    </div><!-- End .ratings -->
+                                </div><!-- End .rating-container -->
+
+                               
+                            </div><!-- End .product-body -->
+                        </div><!-- End .product -->
+                    </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
+                    {% endfor %}
+                    {% else %}
+                    {{not_found}}
+                    {% endif %}
+                </div>
+            </div>
+        
+        <div class="mb-4"></div><!-- End .mb-4 -->
+
+        <div class="container for-you">
+            <div class="heading heading-flex mb-3">
+                <div class="heading-left">
+                    <h2 class="title">Search for Products</h2><!-- End .title -->
+                </div><!-- End .heading-left -->
+
+            
+            </div><!-- End .heading -->
+
+            <div class="products">
+                <div class="row justify-content-center">
+                    {% if productss %}
+                    {% for product in productss %}
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="product product-2">
+                            <figure class="product-media">
+                                <span class="product-label label-circle label-sale">Sale</span>
+                                <a href="{% url 'website:product-detail' product.pk %}">
+                                    <img style='width:277px;height:277px' src={{product.images.first.image.url}} alt="Product image" class="product-image">
+                                </a>
+                
+                            </figure><!-- End .product-media -->
+
+                            <div class="product-body">
+                                <div class="product-cat">
+                                    <a href="#">Headphones</a>
+                                </div><!-- End .product-cat -->
+                                <h3 class="product-title"><a href="{% url 'website:product-detail' product.pk %}">{{product.name}}</a></h3><!-- End .product-title -->
+                                <div class="product-price">
+                                    <span class="new-price">${{product.price}}</span>
+                                    {% comment %} <span class="old-price">Was $349.99</span> {% endcomment %}
+                                </div><!-- End .product-price -->
+                                <div class="ratings-container">
+                                    <div >
+                                        {{product.average_rating}}
+                                    </div><!-- End .ratings -->
+                                    <span class="ratings-text">( {{product.count_comments}} Reviews )</span>
+                                </div><!-- End .rating-container -->
+
+                               
+                            </div><!-- End .product-body -->
+                        </div><!-- End .product -->
+                    </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
+                    {% endfor %}
+                    {% else %}
+                    {{not_found}}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    
+</div><!-- End .page-wrapper -->
+<button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
+
+{% endblock content %}
+
+
+
+{% block footer %}
+{% include "website/footer.html" %}
+{% endblock footer %}

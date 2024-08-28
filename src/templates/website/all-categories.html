@@ -21,8 +21,9 @@
             <div class="cat-blocks-container">
                 <div class="row">
                     {% for cat in categories %}
+                    {% if not cat.parent %}
                     <div class="col-6 col-sm-4 col-lg-2">
-                        <a href="category.html" class="cat-block">
+                        <a href="{% url 'website:sub-categories' cat.pk %}" class="cat-block">
                             <figure>
                                 <span>
                                     <img src={{cat.image.url}} alt="Category image">
@@ -32,6 +33,7 @@
                             <h3 class="cat-block-title">{{cat.name}}</h3><!-- End .cat-block-title -->
                         </a>
                     </div><!-- End .col-sm-4 col-lg-2 -->
+                    {%endif%}
                     {% endfor %}
 
                 </div><!-- End .row -->

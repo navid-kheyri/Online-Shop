@@ -138,12 +138,12 @@ class CustomerOrderItemDetailView(LoginRequiredMixin,DetailView):
     model=OrderItem
     template_name='dashboard/customer-order-item.html'
 
-    def dispatch(self, request, *args, **kwargs):
-        if int(kwargs.get('pk')) != self.request.user.pk:
-            return self.handle_no_permission()
-        if not (request.user.is_customer ):
-            return HttpResponseForbidden("You are not allowed to access this page.")
-        return super().dispatch(request, *args, **kwargs)
+    # def dispatch(self, request, *args, **kwargs):
+    #     if int(kwargs.get('pk')) != self.request.user.pk:
+    #         return self.handle_no_permission()
+    #     if not (request.user.is_customer ):
+    #         return HttpResponseForbidden("You are not allowed to access this page.")
+    #     return super().dispatch(request, *args, **kwargs)
 
     def get_object(self):
         pk = self.kwargs.get('pk')

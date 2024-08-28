@@ -1,32 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Customer Orders</title>
-</head>
+{% extends "website/base.html" %}
+{% load static %}
+
+{% block title %}
+{% endblock title %}
+
+{% block header %}
+{% include "website/header.html" with category=category %}
+{% endblock header %}
+
+{% block content %}
 <body>
-    <h1>My Orders</h1>
+    <div class="page-wrapper">
+        <main class="main">
+        	<div class="page-header text-center" style="background-image: url('{% static "assets/images/page-header-bg.jpg" %}')">
+        		<div class="container">
+        			<h1 class="page-title">My Orders<span>Elements</span></h1>
+        		</div><!-- End .container -->
+        	</div><!-- End .page-header -->
 
-    <h2>Paid Orders</h2>
-    <ul>
-        {% for order in myorder %}
-            {% if order.is_paid == True %}
-            <li><a href="{% url 'dashboard:order-item' order.pk %}">Order Number: {{ order.id }} - Created At: {{ order.created_at }} - Status: Completed</a></li>
-            {% endif %}
-        {% empty %}
-            <li>No paid orders found.</li>
-        {% endfor %}
-    </ul>
+            <hr class="mt-4 mb-4">
 
-    <h2>Pending Orders</h2>
-    <ul>
-        {% for order in myorder %}
-            {% if order.is_paid == False %}
-            <li><a href="{% url 'dashboard:order-item' order.pk %}">Order Number: {{ order.id }} - Created At: {{ order.created_at }} - Status: Pending</a></li>
-            {% endif %}
-        {% empty %}
-            <li>No unpaid orders found.</li>
-        {% endfor %}
-    </ul>
+            <div class="page-content">
+                <div class="container">
+                    {% for order in myorder %}
+                    <h2 class="title"><a href="{% url 'dashboard:order-item' order.pk %}">Order Number: {{ order.id }}</a></h2><!-- End .title -->
+                    <p>Created At: {{ order.created_at }}</p>
+                    <p>Status: Completed</p>
+                    <hr class="mt-4 mb-4">
+                    {% endfor %}
+                </div><!-- End .container -->
+            </div><!-- End .page-content -->
+
+        </main><!-- End .main -->
+
+    </div><!-- End .page-wrapper -->
+    <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
+
 </body>
-</html>
+
+{% endblock content %}
+
+
+
+{% block footer %}
+{% include "website/footer.html" %}
+{% endblock footer %}

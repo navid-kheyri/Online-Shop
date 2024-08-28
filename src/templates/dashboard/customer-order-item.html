@@ -1,17 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Customer Orders</title>
-</head>
-<body>
 
-    {% for orderitem in order_items  %}
-    Product name: {{orderitem.product}}<br>
-    Quantity: {{orderitem.quantity}}<br>
-    Price: ${{orderitem.product.price}}<hr>
-    
-    {% endfor %}
+{% extends "website/base.html" %}
+{% load static %}
 
-</body>
-</html>
+{% block title %}
+{% endblock title %}
+
+{% block header %}
+{% include "website/header.html" with category=category %}
+{% endblock header %}
+
+{% block content %}
+
+    <div class="page-wrapper">
+        <main class="main">
+        	<div class="page-header text-center" style="background-image: url('{% static "assets/images/page-header-bg.jpg" %}')">
+        		<div class="container">
+        			<h1 class="page-title">My Orders<span>Elements</span></h1>
+        		</div><!-- End .container -->
+        	</div><!-- End .page-header -->
+
+            <hr class="mt-4 mb-4">
+
+            <div class="page-content">
+                <div class="container">
+                    {% for orderitem in order_items  %}
+                    <h2 class="title">Product name: {{orderitem.product}}</h2><!-- End .title -->
+                    <p>Quantity: {{orderitem.quantity}}</p>
+                    <p>Price: ${{orderitem.item_total_price}}</p>
+                    <hr class="mt-4 mb-4">
+                    {% endfor %}
+                </div><!-- End .container -->
+            </div><!-- End .page-content -->
+
+        </main><!-- End .main -->
+
+    </div><!-- End .page-wrapper -->
+    <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
+
+
+
+{% endblock content %}
+
+
+
+{% block footer %}
+{% include "website/footer.html" %}
+{% endblock footer %}
