@@ -157,6 +157,11 @@ class VendorUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('vendors:my-vendor', kwargs={'pk': self.object.pk})
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request']=self.request
+        return kwargs
 
 
 class AllShopsListView(ListView):

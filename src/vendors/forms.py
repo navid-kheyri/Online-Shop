@@ -103,6 +103,10 @@ class ProductDetailModelForm(forms.ModelForm):
         if self.request and (self.request.user.user_type == 'operator' or self.request.user.user_type == 'customer'):
             for field in self.fields.values():
                 field.disabled = True
+        else:
+            self.fields['rating_count'].disabled = True
+            self.fields['sum_rating'].disabled = True
+            self.fields['average_rating'].disabled = True
 
 
 class VendorChangeDetailForm(forms.ModelForm):
@@ -111,6 +115,14 @@ class VendorChangeDetailForm(forms.ModelForm):
     class Meta:
         model = Vendor
         exclude = ['created_at', 'user']
+        readonly_fields=['rating_count']
+
+    def __init__ (self ,*args, **kwargs):
+        self.request = kwargs.pop('request' , None)
+        super(VendorChangeDetailForm , self).__init__(*args, **kwargs)
+        self.fields['rating_count'].disabled=True
+        self.fields['sum_rating'].disabled=True
+        self.fields['average_rating'].disabled=True
 
 
 class VendorRatingForm(forms.ModelForm):
