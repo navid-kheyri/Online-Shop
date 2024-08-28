@@ -188,3 +188,23 @@ class MostExpensiveListView(ListView):
         products = Product.objects.order_by('-price')
         context['products'] = products
         return context
+    
+class SearchListView(ListView):
+    model = Product
+    template_name ='website/search.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        search = self.request.GET.get('q' , None).capitalize()
+        if search:
+            products = Product.objects.filter(name__icontains=search)
+            vendors = Vendor.objects.filter(name__icontains=search)
+            if products.exists():
+                context['productss'] = products
+            if vendors.exists():
+                context['vendorss'] = vendors
+            else:
+                context["not_found"] = f'"{search}" Does Not Exist.'
+        else:
+            context["not_found"] = 'Write somthing to search'
+        return context
