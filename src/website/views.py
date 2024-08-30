@@ -44,16 +44,16 @@ class AddProductCreateView(CreateView):
         return kwargs
 
 
-@method_decorator(roles_required('customer', 'admin', 'anonymous'), name='dispatch')
-class IndexListView(ListView):
-    template_name = 'index.html'
-    model = Product
+# @method_decorator(roles_required('customer', 'admin', 'anonymous'), name='dispatch')
+# class IndexListView(ListView):
+#     template_name = 'index.html'
+#     model = Product
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        last_products = Product.objects.all().order_by('-created_at')[:4]
-        context['last_products'] = last_products
-        return context
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         last_products = Product.objects.all().order_by('-created_at')[:4]
+#         context['last_products'] = last_products
+#         return context
 
 
 @method_decorator(roles_required('customer', 'admin', 'anonymous'), name='dispatch')
@@ -157,42 +157,79 @@ class SubCategoriesDetailView(DetailView):
         return context
 
 
-class TopSellingListView(ListView):
+# class TopSellingListView(ListView):
+#     model = Product
+#     template_name = 'filters/top-selling-mainpage.html'
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         orders = OrderItem.objects.filter(order__is_paid=True)
+#         total_sales = orders.values('product_id').annotate(
+#             total=Sum('quantity')).order_by('-total')
+#         products = []
+#         for product in total_sales:
+#             products.append(Product.objects.get(id=product['product_id']))
+#         context['products'] = products
+#         return context
+
+
+# class TopRatedListView(ListView):
+#     model = Product
+#     template_name = 'filters/top-rated-mainpage.html'
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         products = Product.objects.order_by('-average_rating')
+#         context['products'] = products
+#         return context
+
+
+# class MostExpensiveListView(ListView):
+#     model = Product
+#     template_name = 'filters/most-expensive-mainpage.html'
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         products = Product.objects.order_by('-price')
+#         context['products'] = products
+#         return context
+    
+
+@method_decorator(roles_required('customer', 'admin', 'anonymous'), name='dispatch')
+class IndexListView(ListView):
+    template_name = 'index.html'
     model = Product
-    template_name = 'filters/top-selling-mainpage.html'
+    context_object_name = 'products'
+
+    def get_queryset(self):
+        
+        filter_type = self.request.GET.get('filter')
+
+        if filter_type == 'top-selling':
+            orders = OrderItem.objects.filter(order__is_paid=True)
+            total_sales = orders.values('product_id').annotate(
+                total=Sum('quantity')).order_by('-total')
+            products = []
+            for product in total_sales:
+                products.append(Product.objects.get(id=product['product_id']))
+            return products
+        
+        elif filter_type == 'top-rated':
+            products = Product.objects.order_by('-average_rating')
+            return products
+        
+        elif filter_type == 'most-expensive':
+            products = Product.objects.order_by('-price')
+            return products
+        return super().get_queryset()
+    
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        orders = OrderItem.objects.filter(order__is_paid=True)
-        total_sales = orders.values('product_id').annotate(
-            total=Sum('quantity')).order_by('-total')
-        products = []
-        for product in total_sales:
-            products.append(Product.objects.get(id=product['product_id']))
-        context['products'] = products
+        last_products = Product.objects.all().order_by('-created_at')[:4]
+        context['last_products'] = last_products
         return context
-
-
-class TopRatedListView(ListView):
-    model = Product
-    template_name = 'filters/top-rated-mainpage.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        products = Product.objects.order_by('-average_rating')
-        context['products'] = products
-        return context
-
-
-class MostExpensiveListView(ListView):
-    model = Product
-    template_name = 'filters/most-expensive-mainpage.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        products = Product.objects.order_by('-price')
-        context['products'] = products
-        return context
+    
     
 class SearchListView(ListView):
     model = Product
@@ -210,6 +247,4 @@ class SearchListView(ListView):
                 context['vendorss'] = vendors
             else:
                 context["not_found"] = f'"{search}" Does Not Exist.'
-        else:
-            context["not_found"] = 'Write somthing to search'
         return context
