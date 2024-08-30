@@ -164,9 +164,9 @@ class VendorUpdateView(LoginRequiredMixin, UpdateView):
         return kwargs
 
 
-class AllShopsListView(ListView):
-    model = Vendor
-    template_name = 'shop/all-shops.html'
+# class AllShopsListView(ListView):
+#     model = Vendor
+#     template_name = 'shop/all-shops.html'
 
 
 class ShopPageDetailView(DetailView):
@@ -218,42 +218,69 @@ class VendorRateCreateView(CreateView):
         return super().form_valid(form)
 
 
-class MostSellingVendorsListView(ListView):
-    model = Product
-    template_name = 'filters/most-selling-vendors.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        orders = OrderItem.objects.filter(order__is_paid=True)
-        total_sales = orders.values('product__vendor').annotate(
-            total=Sum('quantity')).order_by('-total')
-        shops = []
-        for vendor in total_sales:
-            shops.append(Vendor.objects.get(id=vendor['product__vendor']))
-        context['vendors'] = shops
-        return context
-
-
-class TopRatedVendorsListView(ListView):
+class AllShopsListView(ListView):
     model = Vendor
-    template_name = 'filters/top-rated-vendors.html'
+    template_name = 'shop/all-shops.html'
+    context_object_name = 'vendors'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        vendors = Vendor.objects.order_by('-average_rating')
-        context['vendors'] = vendors
-        return context
+    def get_queryset(self):
+        filter_type = self.request.GET.get('filter')
+        if filter_type == 'most-selling':
+            orders = OrderItem.objects.filter(order__is_paid=True)
+            total_sales = orders.values('product__vendor').annotate(
+                total=Sum('quantity')).order_by('-total')
+            vendors = []
+            for vendor in total_sales:
+                vendors.append(Vendor.objects.get(id=vendor['product__vendor']))
+            return vendors
+        
+        elif filter_type == 'top-rating':
+            vendors = Vendor.objects.order_by('-average_rating')
+            return vendors
+        
+        elif filter_type == 'newest-vendors':
+            vendors = Vendor.objects.all().order_by('-created_at')
+            return vendors
+
+        return super().get_queryset()
+    
+
+# class MostSellingVendorsListView(ListView):
+#     model = Product
+#     template_name = 'filters/most-selling-vendors.html'
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         orders = OrderItem.objects.filter(order__is_paid=True)
+#         total_sales = orders.values('product__vendor').annotate(
+#             total=Sum('quantity')).order_by('-total')
+#         shops = []
+#         for vendor in total_sales:
+#             shops.append(Vendor.objects.get(id=vendor['product__vendor']))
+#         context['vendors'] = shops
+#         return context
 
 
-class NewestVendorsListView(ListView):
-    template_name = 'filters/newest-vendors.html'
-    model = Vendor
+# class TopRatedVendorsListView(ListView):
+#     model = Vendor
+#     template_name = 'filters/top-rated-vendors.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        last_vendors = Vendor.objects.all().order_by('-created_at')
-        context['last_vendors'] = last_vendors
-        return context
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         vendors = Vendor.objects.order_by('-average_rating')
+#         context['vendors'] = vendors
+#         return context
+
+
+# class NewestVendorsListView(ListView):
+#     template_name = 'filters/newest-vendors.html'
+#     model = Vendor
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         last_vendors = Vendor.objects.all().order_by('-created_at')
+#         context['last_vendors'] = last_vendors
+#         return context
     
 class TopSellingProductShop(DetailView):
     model = Vendor
