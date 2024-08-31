@@ -31,6 +31,10 @@ class Vendor(models.Model):
     def __str__(self):
         return self.name
     
+    def user_has_permission (self , user):
+        if user in self.user.all():
+            return True
+    
     def update_average_rating(self):
         if self.rating_count > 0:
             self.average_rating = round(self.sum_rating / self.rating_count, 1)

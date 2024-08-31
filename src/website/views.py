@@ -118,6 +118,7 @@ class ProductDetailView(DetailView):
         return self.get(request, *args, **kwargs)
 
 
+@method_decorator(roles_required('customer'), name='dispatch')
 class RatingProductCreateView(CreateView):
     model = Rating
     template_name = 'website/rating-product.html'
@@ -139,6 +140,7 @@ class RatingProductCreateView(CreateView):
         return super().form_valid(form)
 
 
+@method_decorator(roles_required('customer', 'admin', 'anonymous'), name='dispatch')
 class SubCategoriesDetailView(DetailView):
     model = Category
     template_name = 'shop/sub-categories.html'

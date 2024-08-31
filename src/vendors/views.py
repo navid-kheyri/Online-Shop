@@ -1,7 +1,7 @@
 from django.http import HttpRequest, HttpResponseForbidden
 from django.http.response import HttpResponse as HttpResponse
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render ,get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from .models import Vendor, VendorRating
@@ -74,16 +74,19 @@ class AddEmployeeCreateView(CreateView):
         return super().form_valid(form)
 
 
-method_decorator(
-    (roles_required('owner', 'manager', 'operator')), name='dispatch')
-
-
+method_decorator((roles_required('owner', 'manager', 'operator')), name='dispatch')
 class MyVendorDetatilView(LoginRequiredMixin, DetailView):
     """
     برای دیدن آپشن های هر فروشگاه
     """
     model = Vendor
     template_name = 'shop/my-vendors.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        vendor = get_object_or_404(Vendor, pk=self.kwargs['pk'])
+        if not vendor.user_has_permission(request.user):
+            return HttpResponseForbidden("You do not have permission to access this vendor.")
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -102,6 +105,12 @@ class MyProductsListView(ListView):
     model = Vendor
     template_name = 'shop/my-products.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        vendor = get_object_or_404 (Vendor , pk = self.kwargs['pk'])
+        if not vendor.user_has_permission(request.user):
+            return HttpResponseForbidden("You do not have permission to access this vendor.")
+        return super().dispatch(request, *args, **kwargs)
+
     def get_queryset(self):
         pk = self.kwargs['pk']
         return pk
@@ -118,19 +127,22 @@ class MyProductsListView(ListView):
         return context
 
 
+method_decorator((roles_required('owner', 'manager')), name='dispatch')
 class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
     template_name = 'shop/dashboard-product-detail.html'
-    # fields=['name','quantity_in_stock','description','price','discount','average_rating','category']
     form_class = ProductDetailModelForm
     success_url = reverse_lazy("dashboard:owner-dashboard")
 
-    # def dispatch(self, request, *args, **kwargs) :
-    #     if int(kwargs.get('pk')) != self.request.user.pk:
-    #         return self.handle_no_permission()
-    #     if not (request.user.is_manager or request.user.is_owner):
-    #         return HttpResponseForbidden("You are not allowed to access this page.")
-    #     return super().dispatch(request, *args, **kwargs)
+    def get_queryset(self):
+        products = Product.objects.filter(vendor__user=self.request.user)
+        return products
+    
+    def dispatch(self, request, *args, **kwargs) :
+        product = get_object_or_404(Product , pk = kwargs['pk'])
+        if not product in self.get_queryset():
+            return HttpResponseForbidden("You are not allowed to access this page.")
+        return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
         """
@@ -142,18 +154,17 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
         return kwargs
 
 
+method_decorator((roles_required('owner', 'manager')), name='dispatch')
 class VendorUpdateView(LoginRequiredMixin, UpdateView):
     model = Vendor
     template_name = 'shop/vendor-change-detail.html'
     form_class = VendorChangeDetailForm
 
-    # TODO fix this  for Vendor seekers!!!!
-    # def dispatch(self, request, *args, **kwargs) :
-    #     if int(kwargs.get('pk')) != self.request.user.pk:
-    #         return self.handle_no_permission()
-    #     if not (request.user.is_manager or request.user.is_owner):
-    #         return HttpResponseForbidden("You are not allowed to access this page.")
-    #     return super().dispatch(request, *args, **kwargs)
+    def dispatch(self, request, *args, **kwargs) :
+        vendor = get_object_or_404 (Vendor , pk = self.kwargs['pk'])
+        if not vendor.user_has_permission(request.user):
+            return HttpResponseForbidden("You do not have permission to access this vendor.")
+        return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse_lazy('vendors:my-vendor', kwargs={'pk': self.object.pk})
@@ -169,6 +180,7 @@ class VendorUpdateView(LoginRequiredMixin, UpdateView):
 #     template_name = 'shop/all-shops.html'
 
 
+@method_decorator(roles_required('customer', 'admin', 'anonymous'), name='dispatch')
 class ShopPageDetailView(DetailView):
     model = Vendor
     template_name = 'shop/shop-page.html'
@@ -197,6 +209,7 @@ class ShopPageDetailView(DetailView):
         return context
 
 
+@method_decorator(roles_required('customer'), name='dispatch')
 class VendorRateCreateView(CreateView):
     model = VendorRating
     form_class = VendorRatingForm
@@ -218,6 +231,7 @@ class VendorRateCreateView(CreateView):
         return super().form_valid(form)
 
 
+@method_decorator(roles_required('customer', 'admin', 'anonymous'), name='dispatch')
 class AllShopsListView(ListView):
     model = Vendor
     template_name = 'shop/all-shops.html'
@@ -282,6 +296,7 @@ class AllShopsListView(ListView):
 #         context['last_vendors'] = last_vendors
 #         return context
     
+@method_decorator(roles_required('customer', 'admin', 'anonymous'), name='dispatch')
 class TopSellingProductShop(DetailView):
     model = Vendor
     template_name = 'filters/top-selling-product-shop.html'
@@ -299,6 +314,7 @@ class TopSellingProductShop(DetailView):
         context['products'] = products
         return context
     
+@method_decorator(roles_required('customer', 'admin', 'anonymous'), name='dispatch')
 class TopRatedProductShop(DetailView):
     model = Vendor
     template_name = 'filters/top-rated-product-shop.html'
@@ -309,6 +325,7 @@ class TopRatedProductShop(DetailView):
         context['products'] = products
         return context
     
+@method_decorator(roles_required('customer', 'admin', 'anonymous'), name='dispatch')
 class MostExpensiveProductShop(DetailView):
     model = Vendor
     template_name = 'filters/expensive-product-shop.html'
