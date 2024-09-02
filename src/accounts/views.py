@@ -77,7 +77,9 @@ class CustomRegisterView(View):
             message = 'Email or Phone Number already exists!'
         else:
             if password != password_confirmation:
-                raise ValueError('password is not match')
+                # raise ValueError('password is not match')
+                message='password is not match'
+                return render(request, self.template_name,context={'messeage':message})
 
             user = User.objects.create_user(email=email, phone_number=phone_number,
                                             password=password,
