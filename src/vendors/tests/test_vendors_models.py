@@ -34,3 +34,19 @@ class TestVendorImage(TestCase):
         self.assertEqual(vendor_obj.user.get(pk=user_obj.pk), user_obj)
         self.assertEqual(vendor_image.title, 'test')
         self.assertEqual(vendor_image.image, 'media/default.jpg')
+
+
+class TestVendorRating(TestCase):
+    def test_create_vendor_rating(self):
+        user_obj = User.objects.create(email='navid@gmail.com', phone_number='09121234567',
+                                       age=30, city='tehran', user_type='customer')
+
+        vendor_obj = Vendor.objects.create(name='test vendor', phone='02188888888', email='test@gmail.com',
+                                           status=True, address='azadi meydoon')
+        vendor_obj.user.add(user_obj)
+
+        vendor_rating=VendorRating.objects.create(rating=4,user=user_obj,vendor=vendor_obj)
+        self.assertEqual(vendor_obj.user.get(pk=user_obj.pk), user_obj)
+        self.assertEqual(vendor_rating.rating , 4)
+        self.assertEqual(vendor_rating.user , user_obj)
+        self.assertEqual(vendor_rating.vendor , vendor_obj)
