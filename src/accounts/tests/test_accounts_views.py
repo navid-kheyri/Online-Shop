@@ -32,3 +32,31 @@ class TestCustomLoginView(TestCase):
 
 
 
+class TestCustomRegister(TestCase):
+    def setUp(self):
+        self.client=Client()
+        self.user = {'register-email':'navid@gmail.com','register-phone-number':'09121234567',
+                                    'register-password':'pass123','register-password-2':'pass123','register-age':20,'register-city':'qom',
+                                    'register-first-name':'ali','register-last-name':'alibaba'}
+        self.url=reverse('accounts:register')
+
+    def test_register_page(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code , 200)
+
+    def test_register_user(self):
+        response = self.client.post(self.url , self.user)
+        self.assertEqual(response.status_code , 302)
+        self.assertTrue(User.objects.filter(email='navid@gmail.com').exists())
+    
+    def test_register_email_exist(self):
+        response = self.client.post(self.url , {'register-email':'navid@gmail.com','register-phone-number':'09141234567',
+                                    'register-password':'pass123','register-password-2':'pass123','register-age':20,'register-city':'qom',
+                                    'register-first-name':'ali','register-last-name':'alibaba'})
+        self.assertEqual(response.status_code,200)
+    #same for phone
+
+    def test_register_email_exist(self):
+        self.user['register-password-2']='132456789'
+        response = self.client.post(self.url , self.user)
+        self.assertEqual(response.status_code, 200)
