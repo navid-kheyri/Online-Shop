@@ -89,7 +89,7 @@ class ProductDetailView(DetailView):
         product = self.object
         user = self.request.user.id
         paid_orders = Order.objects.filter(
-            user=user, is_paid=True).prefetch_related('order_item__product')
+            user=user).prefetch_related('order_item__product')
         product_name = []
         for order in paid_orders:
             orderitems = order.order_item.all()
@@ -208,7 +208,7 @@ class IndexListView(ListView):
         filter_type = self.request.GET.get('filter')
 
         if filter_type == 'top-selling':
-            orders = OrderItem.objects.filter(order__is_paid=True)
+            orders = OrderItem.objects.all()
             total_sales = orders.values('product_id').annotate(
                 total=Sum('quantity')).order_by('-total')
             products = []

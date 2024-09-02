@@ -5,7 +5,7 @@ from .models import OrderItem, Order
 
 @admin.register(OrderItem)
 class OrderItemModelAdmin(admin.ModelAdmin):
-    list_display = ['user_item', 'product', 'quantity', 'item_total_price']
+    list_display = ['user_item','status', 'product', 'quantity', 'item_total_price']
 
     def user_item(self, instance):
         return instance.order.user.email
@@ -13,4 +13,4 @@ class OrderItemModelAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderModelAdmin(admin.ModelAdmin):
-    list_display = ['user', 'is_paid', 'created_at', 'updated_at']
+    list_display = ['user', 'status', 'created_at', 'updated_at']

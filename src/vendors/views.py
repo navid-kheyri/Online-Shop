@@ -1,13 +1,14 @@
+from django.db.models.query import QuerySet
 from django.http import HttpRequest, HttpResponseForbidden
 from django.http.response import HttpResponse as HttpResponse
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import redirect, render ,get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from .models import Vendor, VendorRating
 from orders.models import Order, OrderItem
 from website.models import Product
-from .forms import ProductDetailModelForm, VendorModelForms, UserModelForm, VendorChangeDetailForm, VendorRatingForm
+from .forms import ProductDetailModelForm, VendorModelForms, UserModelForm, VendorChangeDetailForm, VendorRatingForm, OrderItemModelForm
 from django.utils.decorators import method_decorator
 from accounts.decorators import roles_required
 from django.db.models import Sum
@@ -74,7 +75,10 @@ class AddEmployeeCreateView(CreateView):
         return super().form_valid(form)
 
 
-method_decorator((roles_required('owner', 'manager', 'operator')), name='dispatch')
+method_decorator(
+    (roles_required('owner', 'manager', 'operator')), name='dispatch')
+
+
 class MyVendorDetatilView(LoginRequiredMixin, DetailView):
     """
     برای دیدن آپشن های هر فروشگاه
@@ -106,7 +110,7 @@ class MyProductsListView(ListView):
     template_name = 'shop/my-products.html'
 
     def dispatch(self, request, *args, **kwargs):
-        vendor = get_object_or_404 (Vendor , pk = self.kwargs['pk'])
+        vendor = get_object_or_404(Vendor, pk=self.kwargs['pk'])
         if not vendor.user_has_permission(request.user):
             return HttpResponseForbidden("You do not have permission to access this vendor.")
         return super().dispatch(request, *args, **kwargs)
@@ -128,6 +132,8 @@ class MyProductsListView(ListView):
 
 
 method_decorator((roles_required('owner', 'manager')), name='dispatch')
+
+
 class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
     template_name = 'shop/dashboard-product-detail.html'
@@ -137,9 +143,9 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
     def get_queryset(self):
         products = Product.objects.filter(vendor__user=self.request.user)
         return products
-    
-    def dispatch(self, request, *args, **kwargs) :
-        product = get_object_or_404(Product , pk = kwargs['pk'])
+
+    def dispatch(self, request, *args, **kwargs):
+        product = get_object_or_404(Product, pk=kwargs['pk'])
         if not product in self.get_queryset():
             return HttpResponseForbidden("You are not allowed to access this page.")
         return super().dispatch(request, *args, **kwargs)
@@ -155,23 +161,25 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
 
 
 method_decorator((roles_required('owner', 'manager')), name='dispatch')
+
+
 class VendorUpdateView(LoginRequiredMixin, UpdateView):
     model = Vendor
     template_name = 'shop/vendor-change-detail.html'
     form_class = VendorChangeDetailForm
 
-    def dispatch(self, request, *args, **kwargs) :
-        vendor = get_object_or_404 (Vendor , pk = self.kwargs['pk'])
+    def dispatch(self, request, *args, **kwargs):
+        vendor = get_object_or_404(Vendor, pk=self.kwargs['pk'])
         if not vendor.user_has_permission(request.user):
             return HttpResponseForbidden("You do not have permission to access this vendor.")
         return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse_lazy('vendors:my-vendor', kwargs={'pk': self.object.pk})
-    
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['request']=self.request
+        kwargs['request'] = self.request
         return kwargs
 
 
@@ -191,7 +199,7 @@ class ShopPageDetailView(DetailView):
         user = self.request.user.id
 
         paid_orders = Order.objects.filter(
-            user=user, is_paid=True).prefetch_related('order_item__product')
+            user=user).prefetch_related('order_item__product')
         vendors = []
         for order in paid_orders:
             orderitems = order.order_item.all()
@@ -240,24 +248,25 @@ class AllShopsListView(ListView):
     def get_queryset(self):
         filter_type = self.request.GET.get('filter')
         if filter_type == 'most-selling':
-            orders = OrderItem.objects.filter(order__is_paid=True)
+            orders = OrderItem.objects.all()
             total_sales = orders.values('product__vendor').annotate(
                 total=Sum('quantity')).order_by('-total')
             vendors = []
             for vendor in total_sales:
-                vendors.append(Vendor.objects.get(id=vendor['product__vendor']))
+                vendors.append(Vendor.objects.get(
+                    id=vendor['product__vendor']))
             return vendors
-        
+
         elif filter_type == 'top-rating':
             vendors = Vendor.objects.order_by('-average_rating')
             return vendors
-        
+
         elif filter_type == 'newest-vendors':
             vendors = Vendor.objects.all().order_by('-created_at')
             return vendors
 
         return super().get_queryset()
-    
+
 
 # class MostSellingVendorsListView(ListView):
 #     model = Product
@@ -295,7 +304,7 @@ class AllShopsListView(ListView):
 #         last_vendors = Vendor.objects.all().order_by('-created_at')
 #         context['last_vendors'] = last_vendors
 #         return context
-    
+
 @method_decorator(roles_required('customer', 'admin', 'anonymous'), name='dispatch')
 class TopSellingProductShop(DetailView):
     model = Vendor
@@ -303,35 +312,59 @@ class TopSellingProductShop(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        orders = OrderItem.objects.filter(order__is_paid=True)
+        orders = OrderItem.objects.all()
         total_sales = orders.values('product_id').annotate(
             total=Sum('quantity')).order_by('-total')
         products = []
         for product in total_sales:
-            product = Product.objects.filter(id=product['product_id'],vendor=self.kwargs['pk']).first()
+            product = Product.objects.filter(
+                id=product['product_id'], vendor=self.kwargs['pk']).first()
             if product:
                 products.append(product)
         context['products'] = products
         return context
-    
+
+
 @method_decorator(roles_required('customer', 'admin', 'anonymous'), name='dispatch')
 class TopRatedProductShop(DetailView):
     model = Vendor
     template_name = 'filters/top-rated-product-shop.html'
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        products = Product.objects.filter(vendor=self.kwargs['pk']).order_by('-average_rating')
+        products = Product.objects.filter(
+            vendor=self.kwargs['pk']).order_by('-average_rating')
         context['products'] = products
         return context
-    
+
+
 @method_decorator(roles_required('customer', 'admin', 'anonymous'), name='dispatch')
 class MostExpensiveProductShop(DetailView):
     model = Vendor
     template_name = 'filters/expensive-product-shop.html'
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        products = Product.objects.filter(vendor=self.kwargs['pk']).order_by('-price')
+        products = Product.objects.filter(
+            vendor=self.kwargs['pk']).order_by('-price')
         context['products'] = products
         return context
+
+
+@method_decorator(roles_required('manager', 'operator', 'owner'), name='dispatch')
+class MyVendorOrders(DetailView):
+    model = Vendor
+    template_name = 'shop/orders.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        products = self.get_object().vendor_products.prefetch_related('product_item').all()
+        orderitems = []
+        for product in products:
+            for item in product.product_item.filter(status='pending'):
+                orderitems.append(item)
+        context['orderitems'] = orderitems
+        return context
+
+
+
