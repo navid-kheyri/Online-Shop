@@ -81,9 +81,9 @@
                     <h2 class="title">New Arrivals</h2><!-- End .title -->
                 </div><!-- End .heading-left -->
 
-               <div class="heading-right">
+               {% comment %} <div class="heading-right">
                     <a href="#" class="title-link">View All Products <i class="icon-long-arrow-right"></i></a>
-               </div><!-- End .heading-right -->
+               </div><!-- End .heading-right --> {% endcomment %}
             </div><!-- End .heading -->
 
             <div class="products">
@@ -101,14 +101,18 @@
                             </figure><!-- End .product-media -->
 
                             <div class="product-body">
-                                <div class="product-cat">
+                                {% comment %} <div class="product-cat">
                                     <a href="#">Headphones</a>
-                                </div><!-- End .product-cat -->
+                                </div><!-- End .product-cat --> {% endcomment %}
                                 <h3 class="product-title"><a href="{% url 'website:product-detail' product.pk %}">{{product.name}}</a></h3><!-- End .product-title -->
                                 <div class="product-price">
                                     {% if product.discount %}
                                     <span class="new-price">${{product.count_discount}}</span>
                                     <span class="old-price">Was ${{product.price}}</span>
+                                    {% elif product.percent_discount %}
+                                    <span class="new-price">${{product.count_discount}}</span>
+                                    <span class="old-price">Was ${{product.price}}</span>|<br>  
+                                    <h3 class="product-title">{{product.percent_discount}}%</h3>    
                                     {% else %}
                                     <span class="new-price">${{product.price}}</span>
                                     {% endif %}
@@ -157,14 +161,18 @@
                             </figure><!-- End .product-media -->
 
                             <div class="product-body">
-                                <div class="product-cat">
+                                {% comment %} <div class="product-cat">
                                     <a href="#">Headphones</a>
-                                </div><!-- End .product-cat -->
+                                </div><!-- End .product-cat --> {% endcomment %}
                                 <h3 class="product-title"><a href="{% url 'website:product-detail' product.pk %}">{{product.name}}</a></h3><!-- End .product-title -->
                                 <div class="product-price">
                                 {% if product.discount %}
                                     <span class="new-price">${{product.count_discount}}</span>
                                     <span class="old-price">Was ${{product.price}}</span>
+                                    {% elif product.percent_discount %}
+                                    <span class="new-price">${{product.count_discount}}</span>
+                                    <span class="old-price">Was ${{product.price}}</span>|<br>  
+                                    <h3 class="product-title">{{product.percent_discount}}%</h3>    
                                     {% else %}
                                     <span class="new-price">${{product.price}}</span>
                                     {% endif %}

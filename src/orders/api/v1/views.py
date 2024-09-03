@@ -183,6 +183,8 @@ class CheckoutAPIView(LoginRequiredMixin,APIView):
             #####
             if product.discount:
                 price= product.count_discount()
+            elif product.percent_discount:
+                price= product.count_discount()
             else:
                 price= product.price
             cart_items.append({
@@ -231,8 +233,9 @@ class CheckoutAPIView(LoginRequiredMixin,APIView):
             product = Product.objects.get(id=key)
             if product.discount:
                 price = product.count_discount()
-                print('=====================')
-                print(price)
+                item_total_price = price * item['quantity']
+            elif product.percent_discount:
+                price= product.count_discount()
                 item_total_price = price * item['quantity']
             else:
                 item_total_price = product.price * item['quantity']

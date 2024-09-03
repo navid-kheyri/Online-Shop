@@ -197,17 +197,17 @@ class SubCategoriesDetailView(DetailView):
 #         return context
     
 
-# @method_decorator(roles_required('customer', 'admin', 'anonymous'), name='dispatch')
+@method_decorator(roles_required('customer', 'admin', 'anonymous'), name='dispatch')
 class IndexListView(ListView):
     template_name = 'index.html'
     model = Product
     context_object_name = 'products'
 
-    def get(self, request):
-        if (request.user.is_anonymous or request.user.user_type == 'admin' or request.user.user_type =='customer'):
-            return render(request , 'index.html')
-        else: 
-            return redirect ('dashboard:owner-dashboard')
+    # def get(self, request):
+    #     if (request.user.is_anonymous or request.user.user_type == 'admin' or request.user.user_type =='customer'):
+    #         return render(request , 'index.html')
+    #     else: 
+    #         return redirect ('dashboard:owner-dashboard')
 
     def get_queryset(self):
         
@@ -235,6 +235,7 @@ class IndexListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         last_products = Product.objects.all().order_by('-created_at')[:4]
+        print(last_products)
         context['last_products'] = last_products
         return context
     

@@ -68,6 +68,10 @@ Categories
                                         {% if product.discount %}
                                         <span class="new-price">${{product.count_discount}}</span>
                                         <span class="old-price">Was ${{product.price}}</span>
+                                        {% elif product.percent_discount  %}
+                                        <span class="new-price">${{product.count_discount}}</span>
+                                        <span class="old-price">Was ${{product.price}}</span>|
+                                        <span class="old-price">{{product.percent_discount}}% Discount</span>
                                         {% else %}
                                         <span class="new-price">${{product.price}}</span>
                                         {% endif %}

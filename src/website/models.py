@@ -3,6 +3,8 @@ from django.shortcuts import get_object_or_404
 from django.core.validators import (MaxValueValidator, MinValueValidator)
 from django_jalali.db import models as jmodels
 from vendors.models import Vendor
+from django.core.exceptions import ValidationError
+from decimal import Decimal
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -28,16 +30,20 @@ class Product(models.Model):
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     discount = models.DecimalField(default=0,
-        max_digits=10, decimal_places=0, blank=True, null=True)
+                                   max_digits=10, decimal_places=0, blank=True, null=True)
+    percent_discount = models.IntegerField(default=0, validators=[
+        MinValueValidator(0),
+        MaxValueValidator(50)
+    ])
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     updated_at = jmodels.jDateTimeField(auto_now=True)
     rating_count = models.IntegerField(default=0)
     sum_rating = models.IntegerField(default=0)
     average_rating = models.DecimalField(
-        max_digits=3, decimal_places=2, default=1.00,validators=[
-                                            MinValueValidator(1.0), 
-                                            MaxValueValidator(5.0)
-                                        ])
+        max_digits=3, decimal_places=2, default=1.00, validators=[
+            MinValueValidator(1.0),
+            MaxValueValidator(5.0)
+        ])
     category = models.ForeignKey(
         Category, on_delete=models.DO_NOTHING, related_name="category_products")
     vendor = models.ManyToManyField(
@@ -46,24 +52,37 @@ class Product(models.Model):
     def __str__(self):
         return self.name
     
+    def clean(self):
+        if self.discount and self.percent_discount :
+            raise ValidationError("One Discount At a Time.")
+        if self.discount <0 or self.discount > self.price or self.percent_discount <0 or self.percent_discount > 50:
+            raise ValidationError('Discount should be higher than 0 and Percent Shouldnt be Higher Than 50%')
+
     def update_average_rating(self):
         if self.rating_count > 0:
             self.average_rating = round(self.sum_rating / self.rating_count, 1)
-    
+
     def count_comments(self):
-        return Comment.objects.filter(product=self,comment_type='confirmed').count()
-    
+        return Comment.objects.filter(product=self, comment_type='confirmed').count()
+
+    # def count_discount(self):
+    #     if self.discount <= self.price:
+    #         final_price = self.price - self.discount
+    #         return final_price
+    #     else:
+    #         raise ValueError(
+    #             "Invalid discount: discount cannot exceed the price")
     def count_discount(self):
-        if self.discount <= self.price:
-            final_price= self.price - self.discount
-            return final_price
-        else :
-            raise ValueError("Invalid discount: discount cannot exceed the price")
-        
+        if self.percent_discount:
+            return self.price * Decimal(1 - self.percent_discount / 100)
+        return self.price - self.discount
+
+
 class ProductImage(models.Model):
     title = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
-    image = models.ImageField(upload_to='product/%Y/%m/%d/',default='default.jpg')
+    image = models.ImageField(
+        upload_to='product/%Y/%m/%d/', default='default.jpg')
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name="images")
