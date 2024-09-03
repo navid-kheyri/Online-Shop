@@ -1,7 +1,7 @@
 from django.db.models.base import Model as Model
 from django.db.models.query import QuerySet
 from django.forms import BaseModelForm
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views import View
@@ -197,11 +197,17 @@ class SubCategoriesDetailView(DetailView):
 #         return context
     
 
-@method_decorator(roles_required('customer', 'admin', 'anonymous'), name='dispatch')
+# @method_decorator(roles_required('customer', 'admin', 'anonymous'), name='dispatch')
 class IndexListView(ListView):
     template_name = 'index.html'
     model = Product
     context_object_name = 'products'
+
+    def get(self, request):
+        if (request.user.is_anonymous or request.user.user_type == 'admin' or request.user.user_type =='customer'):
+            return render(request , 'index.html')
+        else: 
+            return redirect ('dashboard:owner-dashboard')
 
     def get_queryset(self):
         

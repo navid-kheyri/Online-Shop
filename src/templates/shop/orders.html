@@ -57,7 +57,11 @@
                   <p class="mb-0">Buyer: {{item.order.user}} </p>
                   <p class="mb-0">Buying Time: {{item.order.created_at}} </p>
                   <p class="mb-0">Total Price: {{item.item_total_price }} </p>
+                  <p class="mb-0">Status: {{item.status }} </p>
+                  {% if not request.user.user_type == 'operator' %}
                   <a href={% url 'vendors:order-detail' item.pk %} ><button type="button" class="btn btn-primary" >Edit</button></a>
+                  {% else %}
+                  {% endif %}
                 </div>
               </div>
             </div>

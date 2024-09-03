@@ -372,9 +372,7 @@ class VendorOrdersDetailView(UpdateView):
     model = OrderItem
     template_name = 'shop/order-detail.html'
     form_class = OrderItemModelForm
-
-    def get_success_url(self):
-        return reverse_lazy('dashboard:owner-dashboard', kwargs={'pk': self.kwargs.get('pk')})
+    success_url =reverse_lazy('dashboard:owner-dashboard')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
