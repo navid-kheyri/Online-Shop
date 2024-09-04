@@ -62,7 +62,11 @@
 												</div><!-- End .product -->
 											</td>
 											<td class="price-col">${{prod.product.price}}</td>
+											{% if prod.product.discount %}
 											<td class="price-col">${{prod.product.discount}}</td>
+											{% elif prod.product.percent_discount %}
+											<td class="price-col">{{prod.product.percent_discount}}%</td>
+											{% endif %}
 											<td class="quantity-col">
                                                 <div class="cart-product-quantity">
 													<input type="number" class="form-control cart-quantity" value="{{prod.quantity}}" min="1" max="10" step="1" data-product-id="{{prod.product.id}}" required>
@@ -145,10 +149,10 @@
 	                					</tbody>
 	                				</table><!-- End .table table-summary -->
 									{% if request.user.is_authenticated %}
-	                				<button type="submit">Place Order</button>
+	                				<button type="submit">Proceed</button>
 								</form>
 									{% else %}
-									<a href="{% url 'accounts:login' %}">Proceed</a>
+									<a href="{% url 'accounts:login' %}?next={{ request.path }}">Proceed</a>
 									{% endif %}
 	                			</div><!-- End .summary -->
 							{% comment %} </form> {% endcomment %}

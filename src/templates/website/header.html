@@ -19,7 +19,7 @@
                         <a href="#">Links</a>
                         <ul>
                             <li>
-                                <div class="header-dropdown">
+                                {% comment %} <div class="header-dropdown">
                                     <a href="#" style='margin-right:20px'>English</a>
                                     <div class="header-menu">
                                         <ul>
@@ -28,15 +28,15 @@
                                             
                                         </ul>
                                     </div><!-- End .header-menu -->
-                                </div>
+                                </div> {% endcomment %}
                             </li>
 
                             {% if request.user.is_authenticated %}
                             <a href="{% url 'dashboard:user' request.user.pk  %}" >{{request.user.email}}</a> <a href="{% url "accounts:logout" %}" style='margin-left:20px'>Sign Out</a>
                             {% else %}
-                            <li><a href="{% url 'accounts:otp-login' %}"> opt login</a></li>
-                            <li><a href="{% url 'accounts:otp-register' %}"> opt register</a></li>
-                            <li><a href={% url 'accounts:login' %} >Sign in / Sign up</a></li>
+                            <li><a href="{% url 'accounts:otp-login' %}"> OTP Login</a></li>
+                            <li><a href="{% url 'accounts:otp-register' %}"> OTP Register</a></li>
+                            <li><a href="{% url 'accounts:login' %} ">Sign in / Sign up</a></li>
                             {% endif %}
                         </ul>
                     </li>
@@ -174,22 +174,22 @@
                     <ul class="menu sf-arrows">
 
                         <li>
-                            <a href="category.html" class="sf-with-ul">Shop</a>
+                            <a href="{% url 'vendors:shops' %}" >Shops</a>
 
-                            <div class="megamenu megamenu-md">
+                            {% comment %} <div class="megamenu megamenu-md">
                                 <div class="row no-gutters">
                                     <div class="col-md-8">
                                         <div class="menu-col">
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     {% comment %} <div class="menu-title">Shop with sidebar</div><!-- End .menu-title --> {% endcomment %}
-                                                    <ul>
+                                                    {% comment %} <ul>
                                                         <li><a href="{% url 'vendors:shops' %}">Shop List</a></li>
-                                                        {% comment %} <li><a href="category-2cols.html">Shop Grid 2 Columns</a></li>
+                                                        <li><a href="category-2cols.html">Shop Grid 2 Columns</a></li>
                                                         <li><a href="category.html">Shop Grid 3 Columns</a></li>
                                                         <li><a href="category-4cols.html">Shop Grid 4 Columns</a></li>
-                                                        <li><a href="category-market.html"><span>Shop Market<span class="tip tip-new">New</span></span></a></li> {% endcomment %}
-                                                    </ul>
+                                                        <li><a href="category-market.html"><span>Shop Market<span class="tip tip-new">New</span></span></a></li> 
+                                                    </ul> 
                                                 </div><!-- End .col-md-6 -->
 
                                       
@@ -198,10 +198,10 @@
                                     </div><!-- End .col-md-8 -->
 
                                 </div><!-- End .row -->
-                            </div><!-- End .megamenu megamenu-md -->
+                            </div><!-- End .megamenu megamenu-md --> {% endcomment %}
                         </li>
                         <li>
-                            <a href="product.html" class="sf-with-ul">Product</a>
+                            {% comment %} <a href="product.html" class="sf-with-ul">Product</a> {% endcomment %}
 
                             <div class="megamenu megamenu-sm">
                                 <div class="row no-gutters">

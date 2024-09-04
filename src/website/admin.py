@@ -31,7 +31,7 @@ class ProductImageInline(admin.StackedInline):
 @admin.register(Product)
 class ProductModelAdmin(admin.ModelAdmin):
     inlines = [ProductImageInline,CommenttInline,RatingInline]
-    list_display = ['name' , 'quantity_in_stock','price','discount','average_rating','category']
+    list_display = ['name' , 'quantity_in_stock','price','discount','percent_discount','average_rating','category']
     ordering = ['created_at', 'discount']
     search_fields=['name','price','discount','quantity_in_stock']
 

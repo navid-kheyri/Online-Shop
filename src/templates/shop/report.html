@@ -1,0 +1,172 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+
+{% block content %}
+
+  <!--  Body Wrapper -->
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <!-- Sidebar Start -->
+        <!--  Body Wrapper -->
+        <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+          data-sidebar-position="fixed" data-header-position="fixed">
+
+          <div class="body-wrapper">
+            <!--  Header Start -->
+            <header class="app-header">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                  <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
+                    <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                      <li class="nav-item dropdown">
+                        <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <img src="{{request.user.images.first.image.url}}" alt="" width="35" height="35" class="rounded-circle">
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
+                          <div class="message-body">
+                            <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                              <i class="ti ti-user fs-6"></i>
+                              <p class="mb-0 fs-3">My Profile</p>
+                            </a>
+                            <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                              <i class="ti ti-mail fs-6"></i>
+                              <p class="mb-0 fs-3">My Account</p>
+                            </a>
+                            <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                              <i class="ti ti-list-check fs-6"></i>
+                              <p class="mb-0 fs-3">My Task</p>
+                            </a>
+                            <a href="{% url 'accounts:logout' %}" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </nav>
+              </header>
+
+            <!--  Header End -->
+            <div class="body-wrapper">
+            <div class="container-fluid">
+                <!--  Row 1 -->
+                <div class="row">
+                    <div class="col-lg-4">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <!-- Yearly Breakup -->
+                        <div class="card overflow-hidden">
+                          <div class="card-body p-4">
+                            <h5 class="card-title mb-9 fw-semibold">Weekly Product Sold and Income</h5>
+                            <div class="row align-items-center">
+                              <div class="col-8">
+                                <h4 class="fw-semibold mb-3">Sold Items: {{total_sale_count_weekly.total_sales}}</h4>
+                                <h4 class="fw-semibold mb-3">Income: ${{total_income_weekly.total_income}}</h4>
+                                <div class="d-flex align-items-center mb-3">
+                                  <span
+                                    class="me-1 rounded-circle bg-light-success round-20 d-flex align-items-center justify-content-center">
+                                    <i class="ti ti-arrow-up-left text-success"></i>
+                                  </span>
+                                </div>
+                              </div>
+                              <div class="col-4">
+                                <div class="d-flex justify-content-center">
+                                  <div id="breakup"></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    
+                    <div class="col-lg-12">
+                        <!-- Yearly Breakup -->
+                        <div class="card overflow-hidden">
+                          <div class="card-body p-4">
+                            <h5 class="card-title mb-9 fw-semibold">Monthly Product Sold and Income</h5>
+                            <div class="row align-items-center">
+                              <div class="col-8">
+                                <h4 class="fw-semibold mb-3">Sold Items: {{total_sale_count_monthly.total_sales}}</h4>
+                                <h4 class="fw-semibold mb-3">Income: ${{total_income_monthly.total_income}}</h4>
+                                <div class="d-flex align-items-center mb-3">
+                                  <span
+                                    class="me-1 rounded-circle bg-light-success round-20 d-flex align-items-center justify-content-center">
+                                    <i class="ti ti-arrow-up-left text-success"></i>
+                                  </span>
+                                </div>
+                              </div>
+                              <div class="col-4">
+                                <div class="d-flex justify-content-center">
+                                  <div id="breakup"></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <!-- Yearly Breakup -->
+                        <div class="card overflow-hidden">
+                          <div class="card-body p-4">
+                            <h5 class="card-title mb-9 fw-semibold">Weekly MostProduct Sold</h5>
+                            <div class="row align-items-center">
+                              <div class="col-8">
+                                {% for item in most_weekly  %}
+                                <h4 class="fw-semibold mb-3">Product: {{item.name}} <br> Quantity: {{item.total_sales}}</h4>
+                                {% endfor %}
+                                {% comment %} <h4 class="fw-semibold mb-3">Income: ${{total_income_monthly.total_income}}</h4> {% endcomment %}
+                                <div class="d-flex align-items-center mb-3">
+                                  <span
+                                    class="me-1 rounded-circle bg-light-success round-20 d-flex align-items-center justify-content-center">
+                                    <i class="ti ti-arrow-up-left text-success"></i>
+                                  </span>
+                                </div>
+                              </div>
+                              <div class="col-4">
+                                <div class="d-flex justify-content-center">
+                                  <div id="breakup"></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <!-- Yearly Breakup -->
+                        <div class="card overflow-hidden">
+                          <div class="card-body p-4">
+                            <h5 class="card-title mb-9 fw-semibold">Monthly MostProduct Sold</h5>
+                            <div class="row align-items-center">
+                              <div class="col-8">
+                                {% for item in most_monthly  %}
+                                <h4 class="fw-semibold mb-3">Product: {{item.name}} <br> Quantity: {{item.total_sales}}</h4>
+                                {% endfor %}
+                                {% comment %} <h4 class="fw-semibold mb-3">Income: ${{total_income_monthly.total_income}}</h4> {% endcomment %}
+                                <div class="d-flex align-items-center mb-3">
+                                  <span
+                                    class="me-1 rounded-circle bg-light-success round-20 d-flex align-items-center justify-content-center">
+                                    <i class="ti ti-arrow-up-left text-success"></i>
+                                  </span>
+                                </div>
+                              </div>
+                              <div class="col-4">
+                                <div class="d-flex justify-content-center">
+                                  <div id="breakup"></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+      </div>
+    </div>
+</div>
+</div>
+          </div>
+          </div>
+        </div>
+        </div>
+
+  {% endblock content %}

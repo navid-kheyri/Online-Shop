@@ -30,6 +30,7 @@
                                         {% csrf_token %}
 							    		<div class="form-group">
 							    			<label for="singin-email-2">Phone number or email address *</label>
+											<input type="hidden" name="next" value="{{ next_url }}">
 							    			<input type="text" class="form-control" id="singin-email-2" name="singin-email" required >
 							    		</div><!-- End .form-group -->
 

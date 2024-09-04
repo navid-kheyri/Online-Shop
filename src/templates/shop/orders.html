@@ -1,0 +1,93 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+
+{% block content %}
+
+  <!--  Body Wrapper -->
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <!-- Sidebar Start -->
+        <!--  Body Wrapper -->
+        <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+          data-sidebar-position="fixed" data-header-position="fixed">
+
+          <div class="body-wrapper">
+            <!--  Header Start -->
+            <header class="app-header">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                  <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
+                    <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                      <li class="nav-item dropdown">
+                        <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <img src="{{request.user.images.first.image.url}}" alt="" width="35" height="35" class="rounded-circle">
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
+                          <div class="message-body">
+                            <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                              <i class="ti ti-user fs-6"></i>
+                              <p class="mb-0 fs-3">My Profile</p>
+                            </a>
+                            <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                              <i class="ti ti-mail fs-6"></i>
+                              <p class="mb-0 fs-3">My Account</p>
+                            </a>
+                            <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                              <i class="ti ti-list-check fs-6"></i>
+                              <p class="mb-0 fs-3">My Task</p>
+                            </a>
+                            <a href="{% url 'accounts:logout' %}" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </nav>
+              </header>
+
+            <!--  Header End -->
+              {% for item in page_obj  %}
+              <div class="container-fluid">
+                <div class="card">
+                  <div class="card-body">
+                  <h5 class="card-title fw-semibold mb-4">Order Number: {{item.order.id}}</h5>
+                  <p class="mb-0">Product: {{item.product.name}}</p>
+                  <p class="mb-0">Quantity: {{item.quantity}} </p>
+                  <p class="mb-0">Price: {{item.product.price}} </p>
+                  <p class="mb-0">Buyer: {{item.order.user}} </p>
+                  <p class="mb-0">Buying Time: {{item.order.created_at}} </p>
+                  <p class="mb-0">Total Price: {{item.item_total_price }} </p>
+                  <p class="mb-0">Status: {{item.status }} </p>
+                  {% if not request.user.user_type == 'operator' %}
+                  <a href={% url 'vendors:order-detail' item.pk %} ><button type="button" class="btn btn-primary" >Edit</button></a>
+                  {% else %}
+                  {% endif %}
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+            <div class="pagination">
+              <span class="step-links">
+                  {% if page_obj.has_previous %}
+                      <a href="?page=1">&laquo; first</a>
+                      <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                  {% endif %}
+          
+                  {% for num in paginator.page_range %}
+                      {% if page_obj.number == num %}
+                          <span class="current">{{ num }}</span>
+                      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                          <a href="?page={{ num }}">{{ num }}</a>
+                      {% endif %}
+                  {% endfor %}
+          
+                  {% if page_obj.has_next %}
+                      <a href="?page={{ page_obj.next_page_number }}">next</a>
+                      <a href="?page={{ paginator.num_pages }}">last &raquo;</a>
+                  {% endif %}
+              </span>
+          </div>
+          </div>
+        </div>
+
+  {% endblock content %}

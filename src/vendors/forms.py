@@ -5,6 +5,7 @@ from accounts.models import UserImage
 from website.models import Product
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
+from orders.models import OrderItem
 
 
 User = get_user_model()
@@ -129,3 +130,8 @@ class VendorRatingForm(forms.ModelForm):
     class Meta:
         model = VendorRating
         fields = ['rating']
+
+class OrderItemModelForm(forms.ModelForm):
+    class Meta:
+        model=OrderItem
+        fields='__all__'
