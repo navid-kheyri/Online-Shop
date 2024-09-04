@@ -115,6 +115,16 @@
               <span class="hide-menu">Orders</span>
             </a>
           </li>
+          <li class="sidebar-item">
+                        
+            <a class="sidebar-link" href="{% url 'vendors:reports' vendor.pk %}" aria-expanded="false">
+              
+              <span>
+                <i class="ti ti-file-description"></i>
+              </span>
+              <span class="hide-menu">Reports</span>
+            </a>
+          </li>
           {% if  request.user.user_type != 'operator' %}
           <li class="sidebar-item">
             

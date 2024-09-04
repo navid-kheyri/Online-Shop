@@ -11,10 +11,11 @@ from website.models import Product
 from .forms import ProductDetailModelForm, VendorModelForms, UserModelForm, VendorChangeDetailForm, VendorRatingForm, OrderItemModelForm
 from django.utils.decorators import method_decorator
 from accounts.decorators import roles_required
-from django.db.models import Sum
+from django.db.models import Sum,Count
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
+from datetime import datetime, timedelta
 
 User = get_user_model()
 
@@ -401,3 +402,35 @@ class VendorOrdersDetailView(UpdateView):
         order = Order.objects.get(id=self.kwargs['pk'])
         context['order'] = order
         return context
+
+
+
+@method_decorator(roles_required('manager', 'operator', 'owner'), name='dispatch')
+class VendorReportsDetailView(DetailView):
+    model = Vendor
+    template_name = 'shop/report.html'
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        products = self.get_object().vendor_products.prefetch_related('product_item').all()
+        sold_items_weekly =products.filter(product_item__order__created_at__gte=datetime.now()-timedelta(days=7))
+        sold_items_monthly =products.filter(product_item__order__created_at__gte=datetime.now()-timedelta(days=30))
+        total_sale_count_weekly =sold_items_weekly.values('product_item','product_item__quantity').aggregate(total_sales=Sum('product_item__quantity'))
+        total_sale_count_monthly =sold_items_monthly.values('product_item','product_item__quantity').aggregate(total_sales=Sum('product_item__quantity'))
+        total_income_weekly =sold_items_weekly.values('product_item').aggregate(total_income=Sum('product_item__item_total_price'))
+        total_income_monthly =sold_items_monthly.values('product_item').aggregate(total_income=Sum('product_item__item_total_price'))
+        most_weekly = sold_items_weekly.values('name').annotate(total_sales=Count('product_item__quantity')).order_by('-total_sales')[:4]
+        most_monthly = sold_items_monthly.values('name').annotate(total_sales=Count('product_item__quantity')).order_by('-total_sales')[:4]
+        # print(most)
+        
+        # orderitems=products.values('product_item').annotate(total_sales=Sum('product_item__item_total_price'))
+        context['total_sale_count_weekly'] = total_sale_count_weekly
+        context['total_sale_count_monthly'] = total_sale_count_monthly
+        context['total_income_weekly'] = total_income_weekly
+        context['total_income_monthly'] = total_income_monthly
+        context['most_weekly'] = most_weekly
+        context['most_monthly'] = most_monthly
+        return context
+
+        
