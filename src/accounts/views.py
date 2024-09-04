@@ -1,3 +1,4 @@
+from urllib.parse import urlparse
 from django.http import HttpRequest, HttpResponseForbidden
 from django.http.response import HttpResponse
 from django.shortcuts import render, redirect
@@ -28,7 +29,8 @@ class CustomLoginView(View):
     template_name = 'accounts/login.html'
 
     def get(self, request):
-        return render(request, self.template_name)
+        next_url = request.GET.get('next', '/')
+        return render(request, self.template_name, {'next_url': next_url})
 
     def post(self, request):
         email = request.POST.get("singin-email")
@@ -37,14 +39,16 @@ class CustomLoginView(View):
         user = authenticate(request, username=email, password=password)
         if user is not None:
             login(request, user)
-            if request.user.user_type == 'customer':
+            next_url = request.POST.get('next','/')
+            parsed_url = urlparse(next_url)
+            if not parsed_url.netloc:
+                return redirect(next_url)
+            if user.user_type == 'customer':
                 return redirect("website:index")
-            elif (user.user_type == 'owner' or user.user_type == 'manager' or user.user_type == 'operator'):
+            elif user.user_type in ['owner', 'manager', 'operator']:
                 return redirect("dashboard:owner-dashboard")
 
-        return render(request, self.template_name)
-
-# TODO CBV later
+        return render(request, self.template_name, {'next_url': next_url})
 
 
 @login_required
@@ -130,6 +134,7 @@ class RegisterOwner(View):
         return render(request, self.template_name, context={'message': message})
 
 
+@method_decorator( roles_required('manager','operator','owner') , name='dispatch')
 class EmployeeUpdateView(LoginRequiredMixin,UpdateView):
     """
     برای آپدیت کردن اطلاعات کارمندان

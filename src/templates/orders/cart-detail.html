@@ -152,7 +152,7 @@
 	                				<button type="submit">Proceed</button>
 								</form>
 									{% else %}
-									<a href="{% url 'accounts:login' %}">Proceed</a>
+									<a href="{% url 'accounts:login' %}?next={{ request.path }}">Proceed</a>
 									{% endif %}
 	                			</div><!-- End .summary -->
 							{% comment %} </form> {% endcomment %}
