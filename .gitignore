@@ -5,5 +5,5 @@ online shop/venv
 *.pyc
 venv
 .env
-staticfiles/
 media/
+staticfiles/
