@@ -422,9 +422,7 @@ class VendorReportsDetailView(DetailView):
         total_income_monthly =sold_items_monthly.values('product_item').aggregate(total_income=Sum('product_item__item_total_price'))
         most_weekly = sold_items_weekly.values('name').annotate(total_sales=Count('product_item__quantity')).order_by('-total_sales')[:4]
         most_monthly = sold_items_monthly.values('name').annotate(total_sales=Count('product_item__quantity')).order_by('-total_sales')[:4]
-        # print(most)
-        
-        # orderitems=products.values('product_item').annotate(total_sales=Sum('product_item__item_total_price'))
+
         context['total_sale_count_weekly'] = total_sale_count_weekly
         context['total_sale_count_monthly'] = total_sale_count_monthly
         context['total_income_weekly'] = total_income_weekly
