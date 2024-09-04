@@ -14,6 +14,7 @@ from accounts.decorators import roles_required
 from django.db.models import Sum
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
 
 User = get_user_model()
 
@@ -125,8 +126,13 @@ class MyProductsListView(ListView):
             'vendor_products').filter(pk=self.get_queryset())
         for products in vendor:
             product = products.vendor_products.all()
+        paginator = Paginator (product, 6)
+        page_number = self.request.GET.get('page', 1)
+        page_obj = paginator.get_page(page_number)
+
+        context['page_obj'] = page_obj
+        context['paginator'] = paginator
         context['vendor'] = vendor
-        context['product'] = product
 
         return context
 
@@ -192,6 +198,7 @@ class VendorUpdateView(LoginRequiredMixin, UpdateView):
 class ShopPageDetailView(DetailView):
     model = Vendor
     template_name = 'shop/shop-page.html'
+    
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -210,7 +217,15 @@ class ShopPageDetailView(DetailView):
         rating = VendorRating.objects.filter(vendor=vendor, user=user)
         products = Product.objects.prefetch_related(
             'vendor').filter(vendor=self.object.id)
-        context['products'] = products
+
+        paginator = Paginator(products , 2)
+        page_number = self.request.GET.get('page',1)
+
+        page_obj = paginator.get_page(page_number)
+        
+        context['page_obj'] = page_obj
+        context['paginator'] = paginator
+        # context['productss'] = products
         context['vendor'] = vendor
         context['my_rating'] = rating
         context['shops'] = set(vendors)
@@ -244,6 +259,7 @@ class AllShopsListView(ListView):
     model = Vendor
     template_name = 'shop/all-shops.html'
     context_object_name = 'vendors'
+    paginate_by = 3
 
     def get_queryset(self):
         filter_type = self.request.GET.get('filter')
@@ -363,7 +379,13 @@ class MyVendorOrders(DetailView):
         for product in products:
             for item in product.product_item.filter(status='pending'):
                 orderitems.append(item)
-        context['orderitems'] = orderitems
+        
+        paginator = Paginator (orderitems, 3)
+        page_number = self.request.GET.get('page', 1)
+        page_obj = paginator.get_page(page_number)
+
+        context['page_obj'] = page_obj
+        context['paginator'] = paginator
         return context
 
 

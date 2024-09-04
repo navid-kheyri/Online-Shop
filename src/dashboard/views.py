@@ -16,6 +16,7 @@ from website.models import Comment
 from django.utils.decorators import method_decorator
 from accounts.decorators import roles_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
 
 User = get_user_model()
 
@@ -120,12 +121,15 @@ class CustomerOrdersListView(ListView):
     def get_queryset(self):
         user = self.request.user
         user_order = Order.objects.filter(user=user)
-        print(user_order)
         return user_order
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['myorder'] = self.get_queryset()
+        paginator = Paginator(self.get_queryset() , 5)
+        page_number = self.request.GET.get('page', 1)
+        page_obj = paginator.get_page(page_number)
+        context['page_obj'] = page_obj
+        context['paginator'] = paginator
         return context
 
 

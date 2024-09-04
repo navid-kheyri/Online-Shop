@@ -14,6 +14,7 @@ from django.utils.decorators import method_decorator
 from accounts.decorators import roles_required
 from django.db.models import Sum
 from django.contrib.auth import get_user_model
+from django.core.paginator import Paginator
 
 User = get_user_model()
 
@@ -65,7 +66,12 @@ class CategoryProductDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         category = self.object
         category_product = category.category_products.all()
-        context['category_product'] = category_product
+        paginator = Paginator (category_product, 4)
+        page_number = self.request.GET.get('page', 1)
+        page_obj = paginator.get_page(page_number)
+        # context['category_product'] = category_product
+        context['page_obj'] = page_obj
+        context['paginator'] = paginator
 
         return context
 
@@ -77,6 +83,16 @@ class AllCategoriesListView(ListView):
     """
     model = Category
     template_name = 'website/all-categories.html'
+    context_object_name = 'categoriess'
+    paginate_by = 6
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     categories = Category.objects.filter (parent=None)
+    #     print(categories)
+    #     print('===============')
+    #     context ['categoriess'] = categories
+    #     return context
 
 
 @method_decorator(roles_required('customer', 'admin', 'anonymous'), name='dispatch')
@@ -202,6 +218,7 @@ class IndexListView(ListView):
     template_name = 'index.html'
     model = Product
     context_object_name = 'products'
+    paginate_by=4
 
     # def get(self, request):
     #     if (request.user.is_anonymous or request.user.user_type == 'admin' or request.user.user_type =='customer'):
