@@ -1,0 +1,31 @@
+# Exclude Python compiled files
+__pycache__
+*.pyc
+*.pyo
+
+# Exclude environment variables files
+*.env
+*.env.*
+
+# Exclude logs
+*.log
+*.log.*
+
+# Exclude static and media files
+staticfiles/
+media/
+
+# Exclude build artifacts
+build/
+dist/
+*.egg-info/
+
+# Exclude database files
+*.sqlite3
+__pycache__/
+
+.venv
+.idea
+online shop/venv
+venv
+.env

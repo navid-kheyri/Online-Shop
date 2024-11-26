@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: django_psql_container
+    environment:
+       POSTGRES_DB: ${DB_NAME}
+       POSTGRES_USER: ${DB_USER}
+       POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    restart:
+      always
+      
+  online_shop:
+    image: django-dockerize
+    container_name: online_shop_container
+    build:  .
+    ports:
+      - "8000:8000"
+    volumes:
+      - static:/usr/src/app/static
+      - media:/usr/src/app/media
+    depends_on:
+      - db
+    environment:
+      SECRET_KEY: ${SECRET_KEY}
+      DEBUG: ${DEBUG}
+
+    env_file:
+      - .env
+  
+    command: sh -c "python manage.py makemigrations &&
+                                python manage.py migrate &&
+                                python manage.py runserver 0.0.0.0:8000"
+    restart:
+      always
+
+volumes:
+  postgres_data:
+  static:
+  media:
