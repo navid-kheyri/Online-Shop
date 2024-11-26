@@ -5,19 +5,20 @@ from .models import OrderItem, Order
 
 @admin.register(OrderItem)
 class OrderItemModelAdmin(admin.ModelAdmin):
-    list_display = ['order_number','buyer','status', 'product', 'quantity', 'item_total_price']
+    list_display = ['order_number', 'buyer', 'status',
+                    'product', 'quantity', 'item_total_price']
 
     def buyer(self, instance):
         return instance.order.user.email
-    
-    def order_number(sellf,instance):
-        return instance.order.pk
 
+    def order_number(sellf, instance):
+        return instance.order.pk
 
 
 @admin.register(Order)
 class OrderModelAdmin(admin.ModelAdmin):
-    list_display = ['order_number','user', 'status', 'created_at', 'updated_at']
+    list_display = ['order_number', 'user',
+                    'status', 'created_at', 'updated_at']
 
-    def order_number(sellf,instance):
+    def order_number(sellf, instance):
         return instance.pk

@@ -1,12 +1,9 @@
-from urllib.parse import urlparse
 from django.http import HttpRequest, HttpResponseForbidden
-from django.http.response import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.views.generic import View
-from django.views.generic import UpdateView
+from django.views.generic import View ,UpdateView
 from django.urls import reverse_lazy
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from .forms import *
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.views import PasswordChangeView
@@ -15,7 +12,6 @@ from .decorators import roles_required
 import random
 from kavenegar import *
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
@@ -29,26 +25,21 @@ class CustomLoginView(View):
     template_name = 'accounts/login.html'
 
     def get(self, request):
-        next_url = request.GET.get('next', '/')
-        return render(request, self.template_name, {'next_url': next_url})
+        return render(request, self.template_name)
 
     def post(self, request):
         email = request.POST.get("singin-email")
         password = request.POST.get("singin-password")
 
-        user = authenticate(request, username=email, password=password)
+        user = authenticate(request, username=email, password=password) #hash password dar custom backend sorat migire
         if user is not None:
             login(request, user)
-            next_url = request.POST.get('next','/')
-            parsed_url = urlparse(next_url)
-            if not parsed_url.netloc:
-                return redirect(next_url)
             if user.user_type == 'customer':
                 return redirect("website:index")
             elif user.user_type in ['owner', 'manager', 'operator']:
                 return redirect("dashboard:owner-dashboard")
 
-        return render(request, self.template_name, {'next_url': next_url})
+        return render(request, self.template_name)
 
 
 @login_required
@@ -81,7 +72,6 @@ class CustomRegisterView(View):
             message = 'Email or Phone Number already exists!'
         else:
             if password != password_confirmation:
-                # raise ValueError('password is not match')
                 message='password is not match'
                 return render(request, self.template_name,context={'messeage':message})
 
@@ -118,7 +108,8 @@ class RegisterOwner(View):
             message = 'Email or Phone Number already exists!'
         else:
             if password != password_confirmation:
-                raise ValueError('password is not match')
+                message='password is not match'
+                return render(request, self.template_name,context={'messeage':message})
 
             user = User.objects.create_user(email=email, phone_number=phone_number,
                                             password=password,
@@ -134,17 +125,17 @@ class RegisterOwner(View):
         return render(request, self.template_name, context={'message': message})
 
 
-@method_decorator( roles_required('manager','operator','owner') , name='dispatch')
+@method_decorator( roles_required('manager','operator','owner',pk_is_user=True) , name='dispatch')
 class EmployeeUpdateView(LoginRequiredMixin,UpdateView):
     """
     برای آپدیت کردن اطلاعات کارمندان
     """
-    def dispatch(self, request, *args, **kwargs) :
-        if int(kwargs.get('pk')) != self.request.user.pk:
-            return self.handle_no_permission()
-        if not (request.user.is_owner or request.user.is_operator or request.user.is_manager):
-            return HttpResponseForbidden("You are not allowed to access this page.")
-        return super().dispatch(request, *args, **kwargs)
+    # def dispatch(self, request, *args, **kwargs) :  # to decorator (role required)bayad taghirati bedam k az dispatch inja estefade nashe
+    #     if int(kwargs.get('pk')) != self.request.user.pk:
+    #         return self.handle_no_permission()
+    #     if not (request.user.is_owner or request.user.is_operator or request.user.is_manager):
+    #         return HttpResponseForbidden("You are not allowed to access this page.")
+    #     return super().dispatch(request, *args, **kwargs)
 
     model = User
     template_name = 'accounts/edit-employee.html'
@@ -153,7 +144,7 @@ class EmployeeUpdateView(LoginRequiredMixin,UpdateView):
 
     def get_form_kwargs(self):
         """
-        در اینجا ما در واقع  ریکوئست را به فرم پاس میدهیم  
+        در اینجا ریکوئست را به فرم پاس میدهیم  
         """
         kwargs = super().get_form_kwargs()
         kwargs['request'] = self.request
@@ -161,9 +152,8 @@ class EmployeeUpdateView(LoginRequiredMixin,UpdateView):
 
 @method_decorator( roles_required('manager','operator','owner') , name='dispatch')
 class ChangePasswordView(PasswordChangeView):
-    form_class = PasswordChangeForm
-    success_url = reverse_lazy('dashboard:owner-dashboard')
     template_name = 'accounts/change-password.html'
+    success_url = reverse_lazy('dashboard:owner-dashboard')
 
 
 ############## for OTP Verification ####################
@@ -174,20 +164,19 @@ def generate_otp():
 
 
 def send_otp(phone_number, otp):
+    
     try:
-        api = KavenegarAPI(
-            '36636E4153466D5A4E4273615A344C6C6A76506C35306B775933424F4F745353466278634566344D41524D3D')
+        api = KavenegarAPI('36636E4153466D5A4E4273615A344C6C6A76506C35306B775933424F4F745353466278634566344D41524D3D')
         params = {
-            'receptor': phone_number,
-            'template': 'verify-otp',
-            'token': otp,
-            'type': 'sms',
-        }
-        response = api.verify_lookup(params)
+            'sender': '',#optional
+            'receptor': '09226639839',#multiple mobile number, split by comma
+            'message': f'your code: {otp}',
+        } 
+        response = api.sms_send(params)
         print(response)
-    except APIException as e:
+    except APIException as e: 
         print(e)
-    except HTTPException as e:
+    except HTTPException as e: 
         print(e)
 
 

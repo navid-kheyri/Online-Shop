@@ -10,11 +10,11 @@ class OrderItemModelSerializer(serializers.ModelSerializer):
 
 
 class OrderModelSerializer(serializers.ModelSerializer):
-    order_items = OrderItemModelSerializer(many=True, read_only=True)
+    order_item = OrderItemModelSerializer(many=True, read_only=True) #var bayad ba related_name yeki bashe
 
     class Meta:
         model = Order
-        fields = '__all__'
+        fields = ['id','created_at','updated_at','status','user','address','order_item']
 
 
 class AddressSerializer(serializers.ModelSerializer):

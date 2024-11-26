@@ -1,7 +1,4 @@
 from django.db.models.base import Model as Model
-from django.db.models.query import QuerySet
-from django.forms import BaseModelForm
-from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views import View
@@ -45,18 +42,6 @@ class AddProductCreateView(CreateView):
         return kwargs
 
 
-# @method_decorator(roles_required('customer', 'admin', 'anonymous'), name='dispatch')
-# class IndexListView(ListView):
-#     template_name = 'index.html'
-#     model = Product
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         last_products = Product.objects.all().order_by('-created_at')[:4]
-#         context['last_products'] = last_products
-#         return context
-
-
 @method_decorator(roles_required('customer', 'admin', 'anonymous'), name='dispatch')
 class CategoryProductDetailView(DetailView):
     model = Category
@@ -86,13 +71,6 @@ class AllCategoriesListView(ListView):
     context_object_name = 'categoriess'
     paginate_by = 6
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     categories = Category.objects.filter (parent=None)
-    #     print(categories)
-    #     print('===============')
-    #     context ['categoriess'] = categories
-    #     return context
 
 
 @method_decorator(roles_required('customer', 'admin', 'anonymous'), name='dispatch')
@@ -105,15 +83,15 @@ class ProductDetailView(DetailView):
         product = self.object
         user = self.request.user.id
         paid_orders = Order.objects.filter(
-            user=user).prefetch_related('order_item__product')
-        product_name = []
+            user=user).prefetch_related('order_item__product') #az jense Order
+        product_name = [] # ina baraye rating hast k orderhaye done shode ro baraye current user miare k agar in product to in list bood va rate nadade bodim
         for order in paid_orders:
             orderitems = order.order_item.all()
             for item in orderitems:
                 prod = item.product.name
                 product_name.append(prod)
         rating = Rating.objects.filter(product=product, user=user)
-        comments = product.Product_comments.filter(comment_type='confirmed')
+        comments = product.Product_comments.filter(comment_type='confirmed') #show all confirmed comment of current product
         context['comments'] = comments
         context['product'] = product
         context['form'] = CommentModelForm()
@@ -161,56 +139,13 @@ class SubCategoriesDetailView(DetailView):
     model = Category
     template_name = 'shop/sub-categories.html'
 
-    def get_object(self):
-        pk = self.kwargs.get('pk')
-        print(pk)
-        return pk
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        category = Category.objects.get(id=self.get_object())
+        category = Category.objects.get(id=self.kwargs['pk'])
         sub_cat = category.sub_categories.all()
         context['sub_cat'] = sub_cat
-        print(sub_cat)
         return context
-
-
-# class TopSellingListView(ListView):
-#     model = Product
-#     template_name = 'filters/top-selling-mainpage.html'
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         orders = OrderItem.objects.filter(order__is_paid=True)
-#         total_sales = orders.values('product_id').annotate(
-#             total=Sum('quantity')).order_by('-total')
-#         products = []
-#         for product in total_sales:
-#             products.append(Product.objects.get(id=product['product_id']))
-#         context['products'] = products
-#         return context
-
-
-# class TopRatedListView(ListView):
-#     model = Product
-#     template_name = 'filters/top-rated-mainpage.html'
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         products = Product.objects.order_by('-average_rating')
-#         context['products'] = products
-#         return context
-
-
-# class MostExpensiveListView(ListView):
-#     model = Product
-#     template_name = 'filters/most-expensive-mainpage.html'
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         products = Product.objects.order_by('-price')
-#         context['products'] = products
-#         return context
     
 
 @method_decorator(roles_required('customer', 'admin', 'anonymous'), name='dispatch')
@@ -220,11 +155,6 @@ class IndexListView(ListView):
     context_object_name = 'products'
     paginate_by=4
 
-    # def get(self, request):
-    #     if (request.user.is_anonymous or request.user.user_type == 'admin' or request.user.user_type =='customer'):
-    #         return render(request , 'index.html')
-    #     else: 
-    #         return redirect ('dashboard:owner-dashboard')
 
     def get_queryset(self):
         
@@ -246,13 +176,12 @@ class IndexListView(ListView):
         elif filter_type == 'most-expensive':
             products = Product.objects.order_by('-price')
             return products
-        return super().get_queryset()
+        return super().get_queryset() # in by default Product.objects.all() return mikone age nazarim none mide
     
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         last_products = Product.objects.all().order_by('-created_at')[:4]
-        print(last_products)
         context['last_products'] = last_products
         return context
     
@@ -267,7 +196,7 @@ class SearchListView(ListView):
         if search:
             products = Product.objects.filter(name__icontains=search)
             vendors = Vendor.objects.filter(name__icontains=search)
-            if products.exists():
+            if products.exists(): #True false mide
                 context['productss'] = products
             if vendors.exists():
                 context['vendorss'] = vendors

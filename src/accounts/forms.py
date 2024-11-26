@@ -15,7 +15,7 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 class CustomUserChangeForm(forms.ModelForm):
-    password = ReadOnlyPasswordHashField()
+    # password = ReadOnlyPasswordHashField()
     input_image = forms.ImageField(label='Image',required=False)
 
     class Meta:
@@ -29,13 +29,13 @@ class CustomUserChangeForm(forms.ModelForm):
         """
         self.request = kwargs.pop('request', None)
         super(CustomUserChangeForm, self).__init__(*args, **kwargs)
-        if self.request and (self.request.user.user_type == 'owner' or self.request.user.user_type == 'operator' or self.request.user.user_type == 'manager' or self.request.user.user_type == 'customer'):
+        if self.request :
             self.fields['user_type'].disabled = True
             self.fields['email'].disabled = True
             self.fields['phone_number'].disabled = True
 
     def save(self, commit=True):
-        user = super().save(commit=False)
+        user = super().save(commit=False)  # super() yek instance az model misaze 
         if commit:
             user.save()
             UserImage.objects.create(

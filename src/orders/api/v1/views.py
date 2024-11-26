@@ -12,6 +12,8 @@ from django.contrib.auth.decorators import login_required
 from customers.models import Address
 from .serializers import CartAddSerializer, CartRemoveSerializer, AddressSerializer
 from django.contrib.auth.mixins import LoginRequiredMixin
+from rest_framework import status
+from decimal import Decimal
 
 
 class OrderListCreateAPIView(APIView):
@@ -112,8 +114,8 @@ class RemoveFromCartAPIView(APIView):
                 'product_id': product.id,
                 'product_name': product.name,
                 'quantity': item['quantity'],
-                'price': product.price,
-                'total_price': product.price * item['quantity']
+                'price': item['price'],
+                'total_price': Decimal(item['price']) * int(item['quantity'])
             })
         return Response(cart_items, status=status.HTTP_200_OK)
 
@@ -142,7 +144,7 @@ class DeleteFromCartAPIView(APIView):
 
 
 class UpdateCartAPIView(APIView):
-    def post(self, request, *args, **kwargs):
+    def put(self, request, *args, **kwargs):
         serializer = CartAddSerializer(data=request.data)
         if serializer.is_valid():
             product = get_object_or_404(
@@ -152,10 +154,28 @@ class UpdateCartAPIView(APIView):
             cart.update(product, quantity)
             return Response({'message': 'Cart updated successfully'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def get(self,request,*args, **kwargs):
+        cart = Cart(request)
+        cart_items = []
+        for key, item in cart.cart.items():
+            product = Product.objects.get(id=key)
+            cart_items.append({
+                'product_id': product.id,
+                'product_name': product.name,
+                'quantity': item['quantity'],
+                'price': item['price'],
+                'total_price': Decimal(item['price']) * int(item['quantity']),
+                # 'image_url': product.images.first().image.url
+            })
+        return Response(cart_items, status=status.HTTP_200_OK)
 
-
+from rest_framework import authentication
 class CartDetailAPIView(APIView):
+    # permission_classes=[  IsAuthenticated]
+    # authentication_classes=[authentication.BasicAuthentication]
     def get(self, request, *args, **kwargs):
+        print(request.user)
         cart = Cart(request)
         cart_items = []
         for key, item in cart.cart.items():
@@ -165,14 +185,14 @@ class CartDetailAPIView(APIView):
                 'product_name': product.name,
                 'quantity': item['quantity'],
                 'price': product.price,
-                'total_price': product.price * item['quantity'],
+                'total_price': product.price * item['quantity']
                 # 'image_url': product.images.first().image.url
             })
         return Response({'cart_items': cart_items}, status=status.HTTP_200_OK)
 
 
 class CheckoutAPIView(LoginRequiredMixin,APIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     def get(self, request, *args, **kwargs):
         cart = Cart(request)
         if not cart.cart:
@@ -191,7 +211,7 @@ class CheckoutAPIView(LoginRequiredMixin,APIView):
                 'product_id': product.id,
                 'product_name': product.name,
                 'quantity': item['quantity'],
-                'price': product.price,
+                'price': item['price'],
                 'total_price': price * item['quantity']
             })
         addresses = Address.objects.filter(user=request.user)
@@ -208,13 +228,13 @@ class CheckoutAPIView(LoginRequiredMixin,APIView):
         if not cart.cart:
             return Response({'message': 'Cart is empty'}, status=status.HTTP_400_BAD_REQUEST)
 
-        address_data = request.data.get('address')
-        address_id = request.data.get('address_id')
+        address_data = request.data.get('address') #sent new address
+        address_id = request.data.get('address_id') #retrieve exisiting address
 
         if address_data:
-            address_data['user'] = request.user.id
+            address_data['user'] = request.user.id #chon to bala user nadadim gahbl az serialize bayd user hame assign konim
             address_serializer = AddressSerializer(
-                data=address_data, context={'request': request})
+                data=address_data)
             if address_serializer.is_valid():
                 address = address_serializer.save()
             else:

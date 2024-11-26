@@ -33,10 +33,11 @@ class AddProductModelForm(forms.ModelForm):
         product = super().save(commit=False)
         if commit:
             product.save()
-            self.save_m2m()
+            self.save_m2m()  #mitonim inam nanevisim inja vali bashe safe tare
             ProductImage.objects.create(
                 product=product, image=self.cleaned_data['input_image'])
             product.vendor.set(self.cleaned_data['vendors'])
+            #set and add is for m2m relations set():for replacing objs  with current one,, and add():add obj to existing one
         return product
     
 class CommentModelForm(forms.ModelForm):

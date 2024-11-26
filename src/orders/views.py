@@ -28,6 +28,7 @@ class CartDetailView(View):
         return render(request, 'orders/cart-detail.html', {'total': total, 'products': products} )
 
 
+@method_decorator( roles_required('customer') , name='dispatch')
 class NewAddressCreateView(CreateView):
     model = Address
     template_name = 'orders/add-address.html'

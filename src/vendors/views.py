@@ -1,8 +1,5 @@
-from django.db.models.query import QuerySet
-from django.http import HttpRequest, HttpResponseForbidden
-from django.http.response import HttpResponse as HttpResponse
-from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import redirect, render, get_object_or_404
+from django.http import HttpResponseForbidden
+from django.shortcuts import  get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from .models import Vendor, VendorRating
@@ -34,12 +31,13 @@ class AddVendorCreateView(CreateView):
 
     def form_valid(self, form):
         """
+        inja b cleaned_data access nadarim
         در اینجا هدف این است که یوزری که لاگین کرده به عنوان مدیر 
         بصورت پیش فرض ثبت شود  پس کد به این صورت نوشته میشود
         """
-        response = super().form_valid(form)
-        self.object.user.set([self.request.user])
-        form.save()
+        response = super().form_valid(form)  #http response hast,This already handles the saving process and sets self.object to the created instance
+        self.object.user.set([self.request.user]) #self.object is instance model of vendor
+        form.save() # in save baraye db hast
         return response
 
 
@@ -63,24 +61,18 @@ class AddEmployeeCreateView(CreateView):
         kwargs['request'] = self.request
         return kwargs
 
-    def form_valid(self, form):
+    def form_valid(self, form):  #vaghti az in estefade mikonim best practice ine k to forms.py az __init__ estefade konim
         """
         در اینجا هنگام ایجاد کارمند استف را ترو میکنیم
         """
-        # form_data = form.cleaned_data
-        # category = Categories.objects.create(name=form_data['name'], description=form_data['description'])
-        # UserImage.objects.create(category=category, image=form_data['input_image'])
-        self.object = form.save(commit=False)
-        self.object.is_staff = True
+        self.object = form.save(commit=False)  # from.save() instance model misaze
+        self.object.is_staff = True  #farghrsh ba balaii ine k inja dasti tanzim kardim vali balaii khode super initail o formsave mikone
         self.object.save()
         form.save_m2m()
         return super().form_valid(form)
 
 
-method_decorator(
-    (roles_required('owner', 'manager', 'operator')), name='dispatch')
-
-
+@method_decorator(roles_required('owner', 'manager', 'operator',pk_is_vednor=True), name='dispatch')
 class MyVendorDetatilView(LoginRequiredMixin, DetailView):
     """
     برای دیدن آپشن های هر فروشگاه
@@ -88,11 +80,11 @@ class MyVendorDetatilView(LoginRequiredMixin, DetailView):
     model = Vendor
     template_name = 'shop/my-vendors.html'
 
-    def dispatch(self, request, *args, **kwargs):
-        vendor = get_object_or_404(Vendor, pk=self.kwargs['pk'])
-        if not vendor.user_has_permission(request.user):
-            return HttpResponseForbidden("You do not have permission to access this vendor.")
-        return super().dispatch(request, *args, **kwargs)
+    # def dispatch(self, request, *args, **kwargs):
+    #     vendor = get_object_or_404(Vendor, pk=self.kwargs['pk'])
+    #     if not vendor.user_has_permission(request.user):
+    #         return HttpResponseForbidden("You do not have permission to access this vendor.")
+    #     return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -103,7 +95,7 @@ class MyVendorDetatilView(LoginRequiredMixin, DetailView):
         return context
 
 
-@method_decorator(roles_required('manager', 'operator', 'owner'), name='dispatch')
+@method_decorator(roles_required('manager', 'operator', 'owner',pk_is_vednor=True), name='dispatch')
 class MyProductsListView(ListView):
     """
     برای دیدن محصولات هر فزوشگاه
@@ -111,36 +103,31 @@ class MyProductsListView(ListView):
     model = Vendor
     template_name = 'shop/my-products.html'
 
-    def dispatch(self, request, *args, **kwargs):
-        vendor = get_object_or_404(Vendor, pk=self.kwargs['pk'])
-        if not vendor.user_has_permission(request.user):
-            return HttpResponseForbidden("You do not have permission to access this vendor.")
-        return super().dispatch(request, *args, **kwargs)
+    # def dispatch(self, request, *args, **kwargs):
+    #     vendor = get_object_or_404(Vendor, pk=self.kwargs['pk'])
+    #     if not vendor.user_has_permission(request.user):
+    #         return HttpResponseForbidden("You do not have permission to access this vendor.")
+    #     return super().dispatch(request, *args, **kwargs)
 
-    def get_queryset(self):
-        pk = self.kwargs['pk']
-        return pk
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         vendor = Vendor.objects.prefetch_related(
-            'vendor_products').filter(pk=self.get_queryset())
+            'vendor_products').filter(pk=self.kwargs['pk'])
         for products in vendor:
             product = products.vendor_products.all()
         paginator = Paginator (product, 6)
-        page_number = self.request.GET.get('page', 1)
-        page_obj = paginator.get_page(page_number)
+        page_number = self.request.GET.get('page', 1) #retrieve pagenumber from query params,agar nabood default is 1
+        page_obj = paginator.get_page(page_number) #az obj paginator itema ro baraye in page migire
 
-        context['page_obj'] = page_obj
-        context['paginator'] = paginator
+        context['page_obj'] = page_obj #has_previous,has_next,next_page_number,previous_page_number,number dare
+        context['paginator'] = paginator  #page_range,num_pages dare
         context['vendor'] = vendor
 
         return context
 
 
-method_decorator((roles_required('owner', 'manager')), name='dispatch')
-
-
+@method_decorator((roles_required('owner', 'manager')), name='dispatch')
 class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
     template_name = 'shop/dashboard-product-detail.html'
@@ -167,19 +154,17 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
         return kwargs
 
 
-method_decorator((roles_required('owner', 'manager')), name='dispatch')
-
-
+@method_decorator(roles_required('owner', 'manager',pk_is_vednor=True), name='dispatch')
 class VendorUpdateView(LoginRequiredMixin, UpdateView):
     model = Vendor
     template_name = 'shop/vendor-change-detail.html'
     form_class = VendorChangeDetailForm
 
-    def dispatch(self, request, *args, **kwargs):
-        vendor = get_object_or_404(Vendor, pk=self.kwargs['pk'])
-        if not vendor.user_has_permission(request.user):
-            return HttpResponseForbidden("You do not have permission to access this vendor.")
-        return super().dispatch(request, *args, **kwargs)
+    # def dispatch(self, request, *args, **kwargs):
+    #     vendor = get_object_or_404(Vendor, pk=kwargs['pk'])
+    #     if not vendor.user_has_permission(request.user):
+    #         return HttpResponseForbidden("You do not have permission to access this vendor.")
+    #     return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse_lazy('vendors:my-vendor', kwargs={'pk': self.object.pk})
@@ -189,10 +174,6 @@ class VendorUpdateView(LoginRequiredMixin, UpdateView):
         kwargs['request'] = self.request
         return kwargs
 
-
-# class AllShopsListView(ListView):
-#     model = Vendor
-#     template_name = 'shop/all-shops.html'
 
 
 @method_decorator(roles_required('customer', 'admin', 'anonymous'), name='dispatch')
@@ -207,15 +188,15 @@ class ShopPageDetailView(DetailView):
         user = self.request.user.id
 
         paid_orders = Order.objects.filter(
-            user=user).prefetch_related('order_item__product')
+            user=user).prefetch_related('order_item__product') #order haye  current user
         vendors = []
         for order in paid_orders:
-            orderitems = order.order_item.all()
+            orderitems = order.order_item.all() # all of products that bought from current user
             for item in orderitems:
                 shop = item.product.vendor.first().name
                 vendors.append(shop)
 
-        rating = VendorRating.objects.filter(vendor=vendor, user=user)
+        rating = VendorRating.objects.filter(vendor=vendor, user=user) #rate current user
         products = Product.objects.prefetch_related(
             'vendor').filter(vendor=self.object.id)
 
@@ -226,7 +207,6 @@ class ShopPageDetailView(DetailView):
         
         context['page_obj'] = page_obj
         context['paginator'] = paginator
-        # context['productss'] = products
         context['vendor'] = vendor
         context['my_rating'] = rating
         context['shops'] = set(vendors)
@@ -265,8 +245,8 @@ class AllShopsListView(ListView):
     def get_queryset(self):
         filter_type = self.request.GET.get('filter')
         if filter_type == 'most-selling':
-            orders = OrderItem.objects.all()
-            total_sales = orders.values('product__vendor').annotate(
+            orderitems = OrderItem.objects.all()
+            total_sales = orderitems.values('product__vendor').annotate(
                 total=Sum('quantity')).order_by('-total')
             vendors = []
             for vendor in total_sales:
@@ -285,43 +265,6 @@ class AllShopsListView(ListView):
         return super().get_queryset()
 
 
-# class MostSellingVendorsListView(ListView):
-#     model = Product
-#     template_name = 'filters/most-selling-vendors.html'
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         orders = OrderItem.objects.filter(order__is_paid=True)
-#         total_sales = orders.values('product__vendor').annotate(
-#             total=Sum('quantity')).order_by('-total')
-#         shops = []
-#         for vendor in total_sales:
-#             shops.append(Vendor.objects.get(id=vendor['product__vendor']))
-#         context['vendors'] = shops
-#         return context
-
-
-# class TopRatedVendorsListView(ListView):
-#     model = Vendor
-#     template_name = 'filters/top-rated-vendors.html'
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         vendors = Vendor.objects.order_by('-average_rating')
-#         context['vendors'] = vendors
-#         return context
-
-
-# class NewestVendorsListView(ListView):
-#     template_name = 'filters/newest-vendors.html'
-#     model = Vendor
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         last_vendors = Vendor.objects.all().order_by('-created_at')
-#         context['last_vendors'] = last_vendors
-#         return context
-
 @method_decorator(roles_required('customer', 'admin', 'anonymous'), name='dispatch')
 class TopSellingProductShop(DetailView):
     model = Vendor
@@ -331,9 +274,10 @@ class TopSellingProductShop(DetailView):
         context = super().get_context_data(**kwargs)
         orders = OrderItem.objects.all()
         total_sales = orders.values('product_id').annotate(
-            total=Sum('quantity')).order_by('-total')
+            total=Sum('quantity')).order_by('-total') #values yek list az dictionaries misaze va bar asas product_id gp mikone,agar bekhaim maslan quantity ham neshon bede bayd mention konim to value
+        print(total_sales)
         products = []
-        for product in total_sales:
+        for product in total_sales: #product y dict hast
             product = Product.objects.filter(
                 id=product['product_id'], vendor=self.kwargs['pk']).first()
             if product:
@@ -370,12 +314,14 @@ class MostExpensiveProductShop(DetailView):
 
 @method_decorator(roles_required('manager', 'operator', 'owner'), name='dispatch')
 class MyVendorOrders(DetailView):
+    #TODO badan: Order: ->orderitemash -> edit kardanash
     model = Vendor
     template_name = 'shop/orders.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        products = self.get_object().vendor_products.prefetch_related('product_item').all()
+        products = self.get_object().vendor_products.prefetch_related('product_item').all() #az vendor :producthash to barmidarim: az product b orderitemaii k oon product tosh bode
+        print(products)
         orderitems = []
         for product in products:
             for item in product.product_item.filter(status='pending'):
@@ -385,13 +331,13 @@ class MyVendorOrders(DetailView):
         page_number = self.request.GET.get('page', 1)
         page_obj = paginator.get_page(page_number)
 
-        context['page_obj'] = page_obj
+        context['page_obj'] = page_obj #az in mitonim b itemyae orderitems access dashte bashim
         context['paginator'] = paginator
         return context
 
 
 @method_decorator(roles_required('manager', 'operator', 'owner'), name='dispatch')
-class VendorOrdersDetailView(UpdateView):
+class VendorOrdersUpdateView(UpdateView):
     model = OrderItem
     template_name = 'shop/order-detail.html'
     form_class = OrderItemModelForm
@@ -407,6 +353,7 @@ class VendorOrdersDetailView(UpdateView):
 
 @method_decorator(roles_required('manager', 'operator', 'owner'), name='dispatch')
 class VendorReportsDetailView(DetailView):
+    #TODO check this later
     model = Vendor
     template_name = 'shop/report.html'
 

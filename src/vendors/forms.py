@@ -1,4 +1,3 @@
-from typing import Any
 from django import forms
 from .models import Vendor, VendorImage, VendorRating
 from accounts.models import UserImage
@@ -16,7 +15,8 @@ class VendorModelForms(forms.ModelForm):
 
     class Meta:
         model = Vendor
-        exclude = ['user', 'status']
+        exclude = ['user', 'status','rating_count','sum_rating','average_rating']
+
 
     def save(self, commit=True):
         vendor = super().save(commit=False)
@@ -38,7 +38,7 @@ class UserModelForm(forms.ModelForm):
     input_image = forms.ImageField(label='Image')
 
     vendors = forms.ModelMultipleChoiceField(
-        queryset=Vendor.objects.all(),
+        queryset=Vendor.objects.none(), #hit zade mishe db pas none() mizarim k nazane
         required=True,
         label="Vendors"
     )
@@ -68,15 +68,15 @@ class UserModelForm(forms.ModelForm):
         user.password = make_password(self.cleaned_data['password'])
         if commit:
             user.save()
+            user.vendors.set(self.cleaned_data['vendors'])
             self.save_m2m()
             UserImage.objects.create(
                 user=user, image=self.cleaned_data['input_image'])
-            user.vendors.set(self.cleaned_data['vendors'])
 
         return user
 
-    def clean(self):
-        cleaned_data = super().clean()
+    def clean(self): # ba password_clean fargh dare inja super call mishe
+        cleaned_data = super().clean() #same as form.cleaned_data
         password = cleaned_data.get("password")
         confirm_password = cleaned_data.get("confirm_password")
 
@@ -116,7 +116,6 @@ class VendorChangeDetailForm(forms.ModelForm):
     class Meta:
         model = Vendor
         exclude = ['created_at', 'user']
-        readonly_fields=['rating_count']
 
     def __init__ (self ,*args, **kwargs):
         self.request = kwargs.pop('request' , None)

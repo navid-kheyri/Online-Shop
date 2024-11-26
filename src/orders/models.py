@@ -24,7 +24,8 @@ class OrderItem(models.Model):
         max_length=10, choices=ORDER_ITEM_STATUS, default='pending')
 
     def __str__(self):
-        return self.order.user.email
+        # return self.order.user.email
+        return self.product.name
 
 
 class Order(models.Model):

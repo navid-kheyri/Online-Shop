@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (AddProductCreateView ,IndexListView,CategoryProductDetailView,AllCategoriesListView,ProductDetailView,SubCategoriesDetailView,
-                    RatingProductCreateView,SearchListView)  #TopSellingListView,TopRatedListView,MostExpensiveListView,
+                    RatingProductCreateView,SearchListView)
 
 app_name='website'
 

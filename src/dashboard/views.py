@@ -1,15 +1,11 @@
-from django.db.models.query import QuerySet
-from django.http import HttpResponseForbidden
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, redirect,render
 from .forms import AddressModelForm
-from django.views.generic import DetailView, CreateView, ListView, UpdateView
+from django.views.generic import DetailView, ListView, UpdateView,View
+from django.views.generic.base import ContextMixin
 from django.urls import reverse_lazy
-from django.views.generic import View
 from django.contrib.auth import get_user_model
 from vendors.models import Vendor
-from customers.models import Address
 from accounts.forms import CustomUserChangeForm
-from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.views import PasswordChangeView
 from orders.models import Order, OrderItem
 from website.models import Comment
@@ -22,26 +18,46 @@ User = get_user_model()
 
 
 # Create your views here.
-@method_decorator(roles_required('customer'), name='dispatch')
-class CustomerDetailView (LoginRequiredMixin, DetailView):
+# @method_decorator(roles_required('customer',pk_is_user=True), name='dispatch')
+# class CustomerDetailView (LoginRequiredMixin, DetailView):
+#     """
+#     برای نشان دادن داشبورد کاستومر
+#     """
+#     model = User
+#     template_name = 'dashboard/dashboard.html'
+#     success_url = success_url = reverse_lazy('dashboard:user')
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         user = self.object
+#         addresses = user.address.all()
+#         context['address_form'] = AddressModelForm()
+#         context['address'] = addresses
+#         context['user'] = user
+#         return context
+
+#     def post(self, request, *args, **kwargs):
+#         form = AddressModelForm(request.POST)
+#         if form.is_valid():
+#             address = form.save(commit=False)
+#             address.user = self.request.user
+#             address.save()
+#             return redirect('dashboard:user', pk=self.get_object().id)
+#         return self.get(request, *args, **kwargs)
+
+@method_decorator(roles_required('customer',pk_is_user=True), name='dispatch')
+class CustomerDetailView (LoginRequiredMixin, View, ContextMixin):
     """
     برای نشان دادن داشبورد کاستومر
     """
-    model = User
     template_name = 'dashboard/dashboard.html'
-    success_url = success_url = reverse_lazy('dashboard:index')
-
-    def dispatch(self, request, *args, **kwargs):
-        if int(kwargs.get('pk')) != self.request.user.pk:
-            return self.handle_no_permission()
-        if not (request.user.is_customer):
-            return HttpResponseForbidden("You are not allowed to access this page.")
-        return super().dispatch(request, *args, **kwargs)
+    def get(self,request,*args, **kwargs):
+        user = get_object_or_404(User, pk=self.kwargs['pk'])
+        return render(request,self.template_name,context={'user':user})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        user_id = self.object
-        user = User.objects.get(pk=user_id.id)
+        user = self.request.user
         addresses = user.address.all()
         context['address_form'] = AddressModelForm()
         context['address'] = addresses
@@ -54,7 +70,7 @@ class CustomerDetailView (LoginRequiredMixin, DetailView):
             address = form.save(commit=False)
             address.user = self.request.user
             address.save()
-            return redirect('dashboard:user', pk=self.get_object().id)
+            return redirect(reverse_lazy('dashboard:user', pk=self.get_object().id))
         return self.get(request, *args, **kwargs)
 
 
@@ -73,23 +89,19 @@ class MyVendorListView(ListView):
         context['vendor'] = vendor
         return context
 
-# class AdressCreateView(CreateView):
-#     model=Address
-#     template_name=
 
-
-@method_decorator(roles_required('customer'), name='dispatch')
+@method_decorator(roles_required('customer',pk_is_user=True), name='dispatch')
 class CustomerUpdateView(LoginRequiredMixin, UpdateView):
     model = User
     template_name = 'dashboard/customer-detail-change.html'
     form_class = CustomUserChangeForm
 
-    def dispatch(self, request, *args, **kwargs):
-        if int(kwargs.get('pk')) != self.request.user.pk:
-            return self.handle_no_permission()
-        if not (request.user.is_customer):
-            return HttpResponseForbidden("You are not allowed to access this page.")
-        return super().dispatch(request, *args, **kwargs)
+    # def dispatch(self, request, *args, **kwargs):
+    #     if int(kwargs.get('pk')) != self.request.user.pk:
+    #         return self.handle_no_permission()
+    #     if not (request.user.is_customer):
+    #         return HttpResponseForbidden("You are not allowed to access this page.")
+    #     return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse_lazy('dashboard:user', kwargs={'pk': self.object.pk})
@@ -105,8 +117,6 @@ class CustomerUpdateView(LoginRequiredMixin, UpdateView):
 
 @method_decorator(roles_required('customer'), name='dispatch')
 class CustomerChangePasswordView(PasswordChangeView):
-    form_class = PasswordChangeForm
-    success_url = reverse_lazy('dashboard:user')
     template_name = 'dashboard/customer-change-password.html'
 
     def get_success_url(self):
@@ -133,7 +143,7 @@ class CustomerOrdersListView(ListView):
         return context
 
 
-@method_decorator(roles_required('customer'), name='dispatch')
+@method_decorator(roles_required('customer',pk_is_user=True), name='dispatch')
 class CustomerOrderItemDetailView(LoginRequiredMixin, DetailView):
     model = OrderItem
     template_name = 'dashboard/customer-order-item.html'
@@ -146,11 +156,11 @@ class CustomerOrderItemDetailView(LoginRequiredMixin, DetailView):
         pk = self.kwargs.get('pk')
         return pk
 
-    def dispatch(self, request, *args, **kwargs):
-        order = get_object_or_404(Order, pk=self.get_pk())
-        if not order in self.get_queryset():
-            return HttpResponseForbidden("You are not allowed to access this page.")
-        return super().dispatch(request, *args, **kwargs)
+    # def dispatch(self, request, *args, **kwargs):
+    #     order = get_object_or_404(Order, pk=self.get_pk())
+    #     if not order in self.get_queryset():
+    #         return HttpResponseForbidden("You are not allowed to access this page.")
+    #     return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -159,26 +169,22 @@ class CustomerOrderItemDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-@method_decorator(roles_required('customer'), name='dispatch')
+@method_decorator(roles_required('customer',pk_is_user=True), name='dispatch')
 class MyCommentDetailView(LoginRequiredMixin, DetailView):
-    model = Comment
+    model = User
     template_name = 'dashboard/comments.html'
 
-    def dispatch(self, request, *args, **kwargs):
-        if int(kwargs.get('pk')) != self.request.user.pk:
-            return self.handle_no_permission()
-        if not (request.user.is_customer):
-            return HttpResponseForbidden("You are not allowed to access this page.")
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_object(self):
-        pk = self.kwargs.get('pk')
-        return pk
-
+    # def dispatch(self, request, *args, **kwargs):
+    #     if int(kwargs.get('pk')) != self.request.user.pk:
+    #         return self.handle_no_permission()
+    #     if not (request.user.is_customer):
+    #         return HttpResponseForbidden("You are not allowed to access this page.")
+    #     return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        user_comment = Comment.objects.filter(user=self.get_object())
+        user = self.request.user
+        user_comment = Comment.objects.filter(user=user)
         context['mycomment'] = user_comment
         # context['mycomment'] = self.get_queryset()
         return context
